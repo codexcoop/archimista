@@ -1,0 +1,9 @@
+<%= render :partial => "shared/generic_error_message", :object => @group %>
+
+<div class="span9">
+<% form_for @group do |f| %>
+  <%= f.label t('name') + required_marker %>
+  <%= f.text_field :name, :class => "span6" %>
+  <p><%= f.submit @group.new_record? ? t('create_group') : t('save'), :class => "btn btn-primary" %></p>
+<% end %>
+</div>

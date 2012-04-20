@@ -1,0 +1,34 @@
+<% container_class "container-fluid" %>
+
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index "Lista complessi", fonds_path %>
+  </div>
+<% end %>
+
+<%# OPTIMIZE: [very low] per coerenza #create dovrebbe chiamarsi #add-node, ma forse non è possibile %>
+
+<div id="treeview-content" class="span12">
+  <div id="tree-wrapper" class="span3" style="width: <%= css_size_by_cookie("tree_width", "280") %>;">
+    <div id="tree">
+<%# filled by jsTree %>
+    </div>
+    <div id="tree-controls">
+      <span id="create" class="jstree-action btn" title="Aggiungi livello"><i class="icon-plus"></i></span>
+      <span id="remove-node" class="jstree-action btn" title="Rimuovi livello"><i class="icon-minus"></i></span>
+      <span id="trash" data-target="<%= @root_fond.id %>" style="display: <%= @trash.present? ? "block" : "none" %>">Cestino</span>
+      <span id="handle" class="ui-resizable-handle">|||</span>
+    </div>
+  </div>
+
+  <div id="main" style="left: <%= css_size_by_cookie("tree_width", "280") %>">
+    <div id="ajax-form-wrapper" data-loading-message="<%= t('loading_message') %>">
+<%# filled through ajax call %>
+    </div>
+  </div>
+</div>
+
+<div id="add-editor-container"></div>
+<div id="add-heading-container"></div>
+<div id="link-heading-container"></div>

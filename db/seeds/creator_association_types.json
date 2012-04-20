@@ -1,0 +1,5 @@
+{"association_type":"collegato a","inverse_type_id":1}
+{"association_type":"succede a","inverse_type_id":3}
+{"association_type":"precede","inverse_type_id":2}
+{"association_type":"sovraordinato a","inverse_type_id":5}
+{"association_type":"dipendente da","inverse_type_id":4}

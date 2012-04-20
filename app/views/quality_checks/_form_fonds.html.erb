@@ -1,0 +1,8 @@
+<% form_tag("/quality_checks", :method => :get, :id => "quality_checks-fond-choice", :class => "skip-prompt") do %>
+  <i class="icon-search"></i>
+  <%= text_field_tag :q, params[:q], :id => "quality_checks-fond-name-autocomplete",
+    :class => "autocomplete span6",
+    :placeholder => "Cerca un complesso archivistico",
+    :'data-autocompletion-controller' => 'fonds' %>
+  <%= hidden_field_tag :fond_id, "", :id => "quality_checks-fond-id-autocomplete" %>
+<% end %>

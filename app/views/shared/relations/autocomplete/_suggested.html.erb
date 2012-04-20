@@ -1,0 +1,29 @@
+<p class="add-suggested-invite"><%= t('.add_invite') %></p>
+<% content_tag :table,  :id => "suggested-#{related_to}", # => "suggested-creators"
+                        :class => 'interactive-list suggested-list',
+                        :'data-excluded-ids' => excluded_ids.to_json,
+                        :style => 'width:670px;' do %>
+  <% suggested_list.each do |suggested_record| %>
+    <% content_tag  :tr,
+                    :class => 'choice-item suggested-item',
+                    :'data-related-id' => suggested_record.id.to_json do %>
+      <td style="width:22px;">
+        <span class="ui-icon ui-icon-radio-on" style="display:inline; float:left;">&nbsp;</span>
+      </td>
+      <td>
+        <em><%= suggested_label.call(suggested_record) %></em>
+      </td>
+      <% content_tag :td, :class => 'choice-item-label',
+                          :style => "width:70px; padding-left:10px; text-align:right;" do %>
+        <% content_tag  :span,
+                        :class => 'item-action-add-suggested',
+                        :style => 'cursor:pointer; font-size:0.85em; color:green;',
+                        :'data-selected-id' => suggested_record.id.to_json,
+                        :'data-selected-value' => suggested_label.call(suggested_record) do %>
+          <%= t('.add_item') %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+

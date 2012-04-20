@@ -1,0 +1,39 @@
+table.reports  {
+  margin: 0;
+  padding: 0;
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 760px;
+}
+.reports tr {
+  margin: 0;
+  padding: 0;
+}
+.reports td, .reports th {
+  vertical-align: top;
+  line-height: 1.5em;
+  padding: 5px;
+  border-bottom: 1px dotted #ccc;
+}
+.reports td.center {
+  text-align: center;
+}
+.reports td.fixed {
+  width: 25%;
+}
+h2 span.date {
+  font-size: 0.7em;
+  display: block;
+  font-weight: normal;
+}
+span.date {
+  display: block;
+  font-weight: normal;
+}
+h2 span.spec {
+  font-size: 0.7em;
+  display: block;
+  font-weight: normal;
+  text-transform: uppercase;
+}
+

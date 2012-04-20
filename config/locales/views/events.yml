@@ -1,0 +1,52 @@
+en:
+  events:
+    defaults: &defaults
+      year_placeholder: "year..."
+    date_fields:
+      century:
+        <<: *defaults
+      date:
+        <<: *defaults
+      place:
+        birthplace: "Place of birth"
+        deathplace: "Place of death"
+        <<: *defaults
+    event:
+        hide: "hide fields"
+        show: "show fields"
+        remove_event: "remove event"
+        restore_event: "restore event"
+        <<: *defaults
+    form:
+      <<: *defaults
+    bounds:
+      start_date:
+        <<: *defaults
+      end_date:
+        <<: *defaults
+it:
+  events:
+    defaults: &defaults
+      year_placeholder: "anno..."
+    date_fields:
+      century:
+        <<: *defaults
+      date:
+        <<: *defaults
+      place:
+        birthplace: "Luogo di nascita"
+        deathplace: "Luogo di morte"
+        <<: *defaults
+    event:
+      hide: "nascondi campi"
+      show: "mostra campi"
+      remove_event: "rimuovi evento"
+      restore_event: "ripristina evento"
+      <<: *defaults
+    form:
+      <<: *defaults
+    bounds:
+      start_date:
+        <<: *defaults
+      end_date:
+        <<: *defaults

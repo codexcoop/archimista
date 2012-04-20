@@ -1,0 +1,20 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_places') %></h2>
+<% end %>
+
+<div class="span9">
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= t('name') %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @places.each do |place| %>
+    <tr class="<%= cycle("odd", "even") %>">
+      <td><%=h place.display_name %></td>
+    </tr>
+    <% end %>
+  </table>
+<%= will_paginate(@places) %>
+</div>

@@ -1,0 +1,57 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'units-full_path' %>
+  <%= javascript_include_tag "relations" %>
+  <%= javascript_include_tag "live_search" %>
+  <%= javascript_include_tag "sources" %>
+<% end %>
+
+<%= render :partial => "shared/generic_error_message", :object => @unit %>
+
+<% form_for @unit do |f| %>
+  <%= f.hidden_field :parent_id,  :value => @unit.parent_id %>
+  <%= f.hidden_field :fond_id,    :value => @unit.fond_id %>
+  <%= f.hidden_field :unit_type,  :value => "unità documentaria" %>
+  <% @iccd_description = f.object.iccd_description || f.object.build_iccd_description %>
+  <% @iccd_tech_spec =  f.object.iccd_tech_spec || f.object.build_iccd_tech_spec %>
+  <% @iccd_authors =  build_or_retrieve(f.object.iccd_authors) %>
+  <% @iccd_subjects = build_or_retrieve(f.object.iccd_subjects) %>
+  <% @iccd_damages = build_or_retrieve(f.object.iccd_damages) %>
+
+  <%# FIXME: c'è 2 volte. Vedi sopra line 11. È giusto? %>
+  <%= render :partial => "shared/generic_error_message", :object => @unit %>
+
+  <div id="record-main" class="span9">
+    <div class="row">
+      <div class="span2">
+        TSK <span class="small">(tipologia scheda)</span>
+      </div>
+      <div class="span4">
+        <%= iccd_terms_select(f, "units.tsk", nil, {:id => "tsk", :selected => @iccd_type}, :class => "span4") %>
+      </div>
+    </div>
+
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-identification" data-toggle="tab"><%= t('identification_area') %></a></li>
+        <li><a href="#tab-description" data-toggle="tab"><%= t('description_area') %></a></li>
+        <li><a href="#tab-localization" data-toggle="tab"><%= t('localization_area') %></a></li>
+        <li><a href="#tab-techdata" data-toggle="tab"><%= t('tech_area') %></a></li>
+        <li><a href="#tab-editors" data-toggle="tab"><%= t('editors') %></a></li>
+      </ul>
+
+      <div class="tab-content">
+        <%# FIXME: codice attuale impedisce che venga triggerato correttamente askCofirm if form unsaved %>
+        <%= render :partial => "units/iccd/type_#{@iccd_type}", :locals => { :f => f } %>
+      </div> <!-- /tab-content -->
+    </div> <!-- /tab-tabbbable -->
+  </div><!-- /record-main -->
+  <%= render :partial => "shared/side", :object => @unit %>
+
+<% end %>
+
+<div id="add-editor-container"></div>
+<div id="add-heading-container"></div>
+<div id="link-heading-container"></div>
+
+<%#= render :partial => "editors/new_editor" %>
+  

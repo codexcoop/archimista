@@ -1,0 +1,13 @@
+en:
+  groups: "Groups"
+  group: "Group"
+  index_groups: "Groups list"
+  users_count: "Users count"
+  create_group: "Create group"
+it:
+  groups: "Gruppi"
+  group: "Gruppo"
+  index_groups: "Lista gruppi"
+  users_count: "Numero utenti"
+  create_group: "Crea gruppo"
+

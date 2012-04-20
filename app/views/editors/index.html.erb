@@ -1,0 +1,37 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <%= link_to t('new'), new_editor_path, {:class => "btn btn-small new"} %>
+  </div>
+
+<%= display_page_entries_info @editors %>
+
+<% if @editors.size > 0 %>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th><%= t('editors_editor') %></th>
+      <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @editors.each do |editor| %>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td><%= link_to editor.reverse_full_name, edit_editor_path(editor) %></td>
+        <td><%= link_to t('destroy'), editor, :confirm => 'Are you sure?', :method => :delete %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= will_paginate @editors %>
+
+<% else %>
+  <%#TODO: i18n. Vedi fonds/index %>
+  <p>Non sono presenti schede compilatore.</p>
+<% end %>
+</div>

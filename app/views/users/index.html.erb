@@ -1,0 +1,46 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <% if current_user.is_superadmin? %>
+    <div id="links">
+      <%= link_to "Vai alla lista gruppi", groups_path %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="span12">
+<div id="index-controls">
+  <%= link_to t('new'), new_user_path, { :class => "btn btn-small new" } %>
+</div>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th><%= t('devise.attributes.username') %></th>
+    <th><%= t('devise.attributes.full_name') %></th>
+    <th>Email</th>
+    <th><%= t('devise.attributes.role') %></th>
+    <th><%= t('devise.attributes.group_id') %></th>
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td><%= link_to_unless(user.is_superadmin?, user.username, edit_user_path(user)) %></td>
+      <td><%= user.full_name %> <%= "(#{user.qualifier})" if user.qualifier.present? %></td>
+      <td><%= mail_to user.email %></td>
+      <td><%= user.role %></td>
+      <td><%= user.group.name %></td>
+      <td>
+        <% if user.active? %>
+          <%= link_to_unless(current_user == user || user.is_superadmin?, t('deactivate'), toggle_active_user_path(user), :method => :put, :class => "btn btn-mini") do |text| '' end %>
+        <% else %>
+          <%= link_to_unless(current_user == user, t('activate'), toggle_active_user_path(user), :method => :put, :class => "btn btn-mini") do |text| '' end %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</div>
+

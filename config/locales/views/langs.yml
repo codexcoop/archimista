@@ -1,0 +1,16 @@
+en:
+  langs: "Languages"
+  listing_lang: "Listing languages"
+  editing_lang: "Editing language"
+  en_name: "english name"
+  fr_name: "french name"
+  it_name: "italian name"
+  code: "code"
+it:
+  langs: "Lingue"
+  listing_lang: "Lingue"
+  editing_lang: "Modifica lingua"
+  en_name: "inglese"
+  fr_name: "francese"
+  it_name: "italiano"
+  code: "codice"

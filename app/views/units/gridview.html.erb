@@ -1,0 +1,125 @@
+<% container_class "container-fluid" %>
+
+<% content_for :stylesheets do %>
+  <%= stylesheet_link_tag "jqgrid-ui" %>
+  <%= stylesheet_link_tag "gridview" %>
+  <%= stylesheet_link_tag "units-reorder" %>
+<% end %>
+
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "jqGrid/grid.locale-#{I18n.locale}" %>
+  <script type="text/javascript">
+    jQuery.jgrid.no_legacy_api = true;
+  </script>
+  <%= javascript_include_tag "jqGrid/jquery.jqGrid.min" %>
+  <%= javascript_include_tag "jsTree/jquery.jstree.min" %>
+
+  <%# archigrid/commons always first, initializes the $.archigrid object %>
+  <%= javascript_include_tag "archigrid/commons",
+                             "archigrid/i18n",
+                             "archigrid/utils",
+                             "archigrid/editing",
+                             "archigrid/keyboard_nav",
+                             "archigrid/events",
+                             "archigrid/formatters",
+                             "archigrid/config",
+                             "archigrid/setup",
+                             "archigrid/boot",
+                             "archigrid",
+                             :cache => "/assets/archigrid" %>
+  <%= javascript_include_tag "units",
+                             "units-jump_to",
+                             "units-classify",
+                             "units-reorder",
+                             "units-remove_rows",
+                             "units-add_rows",
+                             :cache => "/assets/units" %>
+<% end %>
+
+<%# Status bar %>
+<%= render :partial => 'units/status_bar', :locals => {:fond => @fond} %>
+
+<div id="index-controls" class="units">
+  <div id="view-options">
+    Modalità: <%= link_to "elenco sommario", fond_units_path(@fond) %> | tabella
+  </div>
+
+  <div id="buttons">
+    <button id="add-rows" data-target="#mass-add-modal" data-toggle="modal" class="btn btn-small new" tabindex="-1">
+      <%= "+ #{t('add_rows')}" %>
+    </button>
+
+    <button id="mass-classify" data-target="#mass-classify-modal" data-toggle="modal" class="btn btn-small disabled" tabindex="-1">
+     <i class="icon-folder-open"></i>&nbsp;&nbsp;<%= t('classify') %>
+    </button>
+
+    <button id="mass-remove" data-target="#mass-remove-modal" data-toggle="modal" class="btn btn-small disabled" tabindex="-1">
+      <i class="icon-trash"></i>&nbsp;&nbsp;<%= t('destroy') %>
+    </button> |
+
+    <button id="select-columns" data-target="#select-columns-dialog" data-toggle="modal" class="btn btn-small" tabindex="-1">
+      <i class="icon-cog"></i>&nbsp;<%= t('column_layout') %>
+    </button>
+
+    <button id="toggleToolbar" class="btn btn-small" tabindex="-1">
+      <i class="icon-search"></i>&nbsp;&nbsp;<%= t('filters') %>
+    </button>
+  </div>
+</div>
+
+<%# AddRows %>
+<%= render :partial => 'units/add_rows', :locals => {:fond => @fond, :vocabularies => @vocabularies } %>
+
+<%# Classify %>
+<%= render :partial => 'units/classify', :locals => {:fond => @fond, :root_fond => @root_fond} %>
+
+<%# RemoveRows %>
+<%= render :partial => 'units/remove_rows' %>
+
+<%# Reorder units and update sequence_number %>
+<%= render :partial => 'units/reorder' %>
+
+<%# Select columns dialog %>
+<%= render :partial => 'units/gridview_columns' %>
+
+<%# Div specifici di gridview %>
+<%# OPTIMIZE: semplificare / Edit button %>
+<div id="standalone-edit-command-wrapper" class="hide">
+  <%= link_to t('edit').downcase, '#', :id => 'standalone-edit-command', :class => "label"%>
+</div>
+
+<%# Textfield dialog %>
+<%#= render :partial => 'units/gridview_textfield' %>
+<div id="preferred-event-dialog-container">
+  <%# filled through ajax %>
+</div>
+
+<div id="textfield-dialog-container">
+  <%# filled through ajax %>
+</div>
+
+<%
+  I18n.backend.send(:init_translations) unless I18n.backend.instance_variable_get(:'@initialized')
+  column_labels =
+  I18n.backend.instance_variable_get(:'@translations')[I18n.locale.to_sym][:activerecord][:attributes][:unit]
+  archigrid_i18n =
+  I18n.backend.instance_variable_get(:'@translations')[I18n.locale.to_sym][:units_gridview][:archigrid]
+%>
+<%# Attach as DOM data all the required variables (except the content of the table) %>
+
+<% content_tag  :table,
+                :id => 'jqgrid',
+                :'data-fond-id' => @fond.id,
+                :'data-total-entries' => @units_count,
+                :'data-sortname' => 'sequence_number',
+                :'data-vocabularies' => @vocabularies.to_json,
+                :'data-go-to-record-id' => @fond.go_to_unit.try(:id),
+                :'data-go-to-row-index' => @fond.go_to_unit.try(:sequence_number),
+                :'data-selected-attributes' => @selected_attributes.to_json,
+                :'data-column-labels' => column_labels.to_json,
+                :'data-archigrid-i18n' => archigrid_i18n.to_json do %>
+  <%# filled by jqGrid %>
+<% end %>
+
+<div id="jqgrid-pager"></div>
+

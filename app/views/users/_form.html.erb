@@ -1,0 +1,82 @@
+<%= render :partial => "shared/generic_error_message", :object => @user %>
+
+<div class="span8">
+
+<% form_for @user, :html => { :id => "user-form", :class => "form-horizontal well" } do |f| %>
+  <div class="control-group">
+    <%= f.label :username, required_marker + t('devise.attributes.username'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :username %>
+      <p class="help-block"><%= t('devise.registrations.username_characters') %></p>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :first_name, required_marker + t('first_name'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :first_name %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :last_name, required_marker + t('last_name'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :last_name %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :qualifier, t('qualifier'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :qualifier %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :email, required_marker + t('email'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :email %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :password, required_marker + t('devise.attributes.password'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.password_field :password %>
+      <% unless @user.new_record? %>
+        <p class="help-block"><%= t('devise.registrations.keep_current_password') %></p>
+      <% end %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :password_confirmation, required_marker + t('devise.attributes.password_confirmation'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.password_field :password_confirmation %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :role, t('devise.attributes.role'), :class => "control-label" %>
+    <div class="controls">
+      <% if current_user.is_at_least_admin? && @user != current_user %>
+        <%= select :user, :role, User.filter_roles_for(current_user.role), {:prompt => t('devise.attributes.role_prompt')}  %>
+      <% else  %>
+        <%= f.text_field :role, :value => current_user.role, :class => "disabled" %>
+      <% end %>
+    </div>
+  </div>
+  <div class="control-group">
+    <%= f.label :group_id, t('devise.attributes.group_id'), :class => "control-label" %>
+    <div class="controls">
+      <% if current_user.is_superadmin? %>
+        <%= select :user, :group_id, Group.filter(current_user.group_id), {:prompt => t('devise.attributes.group_id_prompt')} %>
+      <% else %>
+        <% if action_name != 'edit' %>
+          <%= select :user, :group_id, Group.filter(current_user.group_id) %>
+        <% else %>
+          <%= f.text_field :group_id, :value => current_user.group.name, :class => "disabled" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <div class="form-actions">
+    <%= f.submit @user.new_record? ? t('create_user') : t('save'), :class => "btn btn-primary" %>
+    oppure <%= link_to t('cancel'), root_path %>
+  </div>
+<% end %>
+
+</div>

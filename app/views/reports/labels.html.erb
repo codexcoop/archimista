@@ -1,0 +1,12 @@
+<% @units.each do |unit| %>
+  <div class="label pbi_avoid">
+    <h4><%= @fond.name %></h4>
+    <p>
+      <em><%= unit.title %></em><br /><%= unit.preferred_event.try(:full_display_date) || "[s.d.]" %>
+    </p>
+    <p class="head">
+      <span class="left"><strong><%= t('reference_number')  %></strong>:&nbsp;<%= unit.reference_number %></span>
+      <span class="right"><strong><%= t('sequence_number') %></strong>:&nbsp;<%= unit.sequence_number %></span>
+    </p>
+  </div>
+<% end %>

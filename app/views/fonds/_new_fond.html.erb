@@ -1,0 +1,19 @@
+<div class="modal hide fade" id="add_fond_modal">
+  <div class="modal-header">
+    <a class="close close_fond" data-dismiss="modal">×</a>
+    <h3>Nuovo complesso archivistico</h3>
+  </div>
+  <div class="modal-body">
+    <div id="fond_form_error"></div>
+
+    <% form_tag({:controller => 'fonds', :action => 'ajax_create'}, {:method => :post, :id => "new-fond-form", :class => "skip-prompt"}) do %>
+      <%= label_tag 'fond[name]', t('name') + required_marker + ' <span class="inline-msg">obbligatorio</span>' %>
+      <%= text_field_tag 'fond[name]', '', :style => "width: 98%" %>
+      <%= hidden_field_tag 'fond[group_id]', current_user.group_id %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <a href="#" class="close_fond btn" data-dismiss="modal">Annulla</a>
+    <a href="#" id="create_fond" class="btn btn-primary">Crea scheda</a>
+  </div>
+</div>

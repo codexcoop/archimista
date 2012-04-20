@@ -1,0 +1,133 @@
+<% content_for :status_bar do %>
+  <% if params[:complete] %>
+    <h2>Controllo qualità<%= path_separator %>descrizione completa</h2>
+  <% else %>
+    <h2>Controllo qualità<%= path_separator %>complesso archivistico</h2>
+  <% end %>
+  <div id="links">
+    <%=  link_to_index "Controllo qualità", quality_checks_path %>
+  </div>
+<% end %>
+
+<div class="span12">
+  <h2><%= @fond_root_name %></h2>
+
+<%# OPTIMIZE: [very low] dopo assestamento funzionalità e vista, i18n e inflection singolare/plurale %>
+
+  <h3 class="section">Requisiti minimi</h3>
+
+  <h4>1. <%=  t('name') %></h4>
+
+  <% if @fonds_with_no_name.count.zero? %>
+    <p><i class="icon-ok-sign"></i> <%= t('count.fonds.success', :count => @fonds.count, :field => t('name')) %></p>
+  <% else %>
+    <p data-toggle="collapse" data-target="#fonds-no-name">
+      <i class="icon-exclamation-sign"></i> <%= t('count.fonds.failure', :count => @fonds_with_no_name.count,
+        :total => @fonds.count,
+        :percentage => number_to_percentage(@fonds_with_no_name.count.to_f/@fonds.count.to_f * 100,:precision => 2),
+        :field => t('name')) %>
+    </p>
+    <div id="fonds-no-name" class="collapse">
+      <%= render :partial => "fond", :object => @fonds_with_no_name %>
+    </div>
+  <% end %>
+
+  <h4>2. <%= t('date_event') %></h4>
+  <% if @fonds_with_no_event.count.zero? %>
+    <p><i class="icon-ok-sign"></i> <%= t('count.fonds.success', :count => @fonds.count, :field => t('date_event')) %></p>
+  <% else %>
+    <p data-toggle="collapse" data-target="#fonds-no-event">
+      <i class="icon-exclamation-sign"></i> <%= t('count.fonds.failure', :count => @fonds_with_no_event.count,
+        :total => @fonds.count,
+        :percentage => number_to_percentage(@fonds_with_no_event.count.to_f/@fonds.count.to_f * 100,:precision => 2),
+        :field => t('date_event')) %>
+    </p>
+    <div id="fonds-no-event" class="collapse">
+      <%= render :partial => "fond", :object => @fonds_with_no_event %>
+    </div>
+  <% end %>
+
+  <h4>3. <%= t('short_fond_type') %></h4>
+  <% if @fonds_with_no_fond_type.count.zero? %>
+    <p><i class="icon-ok-sign"></i> <%= t('count.fonds.success', :count => @fonds.count, :field => t('short_fond_type')) %></p>
+  <% else %>
+    <p data-toggle="collapse" data-target="#fonds-no-type">
+      <i class="icon-exclamation-sign"></i> <%= t('count.fonds.failure', :count => @fonds_with_no_fond_type.count,
+        :total => @fonds.count,
+        :percentage => number_to_percentage(@fonds_with_no_fond_type.count.to_f/@fonds.count.to_f * 100,:precision => 2),
+        :field => t('short_fond_type')) %>
+    </p>
+    <div id="fonds-no-type"  class="collapse">
+      <%= render :partial => "fond", :object => @fonds_with_no_fond_type %>
+    </div>
+  <% end %>
+
+
+  <h3 class="section">Requisiti medi</h3>
+  <h4>1. <%= t('description') %> </h4>
+  <% if @fonds_with_no_description.count.zero? %>
+    <p><i class="icon-ok-sign"></i> <%= t('count.fonds.success', :count => @fonds.count, :field => t('description')) %></p>
+  <% else %>
+    <p data-toggle="collapse" data-target="#fonds-no-description">
+      <i class="icon-exclamation-sign"></i> <%= t('count.fonds.failure', :count => @fonds_with_no_description.count,
+        :total => @fonds.count,
+        :percentage => number_to_percentage(@fonds_with_no_description.count.to_f/@fonds.count.to_f * 100,
+          :precision => 2),
+        :field => t('description')) %>
+    <div id="fonds-no-description" class="collapse">
+      <%= render :partial => "fond", :object => @fonds_with_no_description %>
+    </div>
+  <% end %>
+
+  <h4>2. <%= t('history')  %> </h4>
+  <% if @fonds_with_no_history.count.zero? %>
+    <p><i class="icon-ok-sign"></i> <%= t('count.fonds.success', :count => @fonds.count, :field => t('history')) %></p>
+  <% else %>
+    <p data-toggle="collapse" data-target="#fonds-no-history">
+      <i class="icon-exclamation-sign"></i> <%= t('count.fonds.failure', :count => @fonds_with_no_history.count,
+        :total => @fonds.count,
+        :percentage => number_to_percentage(@fonds_with_no_history.count.to_f/@fonds.count.to_f * 100,:precision => 2),
+        :field =>  t('history')) %>
+    </p>
+    <div id="fonds-no-history" class="collapse">
+      <%= render :partial => "fond", :object => @fonds_with_no_history %>
+    </div>
+  <% end %>
+
+  <h4>3. <%= t('length') %></h4>
+  <% if @fonds_with_no_length.count.zero? %>
+    <p><i class="icon-ok-sign"></i> <%= t('count.fonds.success', :count => @fonds.count, :field => t('length')) %></p>
+  <% else %>
+    <p data-toggle="collapse" data-target="#fonds-no-length">
+      <i class="icon-exclamation-sign"></i> <%= t('count.fonds.failure', :count => @fonds_with_no_length.count,
+        :total => @fonds.count,
+        :percentage => number_to_percentage(@fonds_with_no_length.count.to_f/@fonds.count.to_f * 100,:precision => 2),
+        :field =>  t('length')) %>
+    </p>
+    <div id="fonds-no-length" class="collapse">
+      <%= render :partial => "fond", :object => @fonds_with_no_length %>
+    </div>
+  <% end %>
+
+  <h2>Soggetti produttori</h2>
+
+  <% if @creators.present? %>
+    <p><%= t('count.creators', :count => @creators.count) %></p>
+    <% unless @fonds.first.creators.present? %>
+      <p class="red">[Nessun soggetto produttore associato al complesso archivistico di primo livello]</p>
+    <% end %>
+    <%= render :partial => "creator", :collection => @creators %>
+  <% else %>
+    <p class="red">[Nessun soggetto produttore associato]</p>
+  <% end %>
+
+
+  <h2>Soggetti conservatori</h2>
+
+  <% if @custodians.present? %>
+    <p><%= t('count.custodians', :count => @custodians.count) %></p>
+    <%= render :partial => "custodian", :collection => @custodians %>
+  <% else %>
+    <p class="red">[Nessun soggetto conservatore associato]</p>
+  <% end %>
+</div>

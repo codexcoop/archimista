@@ -1,0 +1,54 @@
+<% event = event_form.object %>
+
+<%
+  fields_wrapper_css_class = 'archidate-format-wrapper Y'
+  fields_wrapper_css_class << (event.send("#{bound}_date_top_level_format").is_in?('Y',nil) ? ' active' : ' inactive')
+%>
+
+<% content_tag  :span,
+                :class              => fields_wrapper_css_class,
+                'data-bound-format' => 'Y',
+                'data-bound'        => bound do %>
+  <%= event_form.select :"#{bound}_date_spec",
+                        options_for_select(
+                          event.class.specifications_for_select(:"#{bound}_date_spec", I18n.locale),
+                          (event.send("#{bound}_date_spec") || event.class.default_specification_code)
+                        ),
+                        options={},
+                        html_options={:class => "archidate-field input-mini"} %>
+
+  <%= text_field_tag "#{event_form.object_name}[#{bound}_date_from_year]",
+                      value = event.send("#{bound}_date_from_year"),
+                      :size => 7,
+                      'data-placeholder' => t('.year_placeholder'),
+                      'data-is-new' => event.new_record?,
+                      :class => "archidate-field year-text-field #{bound} input-mini" %>
+
+  <% select_month_name  = "#{event_form.object_name}[#{bound}_date_from_month]" %>
+  <% select_month_id    = select_month_name.gsub(/\]\Z/,'').gsub(/\[|\]/,'_').squeeze('_') %>
+
+  <%= select_month  event.send("#{bound}_date_from_month").to_i,
+                    options={:prompt => true},
+                    html_options={:name => select_month_name,
+                                  :id => select_month_id,
+                                  :class => "archidate-field input-medium"} %>
+
+  <% select_day_name  = "#{event_form.object_name}[#{bound}_date_from_day]" %>
+  <% select_day_id    = select_day_name.gsub(/\]\Z/,'').gsub(/\[|\]/,'_').squeeze('_') %>
+
+  <%= select_day event.send("#{bound}_date_from_day").to_i,
+                  options={:prompt => true},
+                  html_options={:name => select_day_name,
+                                :id => select_day_id,
+                                :class => "archidate-field input-small"} %>
+
+  <%= event_form.select :"#{bound}_date_valid",
+                options_for_select(
+                  event.class.validities_for_select(I18n.locale),
+                  (event.send("#{bound}_date_valid") || event.class.default_validity_code)
+                ),
+                options={},
+                html_options={:class => "archidate-field input-medium"} %>
+
+<% end %> <%# span %>
+

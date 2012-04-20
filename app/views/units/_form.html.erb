@@ -1,0 +1,262 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'units-full_path' %>
+  <%= javascript_include_tag "relations" %>
+  <%= javascript_include_tag "live_search" %>
+  <%= javascript_include_tag "sources" %>
+<% end %>
+
+<%= render :partial => "shared/generic_error_message", :object => @unit %>
+
+<% form_for @unit do |f| %>
+  <%= f.hidden_field :parent_id,  :value => @unit.parent_id %>
+  <%= f.hidden_field :fond_id,    :value => @unit.fond_id %>
+  <%# TODO: spostare in callback before_save %>
+  <%= f.hidden_field :tsk, :value => "" %>
+
+  <div id="record-main" class="span9">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-description" data-toggle="tab"><%= t('description_area') %></a></li>
+        <li><a href="#tab-physical_description" data-toggle="tab"><%= t('physical_description_area') %></a></li>
+        <li><a href="#tab-access" data-toggle="tab"><%= t('access_area') %></a></li>
+        <li><a href="#tab-sources" data-toggle="tab"><%= t('sources_area')%></a></li>
+        <li><a href="#tab-credits" data-toggle="tab"><%= t('editors') %></a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div class="tab-pane active" id="tab-description">
+  <%# FIXME: codice attuale impedisce che venga triggerato correttamente askCofirm if form unsaved %>
+          <div class="row">
+            <div id="unit-path-wrapper" class="span9">
+              <div class="well">
+              <%= render :partial => 'full_path_controls', :object => @unit %>
+              <h3 id="unit-path-title"><%= t('unit_full_path') %></h3>
+              <div id="unit-path-content">
+                <%= render :partial => 'full_path', :locals => {:unit => @unit, :full_path => @full_path} %>
+              </div>
+              <% if @unit.is_root? %>
+                <div id="unit-path-tree-wrapper">
+                  <div id="unit-path-tree">
+    <%# filled by jsTree %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+         </div>
+
+          <%= f.label :unit_type, t('unit_type') %>
+          <%= terms_select(f, "units.unit_type", {:include_blank => true}, :class => "span4" )%>
+
+          <%= f.label :title, t('title') %>
+          <%= f.text_field :title, :class => "span7" %>&nbsp;&nbsp;<%= t('unit_given_title') %> <%= f.check_box :given_title %>
+
+          <%= render :partial => "events/form", :locals => {:entity_form => f, :events => @events} %>
+
+          <%= f.label :content, t('content') %>
+          <%= f.text_area :content, :class => "textile long-content span9" %>
+
+          <h3 class="row-header">Segnature</h3>
+          <div class="row">
+            <div class="span3"><%= f.label :tmp_reference_number, t('tmp_reference_number') %></div>
+            <div class="span6"><%= f.label :tmp_reference_string, t('tmp_reference_string') %></div>
+          </div>
+          <div class="row">
+            <div class="span3"><%= f.text_field :tmp_reference_number, :class => "span3" %></div>
+            <div class="span6"><%= f.text_field :tmp_reference_string, :class => "span6" %></div>
+          </div>
+          <div class="row">
+            <div class="span3"><%= f.label :folder_number, t('folder_number') %></div>
+            <div class="span3"><%= f.label :file_number, t('file_number') %></div>
+            <div class="span1">&nbsp;</div>
+            <div class="span2"><%= f.label :reference_number, t('reference_number') %></div>
+          </div>
+          <div class="row">
+            <div class="span3"><%= f.text_field :folder_number, :class => "span3" %></div>
+            <div class="span3"><%= f.text_field :file_number, :class => "span3" %></div>
+            <div class="span1"><%= link_to t('create_reference_number'), '#', :id => 'create_reference_number', :class => 'btn btn-small' %></div>
+            <div class="span2"><%= f.text_field :reference_number, :class => "span2"  %></div>
+          </div>
+
+          <%= f.label :arrangement_note, t('arrangement_note') %>
+          <%= f.text_area :arrangement_note, :class => "textile short-content span9" %>
+        </div> <%# /tab-description %>
+
+        <div class="tab-pane" id="tab-physical_description">
+          <div class="row">
+            <div class="span3"><%= f.label :physical_type, t('physical_type') %></div>
+            <div class="span4"><%= f.label :medium, t('medium') %></div>
+          </div>
+          <div class="row">
+            <div class="span3"><%= terms_select(f, "units.physical_type", {:include_blank => true}, :class => "span3") %></div>
+            <div class="span4"><%= terms_select(f, "units.medium", {:include_blank => true}, :class => "span4") %></div>
+          </div>
+
+          <%= f.label :related_materials, t('related_materials') %>
+          <%= f.text_area :related_materials, :class => "textile medium-content span9" %>
+
+          <%= f.label :physical_description, t('physical_description') %>
+          <%= f.text_area :physical_description, :class => "textile medium-content span9" %>
+
+          <h3 class="row-header">
+            <%= t('preservation') %>
+          </h3>
+          <%= terms_select(f, "units.preservation", {:include_blank => true}, {:class => "span2"}) %>
+
+          <%= f.label :preservation_note, t('preservation_note') %>
+          <%= f.text_area :preservation_note, :class => "textile short-content span9" %>
+
+          <div id="unit_unit_damages" class="row">
+            <% @unit_damages = build_or_retrieve(f.object.unit_damages) %>
+            <div class="span9">
+              <h3 class="row-header">
+                <%= t('unit_damages') %>
+              </h3>
+              <% f.fields_for :unit_damages do |id_form| %>
+                <%= render :partial => "unit_damage", :locals => { :f => id_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_damage'), "unit_unit_damages" %></p>
+            </div>
+          </div>
+
+          <%= f.label :restoration, t('restoration') %>
+          <%= f.text_area :restoration, :class => "textile short-content span9" %>
+
+          <%= f.label :note, t('unit_note') %>
+          <%= f.text_area :note, :class => "short-content span9" %>
+
+          <h3 class="row-header">
+            <%= t('physical_container') %>
+          </h3>
+          <div class="row">
+            <div class="span3"><%= f.label :physical_container_type, t('physical_container_type') %></div>
+            <div class="span3"><%= f.label :physical_container_title, t('physical_container_title') %></div>
+            <div class="span3"><%= f.label :physical_container_number, t('physical_container_number') %></div>
+          </div>
+          <div class="row">
+            <div class="span3"><%= f.text_field :physical_container_type %></div>
+            <div class="span3"><%= f.text_field :physical_container_title %></div>
+            <div class="span3"><%= f.text_field :physical_container_number %></div>
+          </div>
+
+          <div id="unit_other_reference_numbers" class="row">
+            <% @unit_other_reference_numbers = build_or_retrieve(f.object.unit_other_reference_numbers) %>
+            <div class="span9">
+              <h3 class="row-header">
+                <%= t('unit_other_reference_numbers') %>
+              </h3>
+              <div class="row">
+                <div class="span3"><%= f.label :other_reference_number, t('unit_other_reference_numbers') %></div>
+                <div class="span3"><%= f.label :qualifier, t('qualifier') %></div>
+                <div class="span2"><%= f.label :note, t('note') %></div>
+              </div>
+              <% f.fields_for :unit_other_reference_numbers do |iorn_form| %>
+                <%= render :partial => "unit_other_reference_number", :locals => { :f => iorn_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_unit_other_reference_numbers'), "unit_other_reference_numbers" %></p>
+            </div>
+          </div>
+        </div>  <%# /tab-physical_description %>
+
+        <div class="tab-pane" id="tab-access">
+          <div id="unit_unit_langs" class="row">
+            <% @unit_langs = build_or_retrieve(f.object.unit_langs) %>
+            <div class="span9">
+              <h3 class="row-header">
+                <%= t('unit_langs') %>
+              </h3>
+              <% f.fields_for :unit_langs do |fl_form| %>
+                <%= render :partial => "unit_lang", :locals => { :f => fl_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_unit_lang'), "unit_unit_langs" %></p>
+            </div>
+          </div>
+
+          <%= f.label :access_condition, t('access_condition') %>
+          <%= terms_select(f, "units.access_condition", {:include_blank => true}, {:class => "span4"}) %>
+
+          <%= f.label :access_condition_note, t('access_condition_note') %>
+          <%= f.text_area :access_condition_note,
+            :class => "textile medium-content wordcount span9",
+            :"data-count" =>"access_condition_note-1000" %>
+          <span class="counter" id="counter-access_condition_note">&nbsp;</span>
+
+          <%= f.label :use_condition, t('use_condition') %>
+          <%= terms_select(f, "units.use_condition", {:include_blank => true}, {:class => "span4"}) %>
+
+          <%= f.label :use_condition_note, t('use_condition_note') %>
+          <%= f.text_area :use_condition_note,
+            :class => "textile medium-content wordcount span9",
+            :"data-count" =>"use_condition_note-1000"  %>
+          <span class="counter" id="counter-use_condition_note">&nbsp;</span>
+
+          <div id="unit_urls" class="row">
+            <% @unit_urls = build_or_retrieve(f.object.unit_urls) %>
+            <div class="span9">
+              <h3  class="row-header"><%= t('unit_urls') %></h3>
+              <div class="row">
+                <div class="span5"><%= t('url') %></div>
+                <div class="span3"><%= t('note') %></div>
+              </div>
+              <% f.fields_for :unit_urls do |cf_form| %>
+                <%= render :partial => "unit_url", :locals => { :f => cf_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_url'), "unit_urls" %></p>
+            </div>
+          </div> <%# unit_urls %>
+
+          <div id="unit_identifiers" class="row">
+            <% @unit_identifiers = build_or_retrieve(f.object.unit_identifiers) %>
+            <div class="span9">
+              <h3  class="row-header"><%= t('unit_identifiers') %></h3>
+              <div class="row">
+                <div class="span3"><%= t('identifier') %></div>
+                <div class="span2"><%= t('identifier_source') %></div>
+                <div class="span3"><%= t('note') %></div>
+              </div>
+              <% f.fields_for :unit_identifiers do |cf_form| %>
+                <%= render :partial => "unit_identifier", :locals => { :f => cf_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_identifier'), "unit_identifiers" %></p>
+            </div>
+          </div> <%# unit_identifiers %>
+        </div> <%# <tab-access /> %>
+
+        <div class="tab-pane" id="tab-sources">
+          <%= render_relation_for f, :sources, @rel_unit_sources,
+            :variant => 'livesearch',
+            :selected_label_full => lambda{|rel_unit_source| formatted_source(rel_unit_source.source)  },
+            :selected_label_short => lambda{|rel_unit_source| h rel_unit_source.source.short_title } %>
+        </div> <%# <tab-sources /> %>
+
+        <div class="tab-pane" id="tab-credits">
+          <div id="unit_editors" class="row">
+            <% @unit_editors = build_or_retrieve(f.object.unit_editors) %>
+            <div class="span9 row-header">
+              <a id="add-editor-modal" class="btn btn-mini pull-right" href="#">  <%= t('new_editor') %></a>
+              <h3 class="row-header"><%= t('unit_editors') %></h3>
+            </div>
+            <div class="span9">
+              <%= render :partial => "shared/editors_labels", :locals => { :f => f } %>
+              <% f.fields_for :unit_editors do |dfe_form| %>
+                <%= render :partial => "shared/editor", :locals => { :f => dfe_form } %>
+              <% end %>
+              <p><%= add_child_link t('add_editor'), "unit_editors" %></p>
+            </div>
+          </div>
+        </div> <!-- /tab-credits -->
+      </div> <!-- /tab-content -->
+    </div> <!-- /tab-tabbbable -->
+  </div>  <!-- /record-main -->
+
+  <%= render :partial => "shared/side", :object => @unit %>
+
+<% end %>
+
+<%#= render :partial => "headings/new_heading" %>
+<div id="add-editor-container"></div>
+
+<div id="add-heading-container"></div>
+<div id="link-heading-container"></div>
+<%#= render :partial => "editors/new_editor" %>
+

@@ -1,0 +1,64 @@
+<%# OPTIMIZE: i18n %>
+<%# OPTIMIZE: stampare cella con numero di "Unità collegate" e inibire eliminazione di fond con units collegate (oppure rendere veloce l'operazione, ma forse meglio la prima ipotesi) %>
+<%# FIXME: [LOW] eliminazione di grossi complessi è molto lenta. Come minimo mettere blockUI %>
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'fonds-trash' %>
+<% end %>
+
+<% content_for :status_bar do %>
+  <h2><%= t('listing_fonds') %><%= path_separator %><%= @fond.name %><%= path_separator %>Cestino</h2>
+  <div id="links">
+   <%= link_to_index "Scheda complesso", treeview_fond_path(@fond) %>
+  </div>
+<% end %>
+
+<div class="span12">
+<% if @trashed_roots.size > 0 %>
+  <p><%= link_to "Vuota il Cestino", "#", :id => "empty-trash", :class => "btn btn-small btn-primary pull-right" %></p>
+  <p style="margin: 0 0 2em 0">Puoi ripristinare / eliminare i singoli elementi oppure vuotare il cestino.</p>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Eliminato</th>
+        <th>Denominazione</th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @trashed_roots.each do |trashed_root| %>
+      <tr>
+        <td><%= l trashed_root.updated_at, :format => :long %></td>
+        <td>
+          <div class="tree-item span8" style="overflow: hidden"
+               data-record-id="<%= trashed_root.id %>"
+               data-tree-path="<%= trashed_subtree_fond_path(trashed_root) %>">
+          </div>
+        </td>
+        <td>
+          <% form_tag(
+            {:action => 'restore_subtree', :id => trashed_root.id},
+            {:method => 'PUT'}) do %>
+            <div><%= submit_tag "Ripristina", :class => "btn btn-mini btn-success pull-right"%></div>
+          <% end %>
+        </td>
+        <%# TODO: aggiungere custom dialog; valutare se usare ajax anche qui %>
+        <td><%=  link_to 'Elimina', destroy_subtree_fond_path(trashed_root.id), :confirm => "Sei sicuro di voler eliminare definitivamente questo livello e i livelli dipendenti?\nNon puoi annullare questa azione", :method => :delete, :class => "btn btn-mini btn-danger pull-right confirm" %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%# TODO: dialog bootstrap %>
+  <div id="confirm-empty-trash" title="Cestino" data-fond-id="<%= @fond.id %>" style="display:none;">
+    <p>Sei sicuro di voler eliminare definitivamente gli elementi contenuti nel Cestino?</p>
+    <p><%= t('alert_no_recovery') %></p>
+  </div>
+
+<% else %>
+  <p>Non ci sono elementi nel cestino.</p>
+  <p>Torna alla scheda <%= link_to "#{@fond.name}", treeview_fond_path(@fond) %></p>
+<% end %>
+</div>
+

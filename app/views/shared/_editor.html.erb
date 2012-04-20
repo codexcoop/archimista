@@ -1,0 +1,19 @@
+<div class="row fields">
+  <div class="span2">
+    <%= f.text_field :name, :id => "fond-editor-name-autocomplete",
+      :class => "autocomplete span2",
+      :'data-autocompletion-controller' => 'editors' %>
+  </div>
+  <div class="span2">
+    <%= f.text_field :qualifier, :class => "span2" %>
+  </div>
+  <div class="span2">
+    <%= terms_select(f, "editors.editing_type", {:prompt => true}, :class => "span2") %>
+  </div>
+  <div class="span2">
+    <%= f.text_field :edited_at, { :class => "span2 datepicker" } %>
+  </div>
+  <div class="span1 destroy">
+    <%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %>
+  </div>
+</div>

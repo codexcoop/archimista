@@ -1,0 +1,39 @@
+<% event = event_form.object %>
+
+  <h3 class="row-header"><%= t('start_date_event') %></h3>
+
+  <div class="start bound-wrapper">
+
+    <p>
+      <% default_start_format = if event.start_date_top_level_format.present?
+                                  nil
+                                else
+                                  event.class.default_format_code
+                                end %>
+      <% event.class.formats_for(:start_date_format, I18n.locale).each do |code,desc| %>
+        <%= event_form.radio_button :start_date_format,
+                                    code,
+                                    :checked => code.is_in?(
+                                      event.start_date_top_level_format,
+                                      default_start_format
+                                    ),
+                                    :class => 'format-toggler start',
+                                    'data-bound' => 'start' %>
+        <%= event_form.label "start_date_format_#{code}".downcase,
+                              ((desc[:label] && desc[:label][I18n.locale]) || desc[:human][I18n.locale]),
+                              :class => "inline" %>
+        &nbsp;
+      <% end %>
+    </p>
+
+    <p>
+      <% locals = { :event_form => event_form, :entity_form => entity_form, :bound => 'start'} %>
+      <%= render :partial => 'events/date_fields/date',     :locals => locals %>
+      <%= render :partial => 'events/date_fields/century',  :locals => locals %>
+    </p>
+
+    <p>
+      <%= render :partial => 'events/date_fields/place',    :locals => locals %>
+    </p>
+
+  </div>

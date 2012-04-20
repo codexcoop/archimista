@@ -1,0 +1,60 @@
+#gridview {
+  overflow: hidden; /* remove scrollbar */
+}
+#gridview #content {
+  padding: 0;
+}
+#gridview #footer {
+  display: none;
+}
+
+/* The height of the rows must be uniform, because jqGrid computes the current page number
+with the total rows, the height of the table and the height of the first row.
+If the current page is altered by different row heights, the behaviour of the pagination is impredictable */
+#jqgrid tr {
+  height: 22px;
+}
+#jqgrid td {
+  overflow: hidden !important;
+  white-space: nowrap !important;
+}
+/* Override di jQuery UI .ui-state-highlight. Originale (smoothness):
+background: #fbf9ee url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x; */
+#jqgrid td.ui-state-highlight {
+/*
+  background: #FCEFA1;
+*/
+}
+
+/* rinominare in #dialog-tree-wrapper o risolvere conflitti con altri CSS */
+#tree-wrapper {
+  position: static;
+  overflow-y: auto;
+  width: 580px;
+  height: 280px;
+  margin: auto 0;
+  z-index: 1003;
+}
+
+/* provvisorio */ 
+#columns-list {
+  list-style: none;
+  margin: 6px 0;
+  padding: 0;
+}
+#columns-list li {
+  padding: 3px 0;
+  line-height: 1;
+  border-bottom: 1px dotted #ccc;
+} 
+#columns-list checkbox {
+  display: inline-block;
+  width: 30px;
+  float: left;
+}
+#columns-list label { 
+  display: inline-block; 
+  width: 400px;
+  margin-left: 10px;
+  font-weight: normal;  
+}

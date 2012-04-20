@@ -1,0 +1,43 @@
+table.summary {
+  width: 760px;
+  margin: 18px 0;
+}
+table.summary th {
+  text-align: center;
+  padding: 2px 6px;
+  border-bottom: 1px solid #ccc;
+  font-size: 11px;
+  background: #ddd url(/images/overlay.png) repeat-x;
+}
+table.summary th.horizontal {
+  text-align: left;
+  line-height: 29px;
+  padding: 2px 6px;
+  background: none;
+  font-size: 11px;
+}
+table.summary td {
+  line-height: 29px;
+  vertical-align: middle;
+  text-align: center;
+  padding: 4px 6px;
+}
+
+img.toggler {
+  cursor: pointer;
+}
+p.accept {
+  vertical-align: middle;
+  padding: 2px 20px;
+  background: url(/images/accept.png) no-repeat left center;
+}
+p.exclamation {
+  vertical-align: middle;
+  padding: 2px 20px;
+  background: url(/images/exclamation.png) no-repeat left center;
+  cursor: pointer;
+}
+p.exclamation a {
+  color: #f0f0f0;
+}
+

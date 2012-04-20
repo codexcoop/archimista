@@ -1,0 +1,59 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+<% end %>
+
+<%# FIXME: troppo stile in linea qui e in sources/index %>
+<div class="span12">
+  <div id="index-controls" class="clearfix">
+    <% if @creators.total_entries > Creator.per_page || params[:q].present? %>
+      <% form_tag('/creators', :method => :get, :class => "skip-prompt form-search pull-right", :style => "margin-bottom: 0") do %>
+        <%= text_field_tag :q, params[:q], :class => "search-query", :placeholder => "Denominazione" %>
+        <%= submit_tag "Cerca", :name => "", :class => "btn btn-small" %>
+      <% end %>
+    <% end %>
+    <div class="btn-group pull-left">
+      <%= link_to t('new') + '<span class="caret"></span>', "#",
+                        { :class => "btn btn-small dropdown-toggle new", :'data-toggle' => "dropdown" } %>
+      <ul class="dropdown-menu">
+        <li><%= link_to t('C'), new_creator_path(:type => "C") %></li>
+        <li><%= link_to t('P'), new_creator_path(:type => "P") %></li>
+        <li><%= link_to t('F'), new_creator_path(:type => "F") %></li>
+      </ul>
+    </div>
+  </div>
+
+  <% if @creators.size > 0 %>
+  <%= display_page_entries_info @creators %>
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= sortable("name", t('creator_name')) %></th>
+        <th><%= sortable("creator_type", t('creator_type')) %></th>
+        <th><%= sortable("updated_at", t('updated_at')) %></th>
+        <th>&nbsp;</th>
+        <th>&nbsp;</th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @creators.each do |creator| %>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td>
+            <%= creator.residence + ", " if creator.residence.present? %>
+            <%= link_to creator.name, edit_creator_path(creator) %>
+            <%= creator.preferred_event.try(:full_display_date) %>
+        </td>
+        <td><%= show_value(creator.creator_type, "t") %></td>
+        <td><%= l creator.updated_at, :format => :long %></td>
+        <td><%= link_to t('show'), creator %></td>
+        <td><%= link_to t('destroy'), creator, :confirm => t('are_you_sure'), :method => :delete %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= will_paginate @creators %>
+
+<% else %>
+  <p>Non sono presenti schede soggetto produttore.</p>
+<% end %>
+</div>

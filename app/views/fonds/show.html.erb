@@ -1,0 +1,230 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index "Lista complessi", fonds_path %>
+  </div>
+<% end %>
+
+<div id="record-main" class="span9">
+  <h3 class="section"><%= t('description_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('fond_type') %></th>
+      <td><%= show_value(@fond.fond_type) %></td>
+    </tr>
+    <tr>
+      <th><%= t('name') %></th>
+      <td><%= show_value(@fond.name) %></td>
+    </tr>
+    <tr>
+      <th><%= t('other_names') %></th>
+      <td>
+        <% if @fond.other_names.present? %>
+          <% @fond.other_names.each do |on_name| %>
+            - <%= on_name.name %>  (<%= on_name.qualifier %>) | <%= t('note') %>: <%= on_name.note %><br />
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('date_event')%></th>
+      <td>
+        <% if @fond.events.present? %>
+          <% @fond.events.each do |fe| %>
+            <%= fe.full_display_date %>
+            <%= show_item(fe.note, ['[', ']']) %>
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('length') %></th>
+      <td><%= show_value(@fond.length) %></td>
+    </tr>
+    <tr>
+      <th><%= t('extent') %></th>
+      <td><%= show_value(@fond.extent) %></td>
+    </tr>
+    <% if @fond.is_root? %>
+      <tr>
+        <th><%= t('abstract') %></th>
+        <td id="fond-abstract"><%= show_value(textilize(@fond.abstract)) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <th><%= t('fond_description') %></th>
+      <td id="fond-description"><%= show_value(textilize_with_entities(@fond.description)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('history') %></th>
+      <td id="fond-history"><%= show_value(textilize(@fond.history)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('arrangement_note') %></th>
+      <td><%= show_value(textilize(@fond.arrangement_note)) %></td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('other_information_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('fond_langs')%></th>
+      <td>
+        <% if @fond.fond_langs.present? %>
+          <% @fond.fond_langs.each do |fl_name| %>
+            - <%= fl_name.code %><br />
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('fond_owners')%></th>
+      <td>
+        <% if @fond.fond_owners.present? %>
+          <% @fond.fond_owners.each do |fo_name| %>
+            - <%= fo_name.owner %><br />
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('related_materials') %></th>
+      <td><%= show_value(textilize(@fond.related_materials)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('fond_note') %></th>
+      <td><%= show_value(@fond.note) %></td>
+    </tr>
+    <tr>
+      <th><%= t('fond_urls')%></th>
+      <td>
+        <% if @fond.fond_urls.present? %>
+          <% @fond.fond_urls.each do |fu_name| %>
+            - <%= fu_name.url %> (<%= fu_name.note %>) <br />
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('fond_identifiers')%></th>
+      <td>
+        <% if @fond.fond_identifiers.present? %>
+          <% @fond.fond_identifiers.each do |fi_name| %>
+            - <%= fi_name.identifier %> (<%= fi_name.identifier_source %>) | <%= t('note') %>: <%= fi_name.note %><br />
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('access_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('access_condition') %></th>
+      <td><%= show_value(textilize(@fond.access_condition)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('access_condition_note') %></th>
+      <td><%= show_value(textilize(@fond.access_condition_note)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('use_condition')%></th>
+      <td><%= show_value(textilize(@fond.use_condition)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('use_condition_note')%></th>
+      <td><%= show_value(textilize(@fond.use_condition_note)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('preservation') %></th>
+      <td><%= show_value(textilize(@fond.preservation)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('preservation_note')%></th>
+      <td><%= show_value(textilize(@fond.preservation_note)) %></td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('relationships_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('creators') %></th>
+      <td>
+        <% if @fond.creators.present? %>
+          <ul>
+            <% @fond.creators.each do |creator| %>
+              <li><%= link_to "#{creator.preferred_name.name}", creator_path(creator) %>
+                <%= creator.preferred_event.full_display_date if creator.preferred_event %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('custodians') %></th>
+      <td>
+        <% if @fond.custodians.present? %>
+          <ul>
+            <% @fond.custodians.each do |custodian| %>
+              <li><%= link_to "#{custodian.preferred_name.name}", custodian_path(custodian) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('projects') %></th>
+      <td>
+        <% if @fond.projects.present? %>
+          <ul>
+            <% @fond.projects.each do |project| %>
+              <li><%= link_to "#{project.name}", project_path(project) %> <%= project.display_date %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('document_forms') %></th>
+      <td>
+        <% if @fond.document_forms.present? %>
+          <ul>
+            <% @fond.document_forms.each do |document_form| %>
+              <li><%= link_to "#{document_form.name}", document_form_path(document_form) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <%= render :partial => "shared/show_sources", :object => @fond.sources %>
+
+  <%= render :partial => "shared/show_editors", :object => @fond.fond_editors %>
+  
+  <div id="add-heading-container"></div>
+  <div id="link-heading-container"></div>
+</div>
+
+<%= render :partial => "shared/side", :object => @fond %>

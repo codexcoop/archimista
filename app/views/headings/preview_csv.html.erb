@@ -1,0 +1,42 @@
+<% content_for :status_bar do %>
+  <h2><%= t('headings') %><%= path_separator %><%= t('import_heading') %><%= path_separator %><%= "Risultato dell'importazione" %></h2>
+  <div id="links">
+    <%= link_to_index t('listing_headings'), headings_path %>
+  </div>
+<% end %>
+
+<div class="span9">
+<% form_tag '/headings/save_csv' do -%>
+<p>Sei sicuro di voler importare i seguenti lemmi?&nbsp;&nbsp;
+  <%= hidden_field_tag :filename, params[:upload][:csv].path -%>
+  <%= submit_tag t('save'), :class => "btn btn-primary btn-mini" -%>
+  <%= link_to t('cancel'), headings_path, :class => "btn btn-mini" -%>
+  </p>
+<% end -%>
+
+
+<% if @csv.size > 0 %>
+  <table class="table">
+    <thead>
+      <th><%= t('heading_type') %></th>
+      <th><%= t('heading_name') %></th>
+      <th><%= t('heading_dates') %></th>
+      <th><%= t('heading_qualifier') %></th>
+    </thead>
+  <% @csv.each do |row| %>
+    <tbody>
+      <tr>
+        <td><%= show_value(row[0], "t") %></td>
+        <td><%= row[1] %></td>
+        <td><%= row[2] %></td>
+        <td><%= row[3] %></td>
+      </tr>
+    </tbody>
+  <% end %>
+  </table>
+
+<% else %>
+  <p><%= t('no_headings') %></p>
+<% end %>
+
+</div>

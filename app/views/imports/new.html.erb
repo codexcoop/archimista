@@ -1,0 +1,11 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_imports') %><%= path_separator %><%= t('new_import') %></h2>
+  <div id="links">
+    <%= link_to_index t('index_imports'), imports_path %>
+  </div>
+<% end %>
+
+<div class="span12">
+  <p>Puoi importare i dati da un file in formato <code>aef</code>.</p>
+  <%= render :partial => "form" %>
+</div>

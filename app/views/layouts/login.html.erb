@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="it" lang="it">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title><%= controller.controller_name %> - <%= controller.action_name %></title>
+    <%# FIXME: caricare subito i CSS cache e forse anhe JS %>
+    <%= stylesheet_link_tag "bootstrap.min" %>
+    <%= stylesheet_link_tag "master" %>
+    <style type="text/css">
+      #login {
+        padding: 5em 0 0 0;
+        background: #f0f0f0;
+      }
+      #login-form {
+        width: 300px; /* span4 */
+        margin: 0 auto;
+        padding: 18px 30px 11px 30px;
+        border: 2px solid #ccc;
+        -webkit-border-radius: 4px;
+        -moz-border-radius: 4px;
+        border-radius: 4px;
+        background: #fff;
+      }
+      h1 {
+        margin: 0 0 20px 0;
+        border-bottom: 1px solid #ccc;
+        font-size: 24px;
+        line-height: 36px;
+      }
+      label.checkbox {
+        font-size: 11px;
+      }
+      input[type="submit"] {
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+
+  <body id="login">
+    <div id="login-form">
+        <%= yield %>
+    </div>
+  </body>
+</html>
+

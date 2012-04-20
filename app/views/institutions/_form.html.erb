@@ -1,0 +1,43 @@
+<%= render :partial => "shared/generic_error_message", :object => @institution %>
+
+<% form_for @institution do |f| %>
+  <div id="record-main" class="span9">
+
+    <% if !@institution.identifier.blank? || !@institution.identifier_source.blank? %>
+      <label>Legacy:</label> <%= @institution.identifier %> (<%= @institution.identifier_source %>)</p>
+  <% end %>
+
+  <%= f.label :name, t('institutions_name') + required_marker %>
+  <%= f.text_field :name, :class=>"span9" %>
+
+  <%= f.label :description, t('institutions_description') %>
+  <%= f.text_area :description, :class => "span9 textile long-content" %>
+
+  <%= f.label :note, t('institutions_note') %>
+  <%= f.text_area :note, :class => "span9 short-content" %>
+
+  <div id="institution_editors" class="row">
+    <% @institution_editors = build_or_retrieve(f.object.institution_editors) %>
+    <div class="span9 row-header">
+      <!--<a class="btn btn-mini pull-right" data-toggle="modal" href="#add_editor_modal">  <%= t('new_editor') %></a>-->
+      <a id="add-editor-modal" class="btn btn-mini pull-right" href="#">  <%= t('new_editor') %></a>
+      <h3><%= t('institution_editors') %></h3>
+    </div>
+
+    <div class="span9">
+      <%= render :partial => "shared/editors_labels", :locals => { :f => f } %>
+
+      <% f.fields_for :institution_editors do |dfe_form| %>
+        <%= render :partial => "shared/editor", :locals => { :f => dfe_form } %>
+      <% end %>
+      <p><%= add_child_link t('add_editor'), "institution_editors" %></p>
+    </div>
+  </div>
+  </div>
+
+  <%= render :partial => "shared/side", :object => @institution %>
+
+<% end %>
+
+<div id="add-editor-container"></div>
+<%#= render :partial => "editors/new_editor" %>

@@ -1,0 +1,49 @@
+<% event = event_form.object %>
+
+<%
+  end_bound_css_class = "end bound-wrapper"
+  end_bound_css_class << (event.equal_bounds? ? " inactive" : " active")
+%>
+
+    <h3 class="row-header"><%= t('end_date_event') %>
+    <% if event.class.equal_bounds_allowed? %>
+      <span>
+      <%= event_form.check_box :equal_bounds, :class => 'checkbox equal-bounds-command', :checked => event.equal_bounds? %>
+      <%= event_form.label :equal_bounds, "uguale all'estremo iniziale", :class => "inline" %>
+      </span>
+    <% end %>
+    </h3>
+
+  <div class="<%= end_bound_css_class %>">
+
+   <p>
+   <% default_end_format = event.end_date_top_level_format.present? ? nil : event.class.default_format_code %>
+   <% event.class.formats_for(:end_date_format, I18n.locale).each do |code,desc| %>
+   <%= event_form.radio_button :end_date_format,
+                                code,
+                               :checked => (code.is_in?(event.end_date_top_level_format,default_end_format)),
+                               :class => 'format-toggler end',
+                               'data-bound' => 'end' %>
+   <%= event_form.label "end_date_format_#{code}".downcase,
+                         ((desc[:label] && desc[:label][I18n.locale]) || desc[:human][I18n.locale]), :class => "inline" %>
+   &nbsp;
+   <% end %>
+   </p>
+
+   <p>
+     <%= render  :partial => 'events/date_fields/date',
+                 :locals => {:event_form => event_form,
+                             :bound => 'end',
+                             :event => event} %>
+     <%= render  :partial => 'events/date_fields/century',
+                 :locals => {:event_form => event_form,
+                             :bound => 'end',
+                             :event => event} %>
+   </p>
+
+   <p>
+     <%= render  :partial  => 'events/date_fields/place',
+                 :locals   => {:event_form => event_form, :entity_form => entity_form, :bound => 'end'} %>
+   </p>
+
+  </div>

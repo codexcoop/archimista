@@ -1,0 +1,21 @@
+<div class="modal hide fade" id="add-editor-dialog">
+  <div class="modal-header">
+    <a class="close close-add-editor-dialog" data-dismiss="modal">×</a>
+    <h3><%= t('new_editor') %></h3>
+  </div>
+  <div class="modal-body">
+    <div id="editor_form_error"></div>
+
+    <% form_tag({:controller => 'editors', :action => 'modal_create'}, {:method => :post, :id => "new-editor-form"}) do %>
+      <%= label_tag 'editor[first_name]', t('editors_first_name') %>
+      <%= text_field_tag 'editor[first_name]', '', :class=> "span5" %>
+
+      <%= label_tag 'editor[last_name]', t('editors_last_name') %>
+      <%= text_field_tag 'editor[last_name]', '', :class=> "span5" %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="create-editor-btn" class="btn btn-primary"><%= t('create_editor') %></button>
+  </div>
+</div>

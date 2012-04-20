@@ -1,0 +1,168 @@
+/* BASIC TYPOGRAPHY
+----------------------------------------------------- */
+/* TODO: dubbio se mantenere default h3 e fare classi per nostri h3 più piccoli. Vedi reports */
+h3 {
+  font-size: 13px;
+}
+.light {
+  color: #666;
+}
+
+/* index-controls */
+#index-controls {
+  margin: 0 0 15px 0;
+  padding: 0 0 15px 0;
+  border-bottom: 1px solid #ddd;
+}
+#index-controls.units .inner {
+  width: auto;
+}
+#index-controls #quick-search {
+  float: right;
+}
+#index-controls #view-options {
+  float: right;
+  padding: 8px 0;
+  font-size: 11px;
+  line-height: 1;
+}
+.page-entries-info { /* spostare sotto pagination */
+  margin: 0 0 2px 0;
+  text-align: left;
+  font-size: 11px;
+  color: #999;
+}
+#more-units-controls {
+   margin: 0;
+}
+#more-units-controls .page-entries-info {
+  float: left;
+  width: auto;
+  text-align: left;
+}
+#more-units-controls #quick-search {
+  float: right;
+}
+
+/* BUTTONS and LINKS
+----------------------------------------------------- */
+a.to-index {
+  line-height: 1;
+}
+a.to-index .ui-icon {
+  float: left;
+  background-image: url(/images/smoothness/ui-icons_888888_256x240.png);
+}
+
+/* FLASH & ERRORS
+----------------------------------------------------- */
+/* Come vengono presentati errori su altri tipi input ?*/
+.fieldWithErrors input, .fieldWithErrors select, .fieldWithErrors textarea {
+  border: 1px solid red;
+}
+
+/* TABLES
+----------------------------------------------------- */
+/* summary */
+table.summary {
+  width: 460px;
+}
+table.summary td {
+  padding: 6px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* FIXME: list - dismessa quasi del tutto, sopravvive temporanamente in UNITS */
+table.list {
+  width: 700px;
+  margin: 0px 0;
+  margin: 0px 0 0px 0;
+}
+table.list th {
+  text-align: left;
+  padding: 8px 12px 6px 6px;
+  border-bottom: 1px solid #ccc;
+  font-size: 11px;
+  line-height: 14px;
+  background: #efefef;
+}
+table.list td {
+  vertical-align: top;
+  padding: 6px 6px 4px 6px;
+  border-bottom: 1px solid #e8e8e8;
+}
+/* Cfr. ActiveAdmin: http://demo.activeadmin.info/stylesheets/admin/active_admin.css */
+table.list th a {
+  color: #666;
+  text-decoration: none;
+}
+table.list th a {
+  padding-left: 11px;
+  background: url(/images/th-sortable.png) no-repeat 0 4px;
+}
+table.list th a.asc {
+  background-position: 0 -27px;
+}
+table.list th a.desc {
+  background-position: 0 -56px;
+}
+/* Specific list */
+table.list.units td {
+  border-left: 1px dotted #ccc;
+  border-right: 1px dotted #ccc;
+}
+table.list.units .unit-actions {
+/*
+  visibility: hidden;
+*/
+  font-size: 11px;
+  color: #999;
+}
+table.list.units .unit-actions a {
+  color: #999;
+  text-decoration: none;
+}
+table.list.units .unit-actions a:hover {
+  text-decoration: underline;
+}
+/* Ricollocare */
+.table .center, td.center {
+  text-align: center;
+}
+
+/* PATTERNS
+----------------------------------------------------- */
+.warning {
+  color: #f00;
+}
+.filters {
+  font-size: 11px;
+}
+
+/* text editor: provvisoriamente disattivato */
+.counter {
+  display: block;
+  display: none;
+  width: 90%;
+  z-index: 10;
+  text-align: right;
+  margin-top: -24px;
+  font-size: 10px;
+}
+
+/* provvisorio */
+div.pdf-list {
+  width: 460px;
+}
+div.pdf-list p {
+  margin: 0;
+  padding: 6px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* OPTIMIZE: da qui in avanti, riordinare / ricollocare */
+.jstree em { /* units_count */
+  font-style: normal;
+  text-shadow: none;
+  color: #666;
+}

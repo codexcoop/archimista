@@ -1,0 +1,27 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_document_forms'), document_forms_path %>
+  </div>
+<% end %>
+<div id="record-main" class="span9">
+  <h3 class="section"><%= t('identification_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('document_forms_name') %></th>
+      <td><%= show_value(@document_form.name) %></td>
+    </tr>
+    <tr>
+      <th><%= t('document_forms_description') %></th>
+      <td><%= show_value(textilize(@document_form.description)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('document_forms_note') %></th>
+      <td><%= show_value(@document_form.note) %></td>
+    </tr>
+  </table>
+  <%= render :partial => "shared/show_editors", :object => @document_form.document_form_editors %>
+
+</div>
+
+<%= render :partial => "shared/side", :object => @document_form %>

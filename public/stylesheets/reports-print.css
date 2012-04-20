@@ -1,0 +1,155 @@
+/*
+REMARKS
+
+- interlinea sui <p> attualmente 1.5em
+- font Georgia, serif in attesa di decisione definitiva
+- font-size 10pt testo normale e 20 18 16 12 pt per h1 h2 h3 h4 rispettivamente
+FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
+
+*/
+
+@media print {
+
+  html, body {
+    margin: 0;
+    width:800px;
+  }
+  html{
+    color: #000;
+    background: #FFF;
+  }
+  body {
+    font: 12px Georgia, serif;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* headers */
+  h1, h2, h3, h4 {
+    line-height: 1.2em;
+  }
+  h1 {
+    font-size: 20pt;
+  }
+  h2 {
+    font-size: 18pt;
+  }
+  h3 {
+    font-size: 16pt;
+  }
+  h4 {
+    font-size: 12pt;
+  }
+  img {
+    border:0;
+  }
+  #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index {
+    display: none;
+  }
+  .label {
+    margin: 1em;
+    padding: 1em;
+    border: 1px solid #000;
+    border-radius: 1em;
+  }
+  .label h4 {
+    margin: 0;
+  }
+  .label p.head {
+    border: 0;
+  }
+  .fond {
+    line-height: 1.5em;
+  }
+  .fond p {
+    text-align: justify;
+    widows: 3;
+    orphans: 3;
+  }
+  .fond p.type {
+    text-transform: uppercase;
+  }
+  h2 span.date {
+    display: block;
+    font-size: 14pt;
+    font-weight: normal;
+  }
+  span.date {
+    display: block;
+    font-weight: normal;
+  }
+  h2 span.spec {
+    display: block;
+    font-size: 10pt;
+    font-weight: normal;
+    text-transform: uppercase;
+  }
+  .unit {
+    margin: 20px 0;
+    line-height: 1.5em;
+  }
+  .unit p {
+    text-align: justify;
+  }
+  table.table  {
+    margin: 0;
+    padding: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+    /*table-layout:fixed;*/
+  }
+
+  td.no-wrap {
+    overflow:hidden;
+    white-space:nowrap
+  }
+
+
+  .table tbody tr {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid #000;
+  }
+  .table td, .table th {
+    vertical-align: top;
+    line-height: 1.5em;
+    padding: 5px;
+    text-align: left;
+  }
+
+  .left {
+    float: left;
+  }
+  .right {
+    float: right;
+  }
+  .head {
+    overflow: hidden;
+    width: 100%;
+    border-bottom: 1px solid #000;
+    line-height: 2em;
+  }
+  #cover {
+    margin: auto;
+    text-align: center;
+  }
+  #cover h1 {
+    line-height: 1.5em;
+    font-size: 24pt;
+  }
+  #cover .date {
+    font-size: 18pt;
+  }
+
+  /* Page Breaks */
+  .pb_before {
+    page-break-before: always !important;
+  }
+  .pb_after  {
+    page-break-after: always !important;
+  }
+  .pbi_avoid {
+    page-break-inside: avoid !important;
+  }
+
+}

@@ -1,0 +1,13 @@
+<%
+  date_place_css_class = 'archidate-place archidate-format-independent'
+  date_place_css_class << ' not-applicable' unless entity_form.object.class.events_can_have_places?
+%>
+
+<% content_tag :span, :class => date_place_css_class do %>
+  <%= event_form.label :"#{bound}_date_place", t(bound == 'start' ? '.birthplace' : '.deathplace') %>
+  <%= event_form.text_field :"#{bound}_date_place",
+                            :class => 'archidate-field autocomplete span5',
+                            :'data-autocompletion-controller' => 'places',
+                            :'data-autocompletion-action' => 'cities' %>
+<% end %>
+

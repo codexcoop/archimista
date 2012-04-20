@@ -1,0 +1,7 @@
+<div class="fields row">
+  <div class="span4">
+    <%= f.collection_select(:code, @langs, :code, "#{I18n.locale}_name".to_sym, options = {:include_blank => true}, {:class =>"span4"}) %>
+  </div>
+  <div class="span1 destroy"><%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %></div>
+</div>
+

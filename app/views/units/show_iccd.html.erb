@@ -1,0 +1,213 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_units') %><%= path_separator %>
+    <% @unit.fond.path_items.each do |item| %>
+      <%= link_to item.name, fond_units_path(item.id) %><%= path_separator %>
+    <% end %>
+    Anteprima scheda</h2>
+  <div id="links">
+    <%= link_to_index "Lista unità del complesso", fond_units_path(@unit.root_fond_id) %>
+  </div>
+<% end %>
+
+<div id="record-main" class="span9">
+<h3 class="section"><%= t('description_area') %></h3>
+<table class="table-show">
+  <tr>
+    <th>TSK (tipologia scheda)</th>
+    <td><%= show_value(@unit.tsk) %></td>
+  </tr>
+  <tr>
+    <th><%= t('level_type') %></th>
+    <td><%= show_value(@unit.level_type) %></td>
+  </tr>
+  <tr>
+     <th><%= t('sequence_number') %></th>
+     <td><%=@unit.sequence_number %></td>
+  </tr>
+  <tr>
+    <th><%= t('unit_type') %></th>
+    <td><%= show_value(@unit.unit_type) %></td>
+  </tr>
+  <tr>
+    <th><%= t('title') %></th>
+    <td><%= @unit.given_title? ? "[#{@unit.title}]" : @unit.title %></td>
+  </tr>
+  <tr>
+    <th><%= t('date_event') %></th>
+    <td>
+    <% if @unit.events.present? %>
+      <% @unit.events.each do |ue| %>
+        <%= ue.full_display_date %>
+        <%= show_item(ue.note, ['[', ']']) %>
+      <% end %>
+    <% else %>
+      <%= blank_field %>
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= t('tmp_reference_string') %></th>
+    <td><%= show_value(@unit.tmp_reference_string) %></td>
+  </tr>
+  <tr>
+    <th><%= t('tmp_reference_number') %></th>
+    <td><%= show_value(@unit.tmp_reference_number) %></td>
+  </tr>
+  <tr>
+    <th><%= t('reference_number') %></th>
+    <td><%= show_value(@unit.reference_number) %></td>
+  </tr>
+  <tr>
+    <th><%= t('arrangement_note') %></th>
+    <td><%= show_value(textilize(@unit.arrangement_note)) %></td>
+  </tr>
+</table>
+
+<h3 class="section"><%= t('physical_description_area') %></h3>
+<table class="table-show">
+  <tr>
+    <th><%= t('physical_type') %></th>
+    <td><%= show_value(@unit.physical_type) %></td>
+  </tr>
+  <tr>
+    <th><%= t('medium') %></th>
+    <td><%= show_value(@unit.medium) %></td>
+  </tr>
+  <tr>
+    <th><%= t('related_materials') %></th>
+    <td><%= show_value(textilize(@unit.related_materials)) %></td>
+  </tr>
+  <tr>
+    <th><%= t('unit_note') %></th>
+    <td><%= show_value(@unit.note) %></td>
+  </tr>
+  <tr>
+    <th><%= t('physical_container') %></th>
+    <td>
+
+    <%= t('physical_container_type') %>:
+    <% if @unit.physical_container_type.present? %>
+      <%= show_item(@unit.physical_container_type, ["", "<br />"]) %>
+    <% else %>
+      <%= blank_field %>
+      <br />
+    <% end -%>
+
+    <%= t('physical_container_title') %>:
+    <% if @unit.physical_container_title.present? %>
+      <%= show_item(@unit.physical_container_title, ["", "<br />"]) %>
+    <% else %>
+      <%= blank_field %>
+      <br />
+    <% end -%>
+
+    <%= t('physical_container_number') %>:
+    <%= show_value(@unit.physical_container_number) %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= t('physical_description') %></th>
+    <td><%= show_value(textilize(@unit.physical_description)) %></td>
+  </tr>
+  <tr>
+    <th><%= t('preservation') %></th>
+    <td><%= show_value(@unit.preservation) %></td>
+  </tr>
+  <tr>
+    <th><%= t('preservation_note') %></th>
+    <td><%= show_value(textilize(@unit.preservation_note)) %></td>
+  </tr>
+  <tr>
+    <th><%= t('unit_damages') %></th>
+    <td>
+    <% if @unit.unit_damages.present? %>
+      <ul>
+        <% @unit.unit_damages.each do |damage| %>
+        <li><%= show_item(t(damage.code)) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <%= blank_field %>
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= t('restoration') %></th>
+    <td><%= show_value(textilize(@unit.restoration)) %></td>
+  </tr>
+  <tr>
+    <th><%= t('unit_other_reference_numbers')%></th>
+    <td>
+      <% @unit.unit_other_reference_numbers.each do |iorn_name| %>
+        - <%= iorn_name.other_reference_number %> (<%= iorn_name.qualifier %>) | <%= t('note') %>: <%= iorn_name.note %><br />
+      <% end %>
+      </td>
+  </tr>
+</table>
+
+<%# OPTIMIZE: i18n per lingue %>
+<h3 class="section"><%= t('access_area') %></h3>
+<table class="table-show">
+  <tr>
+    <th><%= t('unit_langs')%></th>
+    <td>
+    <% if @unit.unit_langs.present? %>
+      <ul>
+        <% @unit.unit_langs.each do |lang| %>
+        <li><%= show_item(lang.code) %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <%= blank_field %>
+    <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= t('access_condition') %></th>
+    <td><%= show_value(@unit.access_condition) %></td>
+  </tr>
+  <tr>
+    <th><%= t('access_condition_note') %></th>
+    <td><%= show_value(textilize(@unit.access_condition_note)) %></td>
+  </tr>
+  <tr>
+    <th><%= t('use_condition') %></th>
+    <td><%= show_value(@unit.use_condition) %></td>
+  </tr>
+  <tr>
+    <th><%= t('use_condition_note') %></th>
+    <td><%= show_value(textilize(@unit.use_condition_note)) %></td>
+  </tr>
+  <tr>
+    <th><%= t('unit_urls')%></th>
+     <td>
+        <% if @unit.unit_urls.present? %>
+          <ul>
+           <% @unit.unit_urls.each do |u_name| %>
+              <li><%= show_item(u_name.url) %></a> <%= show_item(u_name.note, ["[","]"]) %></li>
+          <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+     </td>
+   </tr>
+  <tr>
+      <th><%= t('unit_identifiers')%></th>
+      <td>
+         <% if @unit.unit_identifiers.present? %>
+            <ul>
+             <% @unit.unit_identifiers.each do |fi_name| %>
+                <li><%= show_item(fi_name.identifier) %> <%= show_item(fi_name.identifier_source, ["(",")"]) %> <%= show_item(fi_name.note, ["[","]"]) %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <%= blank_field %>
+          <% end %>
+      </td>
+    </tr>
+</table>                                                 
+</div>
+
+<%= render :partial => "shared/side", :object => @unit %>        
+

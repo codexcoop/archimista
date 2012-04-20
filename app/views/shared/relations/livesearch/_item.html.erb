@@ -1,0 +1,33 @@
+<%
+  item_css_class  = child_index == '_new_' ? "show choice-item template" : "show choice-item"
+  item_style      = child_index == '_new_' ? "display:none;" : nil
+%>
+
+<%# f.fields_for :rel_fond_source %>
+<% f.fields_for(through_association_name, through_record, :child_index => child_index) do |through_record_form| %>
+  <% content_tag :tr, :class => item_css_class, :style => item_style do %>
+    <td style="padding-top:6px;">
+      <span class='choice-item-label-short'>
+        <%= selected_label_short.call(through_record) if child_index != '_new_' && selected_label_short %>
+      </span>
+      <br />
+      <span class='choice-item-label-full'>
+        <%= selected_label_full.call(through_record) if child_index != '_new_' && selected_label_full %>
+      </span>
+      <% unless through_record.new_record? %>
+        <%= through_record_form.hidden_field :id %>
+      <% end %>
+    </td>
+    <td style="width:70px; text-align:right; padding-top:6px;">
+      <%= link_to t('.detach_item'), "#", :style => "color:red; font-size:0.85em;",
+                                          :class => 'item-action-trash' %>
+      <%= through_record_form.hidden_field  foreign_key.to_sym,
+                                            :class => 'related-id',
+                                            :value => through_record.send(foreign_key.to_sym) %>
+      <%= through_record_form.hidden_field  :_destroy,
+                                            :class => 'destroy-relation',
+                                            :value => through_record.marked_for_destruction? %>
+    </td>
+  <% end %>
+<% end %> <%# /fields_for  %>
+

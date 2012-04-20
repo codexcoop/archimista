@@ -1,0 +1,20 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_custodian_type')%></h2>
+<% end %>
+                   
+<div class="span9">
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= t('custodian_type') %></th>
+      </tr>
+  </thead>
+  <tbody>
+  <% @custodian_types.each do |custodian_type| %>
+    <tr class="<%= cycle("odd", "even") %>">
+      <td><%=h custodian_type.custodian_type.capitalize %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>  
+</div>

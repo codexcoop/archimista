@@ -1,0 +1,19 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+<% end %>
+
+<div class="span12">
+<p>I vocabolari sono liste controllate di valori, disponibili in varie parti dell'applicazione. I principali sono:</p>
+<ul>
+  <li><%= link_to t('creator_corporate_types'), creator_corporate_types_path %></li>
+  <li><%= link_to t('custodian_types'), custodian_types_path %></li>
+</ul>
+<ul>
+  <li><%= link_to t('source_types'), source_types_path %></li>
+</ul>
+<ul>
+  <li><%= t('activities') %></li>
+  <li><%= link_to t('places'), places_path %></li>
+  <li><%= link_to t('langs'), langs_path %></li>
+</ul>
+</div>

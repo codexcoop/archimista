@@ -1,0 +1,4 @@
+<div class="fields row">
+  <div class="span2"><%= terms_select(f, "unit_damages.code", {:include_blank => true}, {:class => "span2"}) %></div>
+  <div class="span1 destroy"><%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %></div>
+</div>

@@ -1,0 +1,97 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_projects'), projects_path %>
+  </div>
+<% end %>
+
+<div id="record-main" class="span9">
+
+<h3 class="section"><%= t('identification_area') %></h3>
+<table class="table-show">
+<tr>
+  <th><%= t('name') %></th>
+  <td><%= show_value(@project.name) %></td>
+</tr>
+<tr>
+  <th><%= t('project_type') %></th>
+  <td><%= show_value(@project.project_type) %></td>
+</tr>
+<tr>
+  <th><%= t('duration') %></th>
+  <td><%= show_value(@project.display_date) %></td>
+</tr>
+<tr>
+  <th><%= t('status') %></th>
+  <td><%= show_value(@project.status) %></td>
+</tr>
+<tr>
+  <th><%= t('description') %></th>
+  <td><%= show_value(textilize(@project.description)) %></td>
+</tr>
+<tr>
+  <th><%= t('note') %></th>
+  <td><%= show_value(@project.note) %></td>
+</tr>
+</table>
+
+<h3 class="section"><%= t('credits_area') %></h3>
+<table class="table-show">
+<tr>
+  <th><%= t('project_managers')%></th>
+  <td>
+    <% if @project.project_managers.present? %>
+      <ul>
+      <% @project.project_managers.each do |project_manager| %>
+        <li>
+          <%= show_item(project_manager.credit_name) %> 
+          <%= show_item(project_manager.qualifier, ["[", "]"]) %>
+        </li>
+      <% end %>
+      </ul>
+    <% else %>
+      <%= blank_field %>
+    <% end %>
+  </td>
+</tr>
+<tr>
+  <th><%= t('project_stakeholders')%></th>
+  <td>
+    <% if @project.project_stakeholders.present? %>
+      <ul>
+      <% @project.project_stakeholders.each do |project_stakeholder| %>
+        <li>
+          <%= show_item(project_stakeholder.credit_name) %> 
+          <%= show_item(project_stakeholder.qualifier, ["[", "]"]) %>
+        </li>
+      <% end %>
+      </ul>
+    <% else %>
+      <%= blank_field %>
+    <% end %>
+  </td>
+</tr>
+</table>
+
+<h3 class="section"><%= t('relationships_area') %></h3>
+<table class="table-show">
+<tr>
+  <th><%= t('fonds') %></th>
+  <td>
+    <% if @project.fonds.present? %>
+      <ul>
+      <% @project.fonds.each do |fond| %>
+        <li><%= link_to "#{fond.name}", fond_path(fond) %>
+        <%= fond.preferred_event.full_display_date if fond.preferred_event %></li>
+      <% end %>
+      </ul>
+    <% else %>
+      <%= blank_field %>
+    <% end %>
+  </td>
+</tr>
+</table>
+
+</div>
+<%= render :partial => "shared/side", :object => @project %>
+

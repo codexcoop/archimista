@@ -1,0 +1,22 @@
+<div class="fields">
+  <div class="live-search-wrap">
+    <p>
+      <%= t('.search_invite',
+            :available_related => available_related,
+            :relation_name => t("activerecord.models.#{related_model.name.underscore}", :count => 1).downcase) %>
+    </p>
+    <div>
+      <div>
+        <span class="ui-icon ui-icon-search" style="display:inline; float:left; margin: 5px 0 0 0;">&nbsp;</span>
+      </div>
+      <div style="margin-left:16px; padding-left:10px;">
+        <%= text_field_tag :sources_live_search, '', :style => 'width:600px;' %>
+      </div>
+    </div>
+
+    <div class="interactive-list results-list">
+      <%# populated through html-ajax-response %>
+    </div>
+  </div>
+</div>
+

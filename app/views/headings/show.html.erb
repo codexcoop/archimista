@@ -1,0 +1,18 @@
+<%# FIXME: dismettere vista e routes relativa. Altrimenti fare marcatura e stile %>
+<% content_for :status_bar do %>
+  <h2><%= t('headings') %><%= path_separator %>anteprima scheda</h2>
+  <div id="links">
+    <%= link_to_index t('listing_headings'), headings_path %>
+  </div>
+<% end %>
+
+<p><strong><%= t('heading_type')%>:</strong> <%= show_value(@heading.heading_type, "t") %></p>
+
+<p><strong><%= t('heading_name') %>:</strong> <%= show_value(@heading.name) %></p>
+
+<p><strong><%= t('heading_dates') %></strong> <%= show_value(@heading.dates) %></p>
+
+<p><strong><%= t('heading_qualifier') %>:</strong> <%= show_value(@heading.qualifier) %></p>
+
+<%= link_to t('edit'), edit_heading_path(@heading) %> |
+<%= link_to t('back'), headings_path %>

@@ -1,0 +1,53 @@
+<% content_for :status_bar do %>
+  <%# OPTIMIZE: a funzionalità assestata spostare in helper. Dubbio se mettere link in status-bar %>
+  <h2><%= t(@attachable.class.name.underscore.pluralize) %><span class="divider">/</span><%= @attachable.display_name %><span class="divider">/</span><%= status_bar_context %></h2>
+  <div id="links">
+    <% target_link = @attachable.class.name == "Source" ? edit_polymorphic_path(@attachable) : polymorphic_path(@attachable) %>
+    <%= link_to_index "Scheda " + t("activerecord.models.#{@attachable.class.name.underscore}.one").downcase, target_link %>
+  </div>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <%= link_to "Nuovo oggetto digitale", new_polymorphic_path([@attachable, "digital_object"]), :class => "btn btn-small new", :id => 'new-digital-object' %>
+  </div>
+
+  <% if @digital_objects.size > 0 %>
+    <%= display_page_entries_info @digital_objects %>
+
+    <ul class="thumbnails">
+    <% @digital_objects.each do |digital_object| %>
+      <li class="span3">
+      <div class="thumbnail" style="height: 360px">
+        <% if digital_object.is_image? %>
+          <% if FileTest.exist?(digital_object.asset.path(:medium)) %>
+            <%= image_tag digital_object.asset(:medium) %>
+          <% else %>
+            <%= image_tag "missing-medium.jpg" %>
+          <% end %>
+        <% else %>
+          <%= image_tag "pdf-medium.png" %>
+        <% end %>
+        <div class="caption">
+          <h5><%= digital_object.title.present? ? truncate(digital_object.title, :length => 70) : "" %></h5>
+          <p><%= digital_object.description.present? ? truncate(digital_object.description, :length => 70) : "" %></p>
+          <div class="actions">
+            <% if digital_object.is_image? %>
+              <%= link_to "Ingrandisci", digital_object.asset(:large), :class => "fancybox", :rel => "gallery" %>
+            <% else %>
+              <%= link_to "Scarica", digital_object.asset(:original) %>
+            <% end %> |
+            <%= link_to t('edit'), edit_polymorphic_path([@attachable, digital_object]) %> |
+            <%= link_to t('destroy'), digital_object, :confirm => t('are_you_sure'), :method => :delete %>
+          </div>
+        </div>
+      </div>
+      </li>
+    <% end %>
+    </ul>
+
+    <%= will_paginate @digital_objects %>
+  <% else %>
+    <p>Non sono ancora presenti oggetti digitali.</p>
+  <% end %>
+</div>

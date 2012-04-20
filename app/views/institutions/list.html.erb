@@ -1,0 +1,22 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_institutions'), institutions_path %>
+  </div>
+<% end %>
+
+<table class="list">
+  <tr>
+    <th><%= t('institutions_name') %></th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+    <th>&nbsp;</th>
+  </tr>
+
+  <% @institutions.each do |institution| %>
+    <tr>
+      <td><%= link_to institution.value, edit_institution_path(institution) %></td>
+    </tr>
+  <% end %>
+
+</table>

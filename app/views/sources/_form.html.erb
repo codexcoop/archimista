@@ -1,0 +1,185 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag 'sources-form' %>
+<% end %>
+<%= render :partial => "shared/generic_error_message", :object => @source %>
+
+<% form_for @source, :html => { :class => "form-horizontal" } do |f| %>
+<div id="record-main" class="span9">
+  <div class="control-group">
+    <%= f.label :source_type_code, required_marker + t('source_type_code'), :class => "control-label" %>
+    <div class="controls">
+      <%= select("source",
+                "source_type_code",
+                SourceType.roots.collect {|p| [ p.source_type.capitalize, p.code ] },
+                { :selected => @source.source_type_code },
+                { :class => "span3"} )
+      %>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-subtype-code">
+    <%= f.label :source_subtype_code, t('source_subtype_code'), :class => "control-label" %>
+    <div class="controls">
+      <%= select("source",
+                "source_subtype_code",
+                SourceType.subtypes_of(@source.source_type.code || params[:type].to_i).collect {|p| [ p.source_type.capitalize, p.code ] },
+                { :include_blank => "---", :selected => @source.source_subtype_code },
+                { :class => "span3"} )
+      %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :short_title, required_marker + t('short_title'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :short_title, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-author">
+    <%= f.label :author, t('author'), :class => "control-label", :id => "source-author-label" %>
+    <div class="controls">
+      <%= f.text_field :author, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :title, required_marker + t('title'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_area :title, :class => "span6 x-short-content" %>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-editor">
+    <%= f.label :editor, t('editor'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :editor, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-place">
+    <%= f.label :place, t('place'), :class => "control-label", :id => "source-place-label" %>
+    <div class="controls">
+      <%= f.text_field :place, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-publisher">
+    <%= f.label :publisher, t('publisher'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :publisher, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :date_string, t('date_string'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :date_string, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-finding-aid-valid">
+    <%= f.label :finding_aid_valid, t('finding_aid_valid'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.check_box :finding_aid_valid %>
+      <!--p class="help-block">Solo per strumento di corredo</p-->
+    </div>
+  </div> 
+  
+  <div class="control-group" id="source-finding-aid-published">
+    <%= f.label :finding_aid_published, t('finding_aid_published'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.check_box :finding_aid_published %>
+    </div>
+  </div>
+
+  
+
+  <div class="control-group" id="source-related-item">
+    <hr />
+
+    <%= f.label :related_item, t('related_item'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :related_item, :class => "span6" %>
+      <p class="help-block" style="font-size:12px; color: #999">Titolo del libro correlato o della rivista</p>
+    </div>
+  </div>
+
+  <div class="control-group" id="source-related-item-specs">
+    <%= f.label :related_item_specs, t('related_item_specs'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_field :related_item_specs, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <hr />
+    <%= f.label :abstract, t('abstract'), :class => "control-label" %>
+    <div class="controls">
+      <%= f.text_area :abstract, :class => "span6 short-content" %>
+    </div>
+  </div>
+
+  <div id="source_urls" class="row">
+     <% @source_urls = build_or_retrieve(f.object.source_urls) %>
+     <div class="span9">
+       <h3  class="row-header"><%= t('source_urls') %></h3>
+       <div class="row row-labels">
+         <div class="span5"><%= t('url') %></div>
+         <div class="span3"><%= t('note') %></div>
+       </div>
+       <% f.fields_for :source_urls do |cf_form| %>
+         <%= render :partial => "source_url", :locals => { :f => cf_form } %>
+       <% end %>
+       <p><%= add_child_link t('new_url'), "source_urls" %></p>
+     </div>
+   </div> <%# source_urls %>
+</div> <!-- /#record-main -->
+
+<%= render :partial => "shared/side", :object => @source %>
+
+<% end %>
+
+
+
+<%# TODO: Quale uso per campo institution? Forse per Strumento di corredo, mah... %>
+<!--
+  <div class="control-group">
+    <%#= f.label :institution, t('institution'), :class => "control-label" %>
+    <div class="controls">
+      <%#= f.text_field :institution, :class => "span6" %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%#= f.label :periodical, t('periodical'), :class => "control-label" %>
+    <div class="controls">
+      <%#= f.text_field :periodical, :class => "span6" %>
+      <p class="help-block">Solo per articolo</p> <%# TODO: fare helper se confermiamo la funzionalità %>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%#= f.label :volume, t('volume'), :class => "control-label" %>
+    <div class="controls">
+      <%#= f.text_field :volume, :class => "span6" %>
+      <p class="help-block">Solo per capitolo e articolo</p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%#= f.label :issue, t('issue'), :class => "control-label" %>
+    <div class="controls">
+      <%#= f.text_field :issue %>
+      <p class="help-block">Solo per articolo</p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%#= f.label :pages, t('pages'), :class => "control-label" %>
+    <div class="controls">
+      <%#= f.text_field :pages %>
+      <p class="help-block">Solo per capitolo e articolo</p>
+    </div>
+  </div>
+-->

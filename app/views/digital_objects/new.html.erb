@@ -1,0 +1,8 @@
+<% content_for :status_bar do %>
+  <h2><%= t(@attachable.class.name.underscore.pluralize) %><span class="divider">/</span><%= @attachable.display_name %><span class="divider">/</span><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_digital_objects'), polymorphic_path([@attachable, "digital_objects"]) %>
+  </div>
+<% end %>
+
+<%= render :partial => "form" %>

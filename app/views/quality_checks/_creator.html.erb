@@ -1,0 +1,49 @@
+<h3 class="section">Requisiti minimi</h3>
+<table class="table">
+  <tr>
+    <th style="width:25%;"><%= t('creator_type') %></th>
+    <td>
+      <% if creator.creator_type.present? %>
+        <%= show_value(creator.creator_type, "t") %>
+      <% else %>
+        <%= warning_field %>
+      <%  end %>
+    </td>
+  </tr>
+  <% if creator.is_corporate? %>
+    <tr>
+      <th><%= t('creator_corporate_type') %></th>
+      <td>
+        <% if creator.creator_corporate_type.present? %>
+          <%= creator.creator_corporate_type.corporate_type.capitalize %>
+        <% else %>
+          <%= warning_field %>
+        <% end %>
+      </td>
+    </tr>
+  <% end -%>
+  <tr>
+    <th><%= t('preferred_name') %></th>
+    <td>
+      <% if creator.preferred_name.name.present? %>
+        <% if creator.preferred_name.name == '[nome non compilato]' %>
+          <span class="red"><%= creator.preferred_name.name %></span>
+        <% else %>
+          <%= creator.preferred_name.name %>
+        <% end %>
+      <% else %>
+        <%= warning_field %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= t('date_event')%></th>
+    <td>
+      <% if creator.preferred_event.present? %>
+          <%= creator.preferred_event.full_display_date_with_place %>
+      <% else %>
+        <%= warning_field %>
+      <% end %>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,154 @@
+/* TODO:
+- migliorare + rivedere nomi id-classi
+- aumentare altezza di bottom-controls almeno a 36px
+*/
+#treeview #status-bar {
+  border-bottom: 1px solid #717171;
+}
+#treeview #footer {
+  display: none;
+}
+#treeview-content {
+  position: absolute;
+  z-index: 2;
+  top: 81px; /* = header height + status-bar border-bottom */
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+#tree-wrapper {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  /* default width: 280px;*/
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  background: #DDE2EB;
+}
+#main {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  left: 280px;
+  right: 0;
+  bottom: 0;
+  overflow: auto;
+  border-left: 1px solid #717171;
+  background: #fff;
+}
+#ajax-form-wrapper {
+  padding: 10px 15px 30px 15px;
+}
+#ajax-form-wrapper input[type="text"] {
+  width: 98%;
+}
+#ajax-form-wrapper textarea {
+  width: 98%;
+}
+#ajax-form-wrapper .markItUp {
+  width: 99%;
+}
+#ajax-form-wrapper .markItUpEditor {
+  width: 98%;
+}
+#ajax-form-wrapper .input-mini {
+  width: 60px;
+}
+#ajax-form-wrapper input[type="text"].input-mini {
+  width: 60px;
+}
+
+/* valutare se mettere tree-header */
+#tree {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 37px;
+  width: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding: 10px 0 16px 0;
+  background: #DDE2EB;
+}
+#tree-controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  border-top: 1px solid #717171;
+  background: #e8e8e8;
+}
+#tree-controls span.jstree-action {
+  float: left;
+  display: block;
+  font-size: 11px;
+  line-height: 11px;
+  margin: 0;
+  height: 36px;
+  width: 34px;
+  border-top: 0;
+  border-bottom: 0;
+  border-radius: 0;
+}
+#tree-controls span#trash {
+  cursor: pointer;
+  float: left;
+  display: block;
+  margin: 8px 0 0 30px;
+  padding: 4px;
+  font-size: 11px;
+  line-height: 11px;
+  text-decoration: underline;
+  color: #2f2f2f;
+  text-decoration: none;
+}
+#tree-controls span#trash:hover {
+  text-decoration: none;
+  color: #2f2f2f;
+  background: #ccc;
+}
+
+/*
+#handle eredita le proprietà della sua classe (necessaria per il funzionamento JS):
+.ui-resizable-handle {
+  position: absolute;
+  font-size: 0.1px;
+  z-index: 99999;
+  display: block;
+  background-image:url(data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=);
+}
+*/
+#handle {
+  cursor: col-resize;
+  display: block;
+  position: absolute;
+  right: 0;
+  width: 24px;
+  height: 36px;
+  font-size: 13px;
+  line-height: 36px;
+  letter-spacing: 1px;
+  text-align: center;
+  color: #666;
+  background: transparent;
+}
+
+/* IN PROGRESS */
+#treeview-content #main-form-controls {
+  z-index: 9999;
+  position: fixed;
+  bottom: 0;
+  left: 281px;
+  width: 100%;
+  height: 30px;
+  margin: 0;
+  padding: 10px 0 0 0;
+  border-top: 1px solid #717171;
+  font-size: 11px;
+  line-height: 1;
+  background: #e8e8e8;
+}

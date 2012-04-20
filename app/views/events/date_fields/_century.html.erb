@@ -1,0 +1,37 @@
+<% event = event_form.object %>
+
+<%
+  fields_wrapper_css_class = 'archidate-format-wrapper C'
+  fields_wrapper_css_class << (event.send("#{bound}_date_top_level_format") == 'C' ? ' active' : ' inactive')
+%>
+
+<% content_tag  :span,
+                :class              => fields_wrapper_css_class,
+                'data-bound-format' => 'C',
+                'data-bound'        => bound do %>
+
+  <%= event_form.select :"#{bound}_century",
+                        options_for_select(
+                          event.class.reverted_centuries_for_select(I18n.locale),
+                          event.send("#{bound}_century").to_s
+                        ),
+                        options={},
+                        html_options={:class => "input-small archidate-field"} %>
+
+  <%= event_form.select :"#{bound}_century_interval",
+                        options_for_select(
+                          event.class.century_intervals_for_select(I18n.locale),
+                          event.send("#{bound}_century_interval")
+                        ),
+                        options={:include_blank => "parte..."},
+                        html_options={:class => "input-medium archidate-field"} %>
+
+  <%= event_form.select :"#{bound}_date_valid",
+                        options_for_select(
+                          event.class.validities_for_select(I18n.locale),
+                          (event.send("#{bound}_date_valid") || event.class.default_validity_code)
+                        ),
+                        options={},
+                        html_options={:class => "input-medium archidate-field"} %>
+<% end %>
+

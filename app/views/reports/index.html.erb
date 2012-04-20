@@ -1,0 +1,29 @@
+<% content_for :status_bar do %>
+  <h2>Report</h2>
+<% end %>
+
+<div class="span12">
+<% case @fonds.size
+when 0 then %>
+  <p>Non sono presenti schede complesso archivistico. Report non disponibili.</p>
+<% when 2..10 then %>
+  <p>Scegli il complesso archivistico:</p>
+  <table class="table">
+    <tbody>
+    <% @fonds.each do |fond| %>
+      <tr>
+        <td><%= link_to fond.name, dashboard_report_path(fond) %>
+        <%= fond.preferred_event.try(:full_display_date) %>
+          <% if fond.fond_type.present? %>
+             <span class="light">(<%= fond.fond_type %>)</span>
+           <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% else %>
+  <%= render :partial => "form" %>
+<% end %>
+</div>
+

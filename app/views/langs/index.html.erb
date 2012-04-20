@@ -1,0 +1,27 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_lang')%></h2>
+<% end %>
+
+<div class="span9">
+<table class="table">
+  <tr>
+    <th><%= t('code') %></th>
+    <th><%= t('en_name') %></th>
+    <th><%= t('it_name') %></th>
+    <th>&nbsp;</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% @langs.each do |lang| %>
+    <tr class="<%= cycle("odd", "even") %>">
+      <td><%= lang.code %></td>
+      <td><%= lang.en_name %></td>
+      <td><%= lang.it_name %></td>
+      <td><% if lang.active == true %><i class="icon-ok"></i> <% end %></td>
+    </tr>
+    <% end %>
+  </tbody>
+</table> 
+
+<%= will_paginate @langs %>
+</div>

@@ -1,0 +1,45 @@
+<% content_for :status_bar do %>
+  <h2>Esporta</h2>
+<% end %>
+
+<div class="span12">
+
+<% if @fonds.size > 0 %>
+<div class="row">
+  <div class="span7">
+    <p>Puoi esportare i tuoi dati nel formato <code>aef</code> adatto all'importazione in un'altra istanza di Archimista.</p>
+    <p>Per ogni complesso archivistico saranno inclusi nell'esportazione: l'albero completo, le unità archivistiche, i soggetti produttori, i soggetti conservatori e tutti i dati collegati a queste entità principali.<br />
+I file degli oggetti digitali non sono inclusi.</p>
+  </div>
+</div>
+
+<div class="row">
+  <div class="span12">
+  <% if @fonds.size < 20 %>
+    <p>Scegli il complesso archivistico da esportare:</p>
+    <table class="table">
+    <tbody>
+    <% @fonds.each do |fond| %>
+      <tr>
+        <td>
+          <%= link_to fond.name, '#', {:class => "export-aef-wait", "fond-id".to_sym => fond.id} %>
+          <%= fond.preferred_event.try(:full_display_date) %>
+          <% if fond.fond_type.present? %>
+            <span class="light">(<%= fond.fond_type %>)</span>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+    </table>
+  <% else %>
+    <%= render :partial => "form" %>
+  <% end %>
+  </div>
+</div>
+
+<% else %>
+  <p>Non sono presenti schede complesso archivistico. Export non disponibili.</p>
+<% end %>
+
+</div>

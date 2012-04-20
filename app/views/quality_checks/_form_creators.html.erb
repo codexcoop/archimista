@@ -1,0 +1,8 @@
+<% form_tag("/quality_checks", :method => :get, :id => "quality_checks-creator-choice", :class => "skip-prompt") do %>
+  <i class="icon-search"></i>
+  <%= text_field_tag :q, params[:q], :id => "quality_checks-creator-name-autocomplete",
+    :class => "autocomplete span6",
+    :placeholder => "Cerca un soggetto produttore",
+    :'data-autocompletion-controller' => 'creators' %>
+  <%= hidden_field_tag :creator_id, "", :id => "quality_checks-creator-id-autocomplete" %>
+<% end %>

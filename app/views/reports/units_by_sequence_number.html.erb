@@ -1,0 +1,42 @@
+<% content_for :status_bar do %>
+  <h2>Report<%= path_separator %><%= link_to @root_fond_name, dashboard_report_path %><%= path_separator %>lista unità per numero corda</h2>
+  <div id="links">
+    <%= link_to_index "Report", reports_path %>
+  </div>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <%= link_to '<i class="icon-download-alt"></i> scarica PDF', units_by_sequence_number_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small pdf"} %>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= t('sequence_number') %></th>
+        <th><%= t("title") %></th>
+        <th><%= t("date_event") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @units.each do |unit| %>
+        <tr>
+          <td>
+            <div  class="pbi_avoid">
+              <strong><%= unit.sequence_number %></strong>
+            </div>
+          </td>
+          <td>
+            <div class="pbi_avoid">
+              <em><%= unit.title %></em>
+              <%  unless unit.arrangement_note.blank? %>
+                <br />
+                <%= textilize_with_entities(unit.arrangement_note) %>
+              <% end %>
+            </div>
+          </td>
+          <td class="no-wrap"><div class="pbi_avoid"><%= unit.preferred_event.try(:full_display_date_with_place) %></div></td>
+        </tr>
+      <%  end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,42 @@
+<% container_class "container-fluid" %>
+
+<% content_for :status_bar do %>
+  <h2><%= t('listing_fonds') %><%= path_separator %><%= t('import_tree') %></h2>
+  <div id="links">
+    <%= link_to_index "Lista complessi", fonds_path %>
+  </div>
+<% end %>
+
+<div class="span7">
+  <p style="margin-bottom: 2em;">Scrivi la struttura del complesso archivistico nel campo di testo, un livello per riga, oppure scegli un modello predefinito liberamente modificabile.</p>
+
+  <% form_tag({:action => 'saving_the_tree'}, {:method => 'post', :class => "skip-prompt"}) do %>
+  <p>
+    <%= select(:tree, :predefined_templates, options_from_collection_for_select(@select_options, 'first', 'last'), {:prompt => "--- Scegli modello predefinito ---"}, { :id => 'template-selector', :class => "span5" }) %>
+  </p>
+  <p>
+    <%= text_area_tag :tree_template, content = params[:tree_template], :id => 'template-text', :style => "width: 98%; height: 40em;" %>
+  </p>
+  <p><%= submit_tag t('import_tree'), :class => "btn btn-primary" %></p>
+<% end %>
+</div>
+
+<div class="span5">
+    <p><strong>Regole</strong></p>
+    <p>La denominazione del livello deve essere preceduta dal carattere <code>#</code>.</p>
+    <p>Le occorrenze del carattere # denotano il livello: # significa primo livello, ## secondo livello, ### terzo livello, ecc.</p>
+    <p>Dopo il livello, è possibile inserire la tipologia del complesso preceduta dal carattere <code>@</code>.</p>
+    <p>Esempio:</p>
+    <p><pre># Fondo Tal dei Tali @ fondo</pre></p>
+
+    <p style="margin-top: 2em;"><%= link_to "Lista delle tipologie valide", "#", :'data-toggle' => "collapse", :'data-target' => "#fond-types" %></p>
+    <div id="fond-types" class="collapse">
+      <ul>
+      <% @fond_types.each do |ft| %>
+        <li><%= ft %></li>
+      <% end %>
+      </ul>
+    </div>
+</div>
+
+</div>

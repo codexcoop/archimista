@@ -1,0 +1,15 @@
+<% if @unit.is_root? %>
+ <div id="unit-path-controls">
+   <span id="load-fonds-tree-wrapper">
+    <%= link_to t('edit'), "#",
+                :id => 'load-fonds-tree',
+                :'data-root-fond-id' => (@unit.full_path.first.id if @unit.full_path.present?),
+                :'data-fond-id' => @unit.fond_id, :class => "pull-right" %>
+   </span>
+   <span id="close-fonds-tree-wrapper" class="pull-right"> 
+     <%= link_to t('cancel'), "#", :id => 'close-fonds-tree' %>
+     |
+     <%= link_to t('confirm'), '#', :id => 'confirm-new-fond', :'data-unit-id' => @unit.id %>
+   </span>
+ </div>
+<% end %>

@@ -1,0 +1,7 @@
+<% if user_signed_in? %>
+  <p class="navbar-text pull-right">
+    <em><%= t('devise.user') %></em>: <%= link_to_unless(current_user.is_superadmin?, current_user.username, edit_user_path(current_user)) %>
+    <span style="padding: 0 4px">|</span>
+    <%= link_to(t('devise.sessions.sign_out'), destroy_user_session_path) %>
+  </p>
+<% end %>

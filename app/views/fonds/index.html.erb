@@ -1,0 +1,65 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_fonds') %></h2>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <% if @fonds.total_entries > Fond.per_page || params[:q].present? %>
+      <% # OPTIMIZE: questo forse potrebbe stare in helper, se ripetuto in tutti gli index %>
+      <% form_tag('/fonds', :method => :get, :class => "skip-prompt form-search pull-right") do %>
+        <%= text_field_tag :q, params[:q], :class => "search-query", :placeholder => "Denominazione" %>
+        <%= submit_tag "Cerca", :name => "", :class => "btn btn-small" %>
+      <% end %>
+    <% end %>
+    <% # OPTIMIZE: qui forse div contenitore toolbar o buttons ? %>
+    <%= link_to t('new'), "#add_fond_modal", {:"data-toggle" => "modal", :class => "btn btn-small new"} %>
+    <%= link_to '<i class="icon-share"></i> ' + t('import_tree'), save_a_tree_fonds_path, { :class => "btn btn-small" } %>
+    <%= render :partial => "new_fond" %>
+  </div>
+
+  <% if @fonds.size > 0 %>
+    <%= display_page_entries_info @fonds %>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th class="span7"><%= sortable("name", t('name')) %></th>
+          <th>&nbsp;</th>
+          <th><%= sortable("updated_at", t('updated_at')) %></th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+          <th>&nbsp;</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @fonds.each do |fond| %>
+          <tr class="<%= cycle("odd", "even") %>">
+            <td><%= link_to fond.name, treeview_fond_path(fond) %>
+              <%= fond.preferred_event.try(:full_display_date) %>
+              <% if fond.fond_type.present? %>
+                <span class="light">(<%= fond.fond_type %>)</span>
+              <% end %>
+            </td>
+            <td><%= link_to "#{number_with_delimiter(@units_counts[fond.id] || "0")} unità", fond_units_path(fond) %></td>
+            <td><%= l fond.updated_at, :format => :long %></td>
+            <td><%= link_to t('show'), fond %></td>
+            <td><%= link_to_if @fonds.size > 1, t('merge_with'), '#', {:class => 'merge', "data-id".to_sym => fond.id} %></td>
+            <td><%= link_to t('destroy'), fond, :confirm => t('are_you_sure'), :method => :delete %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= will_paginate @fonds %>
+
+  <% else %>
+    <% if params[:q].present? %>
+      <p>La ricerca di <strong><%= params[:q] %></strong> non ha prodotto risultati. Vedi <%= link_to "tutti i complessi archivistici", fonds_path %></p>
+    <% else %>
+      <p>Non sono presenti schede complesso archivistico.</p>
+    <% end %>
+  <% end %>
+<%# TODO: i18n per tutte le pagine index, a navigazione definita. Simile a config/locales/views/shared.yml no_related_records_available. Valutare se usare una sola key YAML %>
+</div>
+
+<div id="merge-with-container"></div>

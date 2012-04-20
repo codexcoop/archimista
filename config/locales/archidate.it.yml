@@ -1,0 +1,116 @@
+it:
+  activerecord:
+    models:
+      generic_event: &generic_event
+        one: "Evento"
+        other: "Eventi"
+      creator_event:
+        <<: *generic_event
+      fond_event:
+        <<: *generic_event
+      unit_event:
+        <<: *generic_event
+      event:
+        <<: *generic_event
+    attributes:
+      generic_event: &generic_event
+        start_date_spec: "Specifica della data iniziale"
+        start_date_from: "Data iniziale"
+        start_date_to: "Data iniziale (fine del range)"
+        start_date_valid: "Validità della data iniziale"
+        start_date_format: "Formato della data iniziale"
+        start_date_display: "Data iniziale per la visualizzazione"
+        end_date_spec: "Specifica della data finale"
+        end_date_from: "Data finale"
+        end_date_to: "Data finale (fine del range)"
+        end_date_valid: "Validità della data finale"
+        end_date_format: "Formato della data finale"
+        end_date_display: "Data finale per la visualizzazione"
+        created_at: "Creazione"
+        updated_at: "Aggiornamento"
+        preferred: "Preferito"
+      creator_event:
+        <<: *generic_event
+      fond_event:
+        <<: *generic_event
+      unit_event:
+        <<: *generic_event
+      event:
+        <<: *generic_event
+    generic_error: "Scheda non valida. Correggi i campi evidenziati"
+    errors:
+      # activerecord.errors.models.[model_name].attributes.[attribute_name]
+      # activerecord.errors.models.[model_name]
+      # activerecord.errors.messages
+      models:
+        generic_event: &generic_event
+          attributes:
+            start_date_from:
+              invalid_date: "inesistente"
+              intersection: "si sovrappone all'estremo finale"
+              inversion: "deve precedere l'estremo finale"
+            end_date_from:
+              invalid_date: "inesistente"
+        creator_event:
+          <<: *generic_event
+        fond_event:
+          <<: *generic_event
+        unit_event:
+          <<: *generic_event
+        event:
+          <<: *generic_event
+      template:
+        header:
+          #one: "L'oggetto %{model} non può essere salvato a causa di un errore"
+          one:  "Correggi il seguente errore"
+          #other: "Alcuni errori (%{count}) non permettono di salvare l'oggetto %{model}"
+          other: "Correggi i seguenti errori"
+        # The variable :count is also available
+        body: "Correggi i seguenti errori"
+      # The values :model, :attribute and :value are always available for interpolation
+      # The value :count is available when applicable. Can be used for pluralization.
+      messages:
+        invalid: "non è valido"
+        confirmation: "non coincide"
+        accepted: "richiede esplicita accettazione"
+        empty: " non può essere lasciato vuoto"
+        blank: " non può essere lasciato in bianco"
+        too_long: "è di lunghezza eccessiva (il massimo è di %{count} caratteri)"
+        too_short: "è troppo breve (il minimo è %{count} caratteri)"
+        wrong_length: "è di lunghezza non corretta (dovrebbe essere esattamente %{count} caratteri)"
+        taken: "è già presente in database"
+        not_a_number: "non è un numero"
+        greater_than: "dovrebbe essere maggiore di %{count}"
+        greater_than_or_equal_to: "dovrebbe essere maggiore o uguale a %{count}"
+        equal_to: "dovrebbe essere pari a %{count}"
+        less_than: "dovrebbe essere minore di %{count}"
+        less_than_or_equal_to: "dovrebbe essere minore o uguale a %{count}"
+        odd: "dovrebbe essere dispari"
+        even: "dovrebbe essere pari"
+        record_invalid: "Il record non è valido: %{errors}"
+        # Append your own errors here or at the model/attributes scope.
+        # Archidate
+        prior_to_end_date: "deve precedere la data di fine"
+        greater_than_start_date: "deve seguire la data di inizio"
+        invalid_date: "data non valida"
+        invalid_date_range: "è composta da un range non valido"
+        invalid_specification: "ha una specifica non valida"
+        future_date: "non può essere posteriore al giorno odierno"
+        not_a_natural_number: ": l'anno deve essere un numero intero maggiore di zero"
+        inclusion: "ha un valore non compreso tra quelli ammessi"
+        exclusion: "ha un valore non ammesso, in quanto riservato"
+        more_than_one_preferred_event: "Non può avere più di un evento preferito"
+        no_preferred_event_if_events_present: "Uno degli eventi deve essere indicato come preferito"
+      full_messages:
+        format: "%{attribute} %{message}"
+        generic_not_blank: "Il campo %{object_name} deve contenere almeno un valore"
+  date:
+    formats:
+      ymd:  "%Y %B %e"
+      ym:   "%Y %B"
+      y:    "%Y"
+    # Used in date_select and datime_select.
+    order: [ :year, :month, :day ]
+    prompts:
+      year:   "anno..."
+

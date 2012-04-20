@@ -1,0 +1,203 @@
+<% content_for :javascripts do %>
+  <%= javascript_include_tag "relations" %>
+  <%= javascript_include_tag "live_search" %>
+  <%= javascript_include_tag "sources" %>
+<% end %>
+
+<%= render :partial => "shared/generic_error_message", :object => @custodian %>
+
+<% form_for @custodian do |f| %>
+  <div id="record-main" class="span9">
+    <div class="tabbable">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#tab-identification" data-toggle="tab"><%= t('identification_area') %></a></li>
+        <li><a href="#tab-description" data-toggle="tab"><%= t('description_area') %></a></li>
+        <li><a href="#tab-access" data-toggle="tab"><%= t('access_area') %></a></li>
+        <li><a href="#tab-buildings" data-toggle="tab"><%= t('buildings')%></a></li>
+        <li><a href="#tab-relations" data-toggle="tab"><%= t('relationships_area')%></a></li>
+        <li><a href="#tab-sources" data-toggle="tab"><%= t('sources_area')%></a></li>
+        <li><a href="#tab-credits" data-toggle="tab"><%= t('editors')%></a></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <div class="tab-pane active" id="tab-identification">
+          <div class="row">
+            <div class="span2">
+              <%= f.label :legal_status, t('legal_status') %>
+              <%= terms_select(f, "custodians.legal_status", {:include_blank => true}, :class => "span2") %>
+            </div>
+            <div class="span5">
+              <%= f.label :custodian_type_id, t('custodian_macro_type') %>
+              <%= select( "custodian", "custodian_type_id",
+                CustodianType.all.collect {|p| [ p.custodian_type.capitalize, p.id ] },
+                {:include_blank => true, :selected => @custodian.custodian_type_id }, :class => "span5" ) %>
+            </div>
+          </div>
+
+          <div id="preferred_name" class="row">
+            <% @preferred_name = f.object.preferred_name || f.object.build_preferred_name %>
+            <div class="span9">
+              <h3 class="row-header"><%= t('preferred_name') %></h3>
+              <div class="row row-labels">
+                <div class="span6"><%= t('name') + required_marker %></div>
+                <div class="span3"><%= t('note') %></div>
+              </div>
+              <% f.fields_for :preferred_name do |pn_form| %>
+                <%= render :partial => "custodian_name", :locals => { :f => pn_form } %>
+              <% end %>
+            </div>
+          </div> <%# /preferred_name %>
+
+          <div id="other_names" class="row">
+            <% @other_name = build_or_retrieve(f.object.other_names) %>
+            <div class="span9">
+              <h3 class="row-header"><%= t('other_names') %></h3>
+              <div class="row row-labels">
+                <div class="span3"><%= t('qualifier') %></div>
+                <div class="span3"><%= t('name') %></div>
+                <div class="span2"><%= t('note') %></div>
+              </div>
+              <% f.fields_for :other_names do |on_form| %>
+                <%= render :partial => "custodian_other_name", :locals => { :f => on_form } %>
+              <% end %>
+
+              <p><%= add_child_link t('new_name'), "other_names" %></p>
+            </div>
+          </div> <%# /other_names %>
+
+          <%= f.label :history, t('custodian_history') %>
+          <%= f.text_area :history, :class => "textile long-content span9" %>
+
+          <div id="custodian_contacts" class="row">
+            <% @custodian_contacts = build_or_retrieve(f.object.custodian_contacts) %>
+            <div class="span9">
+              <h3 class="row-header"><%= t("contacts") %></h3>
+              <div class="row row-labels">
+                <div class="span2"><%= t("contact_type") %></div>
+                <div class="span3"><%= t("contact_name") %></div>
+                <div class="span3"><%= t('contact_note') %></div>
+              </div>
+              <% f.fields_for :custodian_contacts do |contact_form| %>
+                <%= render :partial => "custodian_contact", :locals => { :f => contact_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_contact'), "custodian_contacts" %></p>
+            </div>
+          </div> <%# /custodian_contacts %>
+
+          <%= f.label :contact_person, t('contact_person') %>
+          <%= f.text_field :contact_person, :class => "span9" %>
+
+          <div id="custodian_owners" class="row">
+            <% @custodian_owners = build_or_retrieve(f.object.custodian_owners) %>
+            <div class="span9">
+              <h3 class="row-header"><%= t('custodian_owners') %></h3>
+              <% f.fields_for :custodian_owners do |fo_form| %>
+                <%= render :partial => "custodian_owner", :locals => { :f => fo_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_custodian_owner'), "custodian_owners" %></p>
+            </div>
+          </div> <%# /custodian_owners %>
+
+          <div id="custodian_urls" class="row">
+            <% @custodian_urls = build_or_retrieve(f.object.custodian_urls) %>
+            <div class="span9">
+              <h3  class="row-header"><%= t('custodian_urls') %></h3>
+              <div class="row row-labels">
+                <div class="span5"><%= t('url') %></div>
+                <div class="span3"><%= t('note') %></div>
+              </div>
+              <% f.fields_for :custodian_urls do |cf_form| %>
+                <%= render :partial => "custodian_url", :locals => { :f => cf_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_url'), "custodian_urls" %></p>
+            </div>
+          </div> <%# custodian_urls %>
+
+          <div id="custodian_identifiers" class="row">
+            <% @custodian_identifiers = build_or_retrieve(f.object.custodian_identifiers) %>
+            <div class="span9">
+              <h3  class="row-header"><%= t('custodian_identifiers') %></h3>
+              <div class="row row-labels">
+                <div class="span3"><%= t('identifier') %></div>
+                <div class="span2"><%= t('identifier_source') %></div>
+                <div class="span3"><%= t('note') %></div>
+              </div>
+              <% f.fields_for :custodian_identifiers do |cf_form| %>
+                <%= render :partial => "custodian_identifier", :locals => { :f => cf_form } %>
+              <% end %>
+              <p><%= add_child_link t('new_identifier'), "custodian_identifiers" %></p>
+            </div>
+          </div> <%# custodian_identifiers %>
+
+        </div><!-- end tab-identification -->
+
+        <div class="tab-pane" id="tab-description">
+          <%= f.label :holdings, t('holdings') %>
+          <%= f.text_area :holdings, :class => "textile long-content span9" %>
+
+          <%= f.label :collecting_policies, t('collecting_policies') %>
+          <%= f.text_area :collecting_policies, :class => "textile long-content span9" %>
+
+          <%= f.label :administrative_structure, t('administrative_structure') %>
+          <%= f.text_area :administrative_structure, :class => "textile long-content span9" %>
+        </div> <!-- end tab-description -->
+
+        <div class="tab-pane" id="tab-access">
+          <%= f.label :accessibility, t('accessibility') %>
+          <%= f.text_area :accessibility, :class => "textile long-content span9" %>
+
+          <%= f.label :services, t('services') %>
+          <%= f.text_area :services, :class => "textile long-content span9" %>
+        </div> <!-- end tab-access -->
+
+        <div class="tab-pane" id="tab-buildings">
+          <div id="custodian_buildings">
+            <% @custodian_buildings = build_or_retrieve(f.object.custodian_buildings) %>
+            <% f.fields_for :custodian_buildings do |building_form| %>
+              <%= render :partial => "custodian_building", :locals => { :f => building_form } %>
+            <% end %>
+            <p><%= add_child_link t('new_building'), "custodian_buildings" %></p>
+          </div>
+        </div> <!-- end tab-buildings -->
+
+        <div class="tab-pane" id="tab-relations">
+          <%= render_relation_for f, :fonds, @rel_custodian_fonds,
+            :selected_label => lambda{|rel_custodian_fond| h rel_custodian_fond.fond.try(:name_with_preferred_date) },
+            :suggested_label => lambda{|fond| h fond.try(:name_with_preferred_date) } %>
+        </div> <!-- end tab-relations -->
+
+        <div class="tab-pane" id="tab-sources">
+          <%= render_relation_for f, :sources, @rel_custodian_sources,
+            :variant => 'livesearch',
+            :selected_label_full => lambda{|rel_custodian_source| formatted_source(rel_custodian_source.source)  },
+            :selected_label_short => lambda{|rel_custodian_source| h rel_custodian_source.source.short_title } %>
+        </div> <!-- /tab-sources -->
+
+        <div class="tab-pane" id="tab-credits">
+          <div id="custodian_editors" class="row">
+            <% @custodian_editors = build_or_retrieve(f.object.custodian_editors) %>
+            <div class="span9 row-header">
+              <a id="add-editor-modal" class="btn btn-mini pull-right new" href="#">  <%= t('new_editor') %></a>
+              <h3 class="row-header"><%= t('custodian_editors') %></h3>
+            </div>
+
+            <div class="span9">
+              <%= render :partial => "shared/editors_labels", :locals => { :f => f } %>
+              <% f.fields_for :custodian_editors do |ce_form| %>
+                <%= render :partial => "shared/editor", :locals => { :f => ce_form } %>
+              <% end %>
+              <p><%= add_child_link t('add_editor'), "custodian_editors" %></p>
+            </div>
+          </div>
+        </div> <!-- /tab-credits -->
+      </div> <!-- /tab-content -->
+    </div> <!-- /tab-tabbbable -->
+  </div>
+
+  <%= render :partial => "shared/side", :object => @custodian %>
+
+<% end %>
+
+<div id="add-editor-container"></div>
+<%#= render :partial => "editors/new_editor" %>

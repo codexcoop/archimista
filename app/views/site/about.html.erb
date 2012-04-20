@@ -1,0 +1,34 @@
+<%# OPTIMIZE: spostare style no-status-bar in helper (comune per ora a about e dashboard) %>
+<% content_for :stylesheets do %>
+  <style type="text/css">
+  body { padding-top: 40px; }
+  #status-bar { display: none; }
+  </style>
+<% end %>
+
+<div class="span8">
+  <h3 style="font-size: 15px"><%= APP_NAME %></h3>
+  <p>Versione <%= "#{APP_VERSION} #{APP_STATUS} - #{APP_EDITION} edition" %></p>
+
+  <p>Copyright &copy; 2011-<%= Time.now.year %>:</p>
+  <ul>
+    <li>Direzione Generale per gli Archivi</li>
+    <li>Regione Lombardia</li>
+    <li>Regione Piemonte</li>
+    <li>Università degli Studi di Pavia</li>
+  </ul>
+
+  <p>Sviluppo dell'applicazione: Codex Società Cooperativa, Pavia</p>
+
+  <p style="margin-top: 2em;">
+    <strong>Licenza</strong>.
+    Questo programma è software libero; è lecito redistribuirlo o
+    modificarlo secondo i termini della GNU General Public License
+    come è pubblicata dalla Free Software Foundation; o la versione 2
+    della licenza o una versione successiva.
+  </p>
+
+  <div id="read-license">
+    <pre class="pre-scrollable"><%= render :file => "LICENSE" %></pre>
+  </div>
+</div>

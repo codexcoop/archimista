@@ -1,0 +1,20 @@
+<div class="modal hide fade" id="select-columns-dialog">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Seleziona colonne</h3>
+  </div>
+  <div class="modal-body">
+    <% form_tag({:action => 'gridview'}, {:method => :post, :id => "select-columns-form", :class => "skip-prompt modal-form"}) do %>
+      <ul id="columns-list">
+        <li class="<%= cycle("odd", "even") %>" style="display: none;">
+          <%= check_box_tag "selected_attributes[]", "<attr_name>", :disabled => true %>
+          <%= label_tag "selected_attributes", "attr_description" %>
+        </li>
+      </ul>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button id="close-select-columns" class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="confirm-columns" class="submit btn btn-primary"><%= t('save') %></button>
+  </div>
+</div>

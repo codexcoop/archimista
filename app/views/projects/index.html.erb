@@ -1,0 +1,43 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <%= link_to t('new'), new_project_path, {:class => "btn btn-small new"} %>
+  </div>
+
+<% if @projects.size > 0 %>
+<%= display_page_entries_info @projects %>
+
+<table class="table">
+  <thead>
+  <tr>
+    <th class="span6"><%= t('name') %></th>
+    <th class="span1"><%= t('duration') %></th>
+    <th class="span2"><%= t('updated_at') %></th>
+    <th class="span1">&nbsp;</th>
+    <th class="span1">&nbsp;</th>
+ </tr>
+ </thead>
+
+ <tbody>
+ <% @projects.each do |project| %>
+  <tr class="<%#= cycle("odd", "even") %>">
+    <td><%= link_to "#{project.name}", edit_project_path(project) %></td>
+    <td><%= project.display_date %></td>
+    <td><%= l project.updated_at, :format => :long %></td>
+    <td class="action"><%= link_to t('show'), project %></td>
+    <td class="action"><%= link_to t('destroy'), project, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+  <% end %>
+  </tbody>
+
+</table>
+
+<%= will_paginate @projects %>
+
+<% else %>
+  <p>Non sono presenti schede progetto.</p>
+<% end %>
+</div>

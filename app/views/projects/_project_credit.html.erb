@@ -1,0 +1,8 @@
+<div class="row fields">
+  <div class="span5">
+    <%= f.hidden_field :credit_type, :value => f.object.credit_type %>
+    <%= f.text_field :credit_name, :class => "span5" %>
+  </div>
+  <div class="span3"><%= terms_select(f, "project_credits.qualifier", {:prompt => true},  :class => "span3") %></div>
+  <div class="span1 destroy"><%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %></div>
+</div>

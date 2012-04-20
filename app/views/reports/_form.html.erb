@@ -1,0 +1,8 @@
+<% form_tag("/reports", :method => :get, :id => "reports-fond-choice", :class => "skip-prompt") do %>
+  <i class="icon-search"></i>
+  <%= text_field_tag :q, params[:q], :id => "reports-fond-name-autocomplete",
+    :class => "autocomplete span6",
+    :placeholder => "Cerca un complesso archivistico",
+    :'data-autocompletion-controller' => 'fonds' %>
+  <%= hidden_field_tag :f, "", :id => "reports-fond-id-autocomplete" %>
+<% end %>

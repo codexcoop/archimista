@@ -1,0 +1,23 @@
+<script type="text/javascript">
+  $(".archidate-wrapper").archidate();
+  $(".autocomplete").archimate_autocomplete_setup();
+</script>
+<div class="modal hide fade" id="preferred-event-dialog">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Estremi cronologici</h3>
+  </div>
+  <div class="modal-body">
+    <% form_for @unit, :url => update_event_unit_path(@unit),
+                       :html => {:method => :put, :id => "preferred-event-form", :class => "skip-prompt modal-form"} do |f| %>
+      <%= f.hidden_field :parent_id,  :value => @unit.parent_id %>
+      <%= f.hidden_field :fond_id,    :value => @unit.fond_id %>
+      <div id="event-error-messages"></div>
+      <%= render :partial => "events/form", :locals => {:entity_form => f, :events => @events} %>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button id="close-events-field-dialog" class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="save-events-field-dialog" class="btn btn-primary"><%= t('save') %></button>
+  </div>
+</div>

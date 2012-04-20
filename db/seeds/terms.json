@@ -1,0 +1,160 @@
+{"vocabulary_id":1,"position":1,"term_value":"C","term_key":"corporate_body"}
+{"vocabulary_id":1,"position":2,"term_value":"P","term_key":"person"}
+{"vocabulary_id":1,"position":3,"term_value":"F","term_key":"family"}
+{"vocabulary_id":2,"position":1,"term_value":"AU","term_key":"authorized_name"}
+{"vocabulary_id":2,"position":2,"term_value":"PA","term_key":"parallel_name"}
+{"vocabulary_id":2,"position":3,"term_value":"AC","term_key":"acronym"}
+{"vocabulary_id":2,"position":4,"term_value":"OT","term_key":"other_name"}
+{"vocabulary_id":3,"position":1,"term_value":"PU","term_key":"public"}
+{"vocabulary_id":3,"position":2,"term_value":"PR","term_key":"private"}
+{"vocabulary_id":3,"position":3,"term_value":"EC","term_key":"ecclesiastic"}
+{"vocabulary_id":3,"position":3,"term_value":"NA","term_key":"not_applicable"}
+{"vocabulary_id":4,"position":1,"term_value":"tel","term_key":"tel"}
+{"vocabulary_id":4,"position":2,"term_value":"fax","term_key":"fax"}
+{"vocabulary_id":4,"position":3,"term_value":"email","term_key":"email"}
+{"vocabulary_id":5,"position":1,"term_value":"riordino e schedatura","term_key":"riordino"}
+{"vocabulary_id":5,"position":2,"term_value":"schedatura","term_key":"schedatura"}
+{"vocabulary_id":5,"position":3,"term_value":"censimento","term_key":"censimento"}
+{"vocabulary_id":6,"position":1,"term_value":"in corso","term_key":"open"}
+{"vocabulary_id":6,"position":2,"term_value":"concluso","term_key":"closed"}
+{"vocabulary_id":7,"position":1,"term_value":"coordinatore","term_key":"coordinator"}
+{"vocabulary_id":7,"position":2,"term_value":"finanziatore","term_key":"funder"}
+{"vocabulary_id":7,"position":3,"term_value":"promotore","term_key":"promoter"}
+{"vocabulary_id":7,"position":4,"term_value":"realizzatore","term_key":"realizzatore"}
+{"vocabulary_id":7,"position":5,"term_value":"schedatore","term_key":"schedatore"}
+{"vocabulary_id":7,"position":6,"term_value":"responsabile scientifico","term_key":"scientific_consultant"}
+{"vocabulary_id":8,"position":1,"term_value":"PM","term_key":"project_managers"}
+{"vocabulary_id":8,"position":2,"term_value":"PS","term_key":"project_stakeholders"}
+{"vocabulary_id":9,"position":1,"term_value":"archivio","term_key":"archive"}
+{"vocabulary_id":9,"position":2,"term_value":"complesso di fondi","term_key":"aggregate_fonds"}
+{"vocabulary_id":9,"position":3,"term_value":"iperfondo","term_key":"iperfond"}
+{"vocabulary_id":9,"position":4,"term_value":"fondo","term_key":"fond"}
+{"vocabulary_id":9,"position":5,"term_value":"subfondo","term_key":"subfond"}
+{"vocabulary_id":9,"position":6,"term_value":"sezione","term_key":"section"}
+{"vocabulary_id":9,"position":7,"term_value":"sottosezione","term_key":"subsection"}
+{"vocabulary_id":9,"position":8,"term_value":"partizione","term_key":"partition"}
+{"vocabulary_id":9,"position":9,"term_value":"sottopartizione","term_key":"subpartition"}
+{"vocabulary_id":9,"position":10,"term_value":"serie","term_key":"series"}
+{"vocabulary_id":9,"position":11,"term_value":"sottoserie","term_key":"subseries"}
+{"vocabulary_id":9,"position":12,"term_value":"sottosottoserie","term_key":"subsubsection"}
+{"vocabulary_id":9,"position":13,"term_value":"parte","term_key":"part"}
+{"vocabulary_id":9,"position":14,"term_value":"categoria","term_key":"category"}
+{"vocabulary_id":9,"position":15,"term_value":"classe","term_key":"class"}
+{"vocabulary_id":9,"position":16,"term_value":"sottoclasse","term_key":"subclass"}
+{"vocabulary_id":9,"position":17,"term_value":"rubrica","term_key":"rubric"}
+{"vocabulary_id":9,"position":18,"term_value":"voce","term_key":"voice"}
+{"vocabulary_id":9,"position":19,"term_value":"sottovoce","term_key":"subvoice"}
+{"vocabulary_id":9,"position":20,"term_value":"titolo","term_key":"title"}
+{"vocabulary_id":9,"position":21,"term_value":"sottotitolo","term_key":"subtitle"}
+{"vocabulary_id":9,"position":22,"term_value":"articolo","term_key":"article"}
+{"vocabulary_id":10,"position":1,"term_value":"ottimo","term_key":"excellent"}
+{"vocabulary_id":10,"position":2,"term_value":"buono","term_key":"good"}
+{"vocabulary_id":10,"position":3,"term_value":"discreto","term_key":"discreet"}
+{"vocabulary_id":10,"position":4,"term_value":"mediocre","term_key":"mediocre"}
+{"vocabulary_id":10,"position":5,"term_value":"cattivo","term_key":"bad"}
+{"vocabulary_id":10,"position":6,"term_value":"pessimo","term_key":"very_bad"}
+{"vocabulary_id":11,"position":1,"term_value":"PU","term_key":"public"}
+{"vocabulary_id":11,"position":2,"term_value":"PR","term_key":"private"}
+{"vocabulary_id":12,"position":1,"term_value":"ottimo","term_key":"excellent"}
+{"vocabulary_id":12,"position":2,"term_value":"buono","term_key":"good"}
+{"vocabulary_id":12,"position":3,"term_value":"discreto","term_key":"discreet"}
+{"vocabulary_id":12,"position":4,"term_value":"mediocre","term_key":"mediocre"}
+{"vocabulary_id":12,"position":5,"term_value":"cattivo","term_key":"bad"}
+{"vocabulary_id":12,"position":6,"term_value":"pessimo","term_key":"very_bad"}
+{"vocabulary_id":13,"position":1,"term_value":"registro o altra unit\u00e0 rilegata","term_key":"list"}
+{"vocabulary_id":13,"position":2,"term_value":"fascicolo o altra unit\u00e0 complessa","term_key":"file"}
+{"vocabulary_id":13,"position":3,"term_value":"unit\u00e0 documentaria","term_key":"item"}
+{"vocabulary_id":14,"position":1,"term_value":"danni da umidit\u00e0","term_key":"humidity"}
+{"vocabulary_id":14,"position":2,"term_value":"danni da alluvione","term_key":"flood"}
+{"vocabulary_id":14,"position":3,"term_value":"danni da roditori","term_key":"rodents"}
+{"vocabulary_id":14,"position":4,"term_value":"danni da insetti","term_key":"insects"}
+{"vocabulary_id":14,"position":5,"term_value":"danni da incendio","term_key":"fire"}
+{"vocabulary_id":14,"position":6,"term_value":"lacerazione","term_key":"laceration"}
+{"vocabulary_id":14,"position":7,"term_value":"macchia","term_key":"stain"}
+{"vocabulary_id":14,"position":8,"term_value":"mutilazione","term_key":"mutilation"}
+{"vocabulary_id":14,"position":9,"term_value":"perforazione","term_key":"perforation"}
+{"vocabulary_id":14,"position":10,"term_value":"piegature","term_key":"folds"}
+{"vocabulary_id":14,"position":11,"term_value":"scoloritura","term_key":"discoloration"}
+{"vocabulary_id":14,"position":12,"term_value":"sgualcitura","term_key":"crease"}
+{"vocabulary_id":14,"position":13,"term_value":"fragilit\u00e0 del supporto","term_key":"fragile"}
+{"vocabulary_id":14,"position":14,"term_value":"funghi e batteri","term_key":"funghi_e_batteri"}
+{"vocabulary_id":14,"position":15,"term_value":"strappi","term_key":"strappi"}
+{"vocabulary_id":14,"position":16,"term_value":"fogli staccati","term_key":"fogli_staccati"}
+{"vocabulary_id":14,"position":17,"term_value":"ingiallimento della carta","term_key":"ingiallimento"}
+{"vocabulary_id":14,"position":18,"term_value":"lacune","term_key":"lacune"}
+{"vocabulary_id":14,"position":19,"term_value":"sbiadimento","term_key":"sbiadimento"}
+{"vocabulary_id":14,"position":20,"term_value":"dispersione","term_key":"dispersione"}
+{"vocabulary_id":14,"position":21,"term_value":"acidit\u00e0","term_key":"acidita"}
+{"vocabulary_id":14,"position":22,"term_value":"usura","term_key":"usura"}
+{"vocabulary_id":14,"position":23,"term_value":"rottura delle cuciture","term_key":"rottura_cuciture"}
+{"vocabulary_id":15,"position":1,"term_value":"AU","term_key":"authorized_name"}
+{"vocabulary_id":15,"position":2,"term_value":"PA","term_key":"parallel_name"}
+{"vocabulary_id":15,"position":3,"term_value":"AC","term_key":"acronym"}
+{"vocabulary_id":15,"position":4,"term_value":"OT","term_key":"other_name"}
+{"vocabulary_id":16,"position":1,"term_value":"sede legale","term_key":"sede_legale"}
+{"vocabulary_id":16,"position":2,"term_value":"deposito","term_key":"deposito"}
+{"vocabulary_id":16,"position":3,"term_value":"deposito alternativo","term_key":"deposito_alternativo"}
+{"vocabulary_id":16,"position":4,"term_value":"sede decentrata","term_key":"sede_decentrata"}
+{"vocabulary_id":16,"position":5,"term_value":"sede di consultazione","term_key":"sede_consultazione"}
+{"vocabulary_id":16,"position":6,"term_value":"sede per la didattica","term_key":"sede_per_la_didattica"}
+{"vocabulary_id":17,"position":1,"term_value":"liberamente accessibile","term_key":"liberamente_accessibile"}
+{"vocabulary_id":17,"position":2,"term_value":"accessibile previa autorizzazione","term_key":"accessibile_previa_autorizzazione"}
+{"vocabulary_id":17,"position":3,"term_value":"non consultabile","term_key":"non_consultabile"}
+{"vocabulary_id":17,"position":4,"term_value":"parzialmente accessibile","term_key":"parzialmente_accessibile"}
+{"vocabulary_id":18,"position":1,"term_value":"libera","term_key":"libera"}
+{"vocabulary_id":18,"position":2,"term_value":"consentita per uso studio","term_key":"consentita_per_uso_studio"}
+{"vocabulary_id":18,"position":3,"term_value":"a pagamento","term_key":"a_pagamento"}
+{"vocabulary_id":18,"position":4,"term_value":"negata","term_key":"negata"}
+{"vocabulary_id":19,"position":1,"term_value":"liberamente accessibile","term_key":"liberamente_accessibile"}
+{"vocabulary_id":19,"position":2,"term_value":"accessibile previa autorizzazione","term_key":"accessibile_previa_autorizzazione"}
+{"vocabulary_id":19,"position":3,"term_value":"non consultabile","term_key":"non_consultabile"}
+{"vocabulary_id":19,"position":4,"term_value":"parzialmente accessibile","term_key":"parzialmente_accessibile"}
+{"vocabulary_id":20,"position":1,"term_value":"libera","term_key":"libera"}
+{"vocabulary_id":20,"position":2,"term_value":"consentita per uso studio","term_key":"consentita_per_uso_studio"}
+{"vocabulary_id":20,"position":3,"term_value":"a pagamento","term_key":"a_pagamento"}
+{"vocabulary_id":20,"position":4,"term_value":"negata","term_key":"negata"}
+{"vocabulary_id":21,"position":1,"term_value":"unit\u00e0","term_key":"level_file"}
+{"vocabulary_id":21,"position":2,"term_value":"sottounit\u00e0","term_key":"level_subfile"}
+{"vocabulary_id":22,"position":1,"term_value":"album","term_key":"album"}
+{"vocabulary_id":22,"position":2,"term_value":"busta","term_key":"busta"}
+{"vocabulary_id":22,"position":3,"term_value":"cartella","term_key":"cartella"}
+{"vocabulary_id":22,"position":4,"term_value":"faldone","term_key":"faldone"}
+{"vocabulary_id":22,"position":5,"term_value":"fascicolo","term_key":"fascicolo"}
+{"vocabulary_id":22,"position":6,"term_value":"filza","term_key":"filza"}
+{"vocabulary_id":22,"position":7,"term_value":"foglio","term_key":"foglio"}
+{"vocabulary_id":22,"position":8,"term_value":"manifesto","term_key":"manifesto"}
+{"vocabulary_id":22,"position":9,"term_value":"mappa","term_key":"mappa"}
+{"vocabulary_id":22,"position":10,"term_value":"mazzo","term_key":"mazzo"}
+{"vocabulary_id":22,"position":11,"term_value":"opuscolo","term_key":"opuscolo"}
+{"vocabulary_id":22,"position":12,"term_value":"pacco","term_key":"pacco"}
+{"vocabulary_id":22,"position":13,"term_value":"plico","term_key":"plico"}
+{"vocabulary_id":22,"position":14,"term_value":"quaderno","term_key":"quaderno"}
+{"vocabulary_id":22,"position":15,"term_value":"registro","term_key":"registro"}
+{"vocabulary_id":22,"position":16,"term_value":"rivista","term_key":"rivista"}
+{"vocabulary_id":22,"position":17,"term_value":"rotolo","term_key":"rotolo"}
+{"vocabulary_id":22,"position":18,"term_value":"scatola","term_key":"scatola"}
+{"vocabulary_id":22,"position":19,"term_value":"scheda","term_key":"scheda"}
+{"vocabulary_id":22,"position":20,"term_value":"taccuino","term_key":"taccuino"}
+{"vocabulary_id":22,"position":21,"term_value":"volume","term_key":"volume"}
+{"vocabulary_id":23,"position":1,"term_value":"carta","term_key":"paper"}
+{"vocabulary_id":23,"position":2,"term_value":"pergamena","term_key":"parchment"}
+{"vocabulary_id":23,"position":2,"term_value":"carta telata","term_key":"linen_paper"}
+{"vocabulary_id":23,"position":3,"term_value":"cartoncino","term_key":"cardboard"}
+{"vocabulary_id":23,"position":4,"term_value":"pellicola","term_key":"film"}
+{"vocabulary_id":23,"position":5,"term_value":"altro","term_key":"other"}
+{"vocabulary_id":24,"position":1,"term_value":"Ente","term_key":"corporate_body"}
+{"vocabulary_id":24,"position":2,"term_value":"Persona","term_key":"person"}
+{"vocabulary_id":24,"position":3,"term_value":"Famiglia","term_key":"family"}
+{"vocabulary_id":24,"position":4,"term_value":"Toponimo","term_key":"geographic"}
+{"vocabulary_id":24,"position":5,"term_value":"Altro","term_key":"other"}
+{"vocabulary_id":25,"position":1,"term_value":"aggiornamento scheda","term_key":"aggiornamento_scheda"}
+{"vocabulary_id":25,"position":2,"term_value":"inserimento dati","term_key":"inserimento_dati"}
+{"vocabulary_id":25,"position":3,"term_value":"integrazione successiva","term_key":"integrazione_successiva"}
+{"vocabulary_id":25,"position":4,"term_value":"prima redazione","term_key":"prima_redazione"}
+{"vocabulary_id":25,"position":5,"term_value":"revisione","term_key":"revisione"}
+{"vocabulary_id":25,"position":6,"term_value":"rielaborazione","term_key":"rielaborazione"}
+{"vocabulary_id":25,"position":7,"term_value":"schedatura","term_key":"schedatura"}
+{"vocabulary_id":26,"position":1,"term_value":"immagine","term_key":"image"}
+{"vocabulary_id":26,"position":2,"term_value":"testo","term_key":"text"}
+{"vocabulary_id":26,"position":3,"term_value":"audio","term_key":"audio"}
+{"vocabulary_id":26,"position":4,"term_value":"video","term_key":"video"}

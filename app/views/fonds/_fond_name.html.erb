@@ -1,0 +1,12 @@
+<div class="fields row-fluid">
+  <div class="span6">
+    <%= f.text_field :name, :class => "span6" %>
+  </div>
+  <div class="span5">
+    <%= f.text_field :note, :class => "span5" %>
+    <%= f.hidden_field :qualifier, :value => f.object.qualifier %>
+  </div>
+  <div class="span1 destroy">
+    <%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %>
+  </div>
+</div>

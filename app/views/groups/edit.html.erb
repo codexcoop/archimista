@@ -1,0 +1,9 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_groups'), groups_path %>
+  </div>
+<% end %>
+
+<%= render :partial => "form" %>
+

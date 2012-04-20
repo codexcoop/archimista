@@ -1,0 +1,190 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_custodians'), custodians_path %>
+  </div>
+<% end %>
+
+<div id="record-main" class="span9">
+  <h3 class="section"><%= t('identification_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('legal_status')%></th>
+      <td><%= show_value(@custodian.legal_status, "t") %></td>
+    </tr>
+    <tr>
+      <th><%= t('custodian_macro_type') %></th>
+      <td>
+        <% if @custodian.custodian_type.present? %>
+          <%= @custodian.custodian_type.custodian_type.capitalize %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('preferred_name') %></th>
+      <td><%= @custodian.preferred_name.name %> <%= show_item(@custodian.preferred_name.note, ["[","]"]) %></td>
+    </tr>
+    <tr>
+      <th><%= t('other_names')%></th>
+      <td>
+        <% if @custodian.other_names.present? %>
+          <ul>
+            <% @custodian.other_names.each do |other_name| %>
+              <li><%= show_item(other_name.name) %> <%= show_item(t(other_name.qualifier), ["<span>(",")</span>"]) %>
+                <%= show_item(other_name.note, ["[","]"]) %></li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('custodian_history') %></th>
+      <td><%= show_value(textilize(@custodian.history)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('custodian_contact_type')%></th>
+      <td>
+        <% if @custodian.custodian_contacts.present? %>
+          <ul>
+            <% @custodian.custodian_contacts.each do |custodian_contacts| %>
+              <li>
+                <%= show_value(custodian_contacts.contact_type, "t") %>:
+                <%= show_item(custodian_contacts.contact) %>
+                <%= show_item(custodian_contacts.contact_note, ["[","]"]) %></li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('contact_person') %></th>
+      <td><%= show_value(@custodian.contact_person) %></td>
+    </tr>
+    <tr>
+      <th><%= t('custodian_owners') %></th>
+      <td>
+        <% if @custodian.custodian_owners.present? %>
+          <ul>
+            <% @custodian.custodian_owners.each do |custodian_owner| %>
+              <li><%= show_item(custodian_owner.owner) %></li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('custodian_urls') %></th>
+      <td>
+        <% if @custodian.custodian_urls.present? %>
+          <ul>
+            <% @custodian.custodian_urls.each do |cu_name| %>
+              <li><%= show_item(cu_name.url) %> <%= show_item(cu_name.note, ["[","]"]) %></li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+    <tr>
+      <th><%= t('custodian_identifiers') %></th>
+      <td>
+        <% if @custodian.custodian_identifiers.present? %>
+          <ul>
+            <% @custodian.custodian_identifiers.each do |ci_name| %>
+              <li>
+                <%= show_item(ci_name.identifier) %>
+                <%= show_item(ci_name.identifier_source, ["<span>(",")</span>"]) %>
+                <%= show_item(ci_name.note, ["[","]"]) %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('description_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('holdings') %></th>
+      <td><%= show_value(textilize(@custodian.holdings)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('collecting_policies') %></th>
+      <td><%= show_value(textilize(@custodian.collecting_policies)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('administrative_structure') %></th>
+      <td><%= show_value(textilize(@custodian.administrative_structure)) %></td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('access_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('accessibility') %></th>
+      <td><%= show_value(textilize(@custodian.accessibility)) %></td>
+    </tr>
+    <tr>
+      <th><%= t('services') %></th>
+      <td><%= show_value(textilize(@custodian.services)) %></td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('buildings') %></h3>
+  <table class="table-show">
+    <% @custodian.custodian_buildings.each do |custodian_building| %>
+      <tr>
+        <th><%= show_item(custodian_building.custodian_building_type.capitalize, ["", ""]) %></th>
+        <td>
+          <%= show_item(custodian_building.name, ["", "<br />"]) %>
+          <%= show_item(custodian_building.address, ["", "<br />"]) %>
+          <%= show_item(custodian_building.postcode) %>   <%= show_item(custodian_building.city, ["", "<br />"]) %>
+          <%= show_item(custodian_building.state) %> <%= show_item(custodian_building.country) %>
+        </td>
+      </tr>
+      <tr>
+        <th><%= t('description') %></th>
+        <td><%= show_value(textilize(custodian_building.description)) %></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <h3 class="section"><%= t('relationships_area')%></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('fonds')%></th>
+      <td>
+        <% if @custodian.fonds.present? %>
+          <ul>
+            <% @custodian.fonds.each do |fond| %>
+              <li><%= link_to "#{fond.name}", fond_path(fond) %>
+                <%= fond.preferred_event.full_display_date if fond.preferred_event %></li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <%= render :partial => "shared/show_sources", :object => @custodian.sources %>
+
+  <%= render :partial => "shared/show_editors", :object => @custodian.custodian_editors %>
+
+</div>
+
+<%= render :partial => "shared/side", :object => @custodian %>
+

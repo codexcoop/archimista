@@ -1,0 +1,16 @@
+<% content_for :status_bar do %>
+  <h2>
+    <% if current_user == @user %>
+      Modifica profilo
+    <% else %>
+      <%= status_bar_context %>
+    <% end %>
+  </h2>
+  <% if current_user.is_at_least_admin? %>
+    <div id="links">
+      <%= link_to_index t('index_users'), users_path %>
+    </div>
+  <% end %>
+<% end %>
+
+<%= render :partial => "form" %>

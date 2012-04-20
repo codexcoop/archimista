@@ -1,0 +1,37 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <% if current_user.is_at_least_admin? %>
+    <div id="links">
+      <%= link_to "Vai alla lista utenti", users_path %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="span12">
+
+<div id="index-controls">
+  <%= link_to t('new'), new_group_path, { :class => "btn btn-small new" } %>
+</div>
+
+<div class="row">
+  <div class="span6">
+    <table class="table">
+      <tr>
+        <th><%= t('name') %></th>
+        <th class="center"><%= t('users_count') %></th>
+        <th>&nbsp;</th>
+      </tr>
+      <% @groups.each do |group| %>
+      <tr>
+        <td><%= link_to_unless(group.name == 'default', group.name, edit_group_path(group)) %></td>
+        <td class="center"><%= group.users.count %></td>
+        <td>
+          <%= link_to_if(group.is_empty?, t('destroy'), group, :method => :delete) do |text| '' end %>
+        </td>
+      </tr>
+      <% end %>
+    </table>
+  </div>
+</div>
+
+</div>

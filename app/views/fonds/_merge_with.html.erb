@@ -1,0 +1,47 @@
+<%# OPTIMIZE: valutare se spostare questo js in fond-merge.js %>
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#term').liveUpdate('#fonds-list', {
+      url: '/fonds/list.json',
+      field: 'new_root_id',
+      exclude : {exclude: [<%= object.id %>]}
+    });
+  });
+</script>
+
+<div class="modal hide fade" id="merge-fonds-modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Unisci complessi archivistici</h3>
+  </div>
+  <div class="modal-body">
+    <p>Unisci il complesso <strong><%= object.name %></strong> con uno di tua scelta.</p>
+    <p class="muted">Il complesso sarà inserito nel complesso di destinazione come primo figlio di livello 1.</p>
+
+    <% if fonds.size > 10 %>
+      <form id="search-fond">
+        <%= text_field_tag :term, '', :id => "term",
+          :class => "span6",
+          :placeholder => "Cerca un nuovo complesso padre" %>
+      </form>
+    <% end %>
+    <% form_tag({:controller => 'fonds', :action => 'merge', :id => object.id}, {:id => "merge-fonds-form", :class => "skip-prompt"}) do %>
+      <ul id="fonds-list" class="unstyled">
+        <% unless fonds.size > 10 %>
+          <% fonds.each do |fond| %>
+            <li>
+              <label class="livesearch radio">
+                <input name="new_root_id" value="<%= fond.id %>" type="radio" />
+                <%= fond.value %>
+              </label>
+            </li>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="confirm-merge" class="submit btn btn-primary disabled">Unisci</button>
+  </div>
+</div>

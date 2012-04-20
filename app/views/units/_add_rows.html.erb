@@ -1,0 +1,35 @@
+<div class="modal hide fade" id="mass-add-modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Aggiungi unità</h3>
+  </div>
+  <div id="add-rows-dialog" class="modal-body">
+  <% form_tag({:action => 'add_rows'}, {:method => :post, :id => "add-rows-form", :class => "skip-prompt modal-form"}) do %>
+    <%= hidden_field_tag 'unit[root_fond_id]', @fond.root_id %>
+    <%= hidden_field_tag 'unit[ancestry_depth]', 0 %>
+    <%= hidden_field_tag 'unit[fond_id]', @fond.id %>
+    <%= hidden_field_tag 'unit[created_at]', Time.now %>
+    <%= hidden_field_tag 'unit[updated_at]', Time.now %>
+    <%= hidden_field_tag 'unit[created_by]', current_user.id %>
+    <%= hidden_field_tag 'unit[updated_by]', current_user.id %>
+
+    <%= label_tag 'number_of_rows', t('how_many_rows') + required_marker %>
+    <%= text_field_tag 'number_of_rows', 1, :class => "input-mini", :maxlength => 3 %>
+    <span class="muted"> <%= t('rows_range') %></span>
+    <span id="number-of-rows-msg" class="inline-msg hide">deve essere un numero da 1 a 100</span>
+
+    <%= label_tag 'unit[title]', t('tmp_title') + required_marker  %>
+    <%= text_field_tag 'unit[title]', '', :class => "span4" %>
+    <span id="unit-title-msg" class="inline-msg hide">obbligatorio</span>
+
+    <%= label_tag 'unit[unit_type]', t('tmp_unit_type') + required_marker %>
+    <%= select_tag 'unit[unit_type]', options_for_select(@vocabularies['units.unit_type'].to_a.map(&:reverse)), :class => "span4" %>
+    <span id="unit-type-msg" class="inline-msg hide">obbligatorio</span>
+
+  <% end %>
+</div>
+  <div class="modal-footer">
+    <button id="close-mass-add" class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="confirm-mass-add" class="btn btn-primary"><%= t('confirm') %></button>
+  </div>
+</div>

@@ -1,0 +1,150 @@
+<div class="modal hide fade" id="mass-reorder-modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Riordina unità<%#= t('reorder') # TODO: i18n %></h3>
+  </div>
+
+  <div class="modal-body clearfix" id="reorder-row-dialog">
+  <% form_tag({:action => 'reorder_rows'}, {:method => :put, :id => "reorder-rows-form", :class => "skip-prompt modal-form"}) do %>
+    <p>Seleziona uno o più campi per il riordino.<br />
+    Il riordino si applicherà a tutte le unità del complesso archivistico <strong><%= @fond.name %></strong></p>
+    <%#= @fond.unit_ids.sort.inspect # Solo per debug %>
+    <div><%= hidden_field_tag "filter_ids", @fond.unit_ids.sort.join(",") %></div>
+    <div class="reorder-attributes available">
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'id' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'id',
+                          :txt => "ID (ordine di inserimento)" %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'id' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'tmp_reference_number' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'tmp_reference_number',
+                          :txt => t('activerecord.attributes.unit.tmp_reference_number') %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'tmp_reference_number' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'tmp_reference_string' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'tmp_reference_string',
+                          :txt => t('activerecord.attributes.unit.tmp_reference_string') %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'tmp_reference_string' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'reference_number' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'reference_number',
+                          :txt => t('activerecord.attributes.unit.reference_number') %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'reference_number' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'title' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'title',
+                          :txt => t('activerecord.attributes.unit.title') %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'title' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'start_date_from' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'start_date_from',
+                          :txt => t('activerecord.attributes.unit_event.start_date_from') %>
+          <%= reorder_tag( :hidden_field, :param => 'table', :value => 'unit_events' ) %>
+          <%= reorder_tag( :hidden_field, :param => 'preferred', :value => true ) %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'start_date_from' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+      <div class="reorder-attribute">
+        <div class="reorder-label">
+          <%= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'end_date_from' ) %>
+          <%= reorder_tag :label,
+                          :attr => 'end_date_from',
+                          :txt => t('activerecord.attributes.unit_event.end_date_from') %>
+          <%= reorder_tag( :hidden_field, :param => 'table', :value => 'unit_events' ) %>
+          <%= reorder_tag( :hidden_field, :param => 'preferred', :value => true ) %>
+        </div>
+        <div class="reorder-checkbox"><%= reorder_tag( :check_box, :attr => 'end_date_from' ) %></div>
+        <div class="reorder-direction"><%= reorder_tag( :direction_select ) %></div>
+        <div class="reorder-add"><%= link_to t('reorder_add'), '#' %></div>
+        <div class="reorder-remove"><%= link_to t('reorder_remove'), '#' %></div>
+      </div>
+    </div>
+    
+    <div class="reorder-attributes selected">
+      <%# filled by Javascript %>
+    </div>
+  <% end %>
+  </div>
+
+  <div class="modal-footer">
+    <button id="close-mass-reorder" class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="confirm-reorder" class="submit btn btn-primary disabled"><%= t('reorder') %></button>
+  </div>
+</div>
+
+<!--
+<div class="reorder-attribute">
+  <div class="reorder-label">
+    <%#= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'sort_letter' ) %>
+    <%#= reorder_tag :label,
+                    :attr => 'sort_letter',
+                    :txt => t('activerecord.attributes.unit.sort_letter') %>
+  </div>
+  <div class="reorder-checkbox"><%#= reorder_tag( :check_box, :attr => 'sort_letter' ) %></div>
+  <div class="reorder-direction"><%#= reorder_tag( :direction_select ) %></div>
+  <div class="reorder-add"><%#= link_to t('reorder_add'), '#' %></div>
+  <div class="reorder-remove"><%#= link_to t('reorder_remove'), '#' %></div>
+</div>
+-->
+
+<!--
+<div class="reorder-attribute">
+  <div class="reorder-label">
+    <%#= reorder_tag( :hidden_field, :param => 'attr_name', :value => 'sort_number' ) %>
+    <%#= reorder_tag :label,
+                    :attr => 'sort_number',
+                    :txt => t('activerecord.attributes.unit.sort_number') %>
+  </div>
+  <div class="reorder-checkbox"><%#= reorder_tag( :check_box, :attr => 'sort_number' ) %></div>
+  <div class="reorder-direction"><%#= reorder_tag( :direction_select ) %></div>
+  <div class="reorder-add"><%#= link_to t('reorder_remove'), '#' %></div>
+  <div class="reorder-remove"><%#= link_to t('reorder_remove'), '#' %></div>
+</div>
+-->
+<%# For simple cases (fields of the target model) only attr_name (with label, check_box and direction) is required. %>
+<%# When the reorder is based on fields from different tables, also the external table_name must be specified. %>
+<%# You can also specify additional conditions in additional hidden_fields: %>
+<%# - by default the additional conditions will be set on the main table (units, in this case) %>
+<%# - if a table has been given, those conditions will be applied to the external table %>
+<%# Compare "title" vs "start_date_from" for an example %>

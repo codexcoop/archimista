@@ -1,0 +1,71 @@
+<div id="cover" class="pb_after">
+  <h1>
+    <%= @root_fond_name %>
+    <span class="date"><%=  @root_fond_preferred_date %></span>
+  </h1>
+</div>
+
+<% @fonds.each do |f| %>
+  <div class="fond pbi_avoid">
+    <h2>
+      <%= f.name %>
+      <% if f.preferred_event.present? %>
+        <span class="date"><%= f.preferred_event.full_display_date %></span>
+      <% end %>
+    </h2>
+    <p class="type"><%= f.fond_type %></p>
+
+    <% if f.abstract.present? %>
+      <div>
+        <h4><%= t('abstract') %></h4>
+        <%= textilize_with_entities(f.abstract) %>
+      </div>
+    <% end %>
+
+    <% if f.history.present? %>
+      <div>
+        <h4><%= t('history') %></h4>
+        <%= textilize_with_entities(f.history) %>
+      </div>
+    <% end %>
+
+    <% if f.description.present? %>
+      <div>
+        <h4><%= t('description') %></h4>
+        <%= textilize_with_entities(f.description) %>
+      </div>
+    <% end %>
+
+    <% if f.creators.present? %>
+      <h4><%= t('creators') %></h4>
+      <% f.creators.each do |creator| %>
+        <div>
+          <%= creator.preferred_name.name if creator.preferred_name.name.present? %>
+          <span class="date"><%= creator.preferred_event.full_display_date if creator.preferred_event.present? %></span>
+        </div>
+      <%  end %>
+    <% end %>
+
+    <% if f.units.present? %>
+      <% f.units.each do |u| %>
+        <div class="unit pbi_avoid">
+          <p class="head">
+            <span class="left"><strong><%= u.sequence_number %></strong></span>
+            <span class="right"><%= u.reference_number %></span>
+          </p>
+          <p>
+            <strong><%= u.title %></strong>
+            <% if u.preferred_event.present? %><br />
+              <em><%= u.preferred_event.full_display_date_with_place %></em>
+            <% end %>
+          </p>
+          <% if u.content.present? %>
+            <div>
+              <%= textilize_with_entities(u.content) %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<%  end %>

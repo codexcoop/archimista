@@ -1,0 +1,9 @@
+<% content_tag :td, :style => "width:180px; padding-top:6px;" do %>
+  <%= through_record_form.collection_select :creator_association_type_id,
+                                            @association_types,
+                                            :id,
+                                            :association_type,
+                                            options={},
+                                            html_options={:style => "width:170px;"} %>
+<% end %>
+

@@ -1,0 +1,65 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_imports') %></h2>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <%= link_to t('new_import'), new_import_path, { :class => "btn btn-small new" } %>
+  </div>
+
+  <% if @imports.empty? %>
+    <p>Nessun database importato.</p>
+  <% else %>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Complesso archivistico</th>
+          <th>Importato da</th>
+          <th>Data</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @imports.each do |import| %>
+          <tr>
+            <td>
+              <%# if import.fond.is_root? %>
+                <%= link_to import.fond.name, treeview_fond_path(import.fond) %>
+              <%# else %>
+                <%#= import.fond.name %>
+              <%# end %>
+            </td>
+            <td><%= import.user.full_name %></td>
+            <td><%= l import.created_at, :format => :long %></td>
+            <td class="action">
+              <% if import.deletable? %>
+                <%= link_to t('destroy'), '#', {:class => 'delete-import', "data-import-id".to_sym => import.id} %>
+              <% else %>
+                non cancellabile
+              <%end%>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <div class="modal hide fade" id="confirm-delete-import">
+      <div class="modal-header">
+        <a class="close" data-dismiss="modal">×</a>
+        <h3>Elimina importazione</h3>
+      </div>
+      <div class="modal-body">
+        <p>Sei sicuro di voler eliminare definitivamente tutti gli elementi di questa importazione?</p>
+        <!--<p class="muted">Saranno eliminati l'intero complesso archivistico e le eventuali entità collegate: unità archivistiche, soggetti produttori, soggetti conservatori e i dati collegati a queste entità principali.</p>-->
+        <p class="muted">Saranno eliminate tutte le schede importate, comprese le modifiche successive.</p>
+        <p class="muted">Non puoi annullare questa azione.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+        <button id="confirm-delete-btn" class="btn btn-danger"><%= t('destroy') %></button>
+      </div>
+    </div>
+
+  <% end %>
+</div>
+

@@ -1,0 +1,45 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <% if @custodians.total_entries > Custodian.per_page || params[:q].present? %>
+      <% form_tag('/custodians', :method => :get, :class => "skip-prompt form-search pull-right") do %>
+        <%= text_field_tag :q, params[:q], :class => "search-query", :placeholder => "Denominazione" %>
+        <%= submit_tag "Cerca", :name => "", :class => "btn btn-small" %>
+      <% end %>
+    <% end %>
+    <%= link_to t('new'), new_custodian_path, { :class => "btn btn-small new" } %>
+  </div>
+
+  <% if @custodians.size > 0 %>
+  <%= display_page_entries_info @custodians %>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th class="span8"><%= sortable("name", t('custodian_name')) %></th>
+      <th><%= sortable("updated_at", t('updated_at')) %></th>
+      <th>&nbsp;</th>
+      <th>&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @custodians.each do |custodian| %>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td><%= link_to custodian.name, edit_custodian_path(custodian) %></td>
+        <td><%= l custodian.updated_at, :format => :long %></td>
+        <td><%= link_to t('show'), custodian %></td>
+        <td><%= link_to t('destroy'), custodian, :confirm => t('are_you_sure'), :method => :delete %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+<%= will_paginate @custodians %>
+
+<% else %>
+  <p>Non sono presenti schede soggetto conservatore.</p>
+<% end %>
+</div>

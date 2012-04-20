@@ -1,0 +1,417 @@
+/*
+  Title: Archimate master styles for screen media
+  Author: Codex, Pavia (IT) - http://www.codexcoop.it
+  Created: 2011-2012
+*/
+
+/* TODO: [LOW] testare IE e inibire accesso istanza server a browser obsoleti */
+
+body {
+  padding-top: 80px;
+  /* background: #E3E9ED; */
+}
+
+/* Header
+----------------------------------------------------- */
+/* navbar */
+.navbar {
+  margin-bottom: 0;
+}
+.navbar-inner {
+  background: #333 url(/images/overlay.png) repeat-x;
+}
+.navbar .container-fluid {
+  padding-left: 5px;
+}
+.navbar .nav > li > a {
+  color: #aaa;
+  padding: 10px 13px 11px 13px;
+  border-right: 1px solid #999;
+  border-right-color: rgba(153, 153, 153, 0.6);
+}
+.navbar .nav > li > a:hover, .navbar .nav .open > .dropdown-toggle {
+  background: #222 url(/images/overlay.png) repeat-x;
+}
+.navbar .nav .active > a, .navbar .nav .active > a:hover  {
+  background: inherit;
+}
+.navbar .dropdown-menu {
+  width: 220px;
+}
+.navbar-text {
+  font-size: 11px;
+}
+.navbar-text a {
+  color: #fff;
+}
+
+/* status-bar */
+/* Modello: .subnav ==> http://twitter.github.com/bootstrap/assets/css/docs.css */
+#status-bar {
+  position: fixed;
+  top: 40px;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  height: 40px;
+  background-color: #eeeeee; /* Old browsers */
+  background-repeat: repeat-x; /* Repeat the gradient */
+  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #eeeeee)); /* Chrome, Safari4+ */
+  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* Chrome 10+, Safari 5.1+ */
+  background-image: -ms-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* IE10+ */
+  background-image: -o-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* Opera 11.10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#eeeeee', GradientType=0 ); /* IE6-9 */
+  background-image: linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* W3C */
+  border-bottom: 1px solid #ccc; /* oppure #e5e5e5; */
+}
+/* quickfix per evitare sovrapposizione di path lunghissimi a #links */
+/* FIXME: invertire ordine di elementi e usare float right su #links; rendere più preciso allineamento tra h2 e #links */
+#status-bar h2 {
+  width: 80%;
+  margin: 0;
+  padding: 15px 18px 13px 18px;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 13px;
+  text-shadow: 0 1px 0 #ffffff;
+}
+.divider { /* DUBBIO: rinominare in path-separator, si usa in diversi contesti, attenzione a spazi */
+  padding: 0 5px;
+  color: #999999;
+}
+#status-bar .active a {
+  color: #333333;
+}
+#status-bar #links {
+  position: absolute;
+  top: 11px;
+  right: 20px;
+  margin: 0;
+  padding: 0;
+  font-size: 11px;
+  line-height: 18px;
+}
+
+/* Content
+----------------------------------------------------- */
+#content .container {
+  min-width: 980px;
+  min-height: 460px;
+  margin: 15px 0;
+  padding: 0 18px;
+}
+#content .container-fluid {
+  min-width: 980px;
+  min-height: 460px;
+  margin: 15px 0;
+}
+
+/* Footer
+----------------------------------------------------- */
+#footer {
+  margin: 12px 0 0 0;
+  padding: 6px 20px 10px 20px;
+  border-top: 1px solid #ccc;
+  font-size: 11px;
+  line-height: 1;
+  color: #999;
+}
+
+/* Record pages
+----------------------------------------------------- */
+.nav-tabs {
+  font-size: 12px;
+}
+#record-container {
+  width: 1000px;
+}
+#record-main {
+  min-height: 460px;
+  padding-right: 19px;
+  border-right: 1px solid #ccc;
+}
+#record-side {
+  width: 260px;
+/* float: right; */
+  position: fixed;
+  top: 95px;
+  left: 740px;
+  right: 0;
+  /* background: #f5f5f5;*/
+}
+#record-main label, #record-main .row-labels {
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #666;
+}
+a.add_child {
+  font-size: 11px;
+  font-weight: bold;
+}
+a.add_child:before, a.new:before {
+  content: "+ ";
+}
+/* TODO: riordinare ! */
+#side-nav {
+  text-align: center;
+}
+#side-meta {
+  font-size: 11px;
+  color: #666;
+}
+#updater {
+  margin: 0;
+}
+#updater dt {
+  color: #999;
+  font-weight: normal;
+}
+#updater dd {
+  margin: 0;
+}
+#record-side hr {
+  margin: 14px 0;
+  border-top-color: #ddd;
+  border-bottom-color: #eee;
+}
+#record-side span.nav-counter {
+  display: inline-block;
+  padding: 4px 0;
+}
+.destroy-link {
+  padding: 0 4px;
+  font-size: 11px;
+  color: #999;
+}
+.destroy-link:hover {
+  padding: 0 4px;
+  font-size: 11px;
+  text-decoration: none;
+  color: white;
+  background: red;
+}
+select {
+  width: 140px;
+}
+.btn-small .caret {
+  margin-top: 7px;
+  margin-left: 4px;
+}
+
+/* Tables
+----------------------------------------------------- */
+.table th {
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #666;
+  background: #efefef;
+}
+.table th a {
+  color: #666;
+}
+
+/* table-show */
+h3.section {
+  margin: 0 0 10px 0;
+  padding: 3px 6px 4px 6px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 18px;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #fff;
+  background: #999;
+}
+.table-show {
+  width: 98%;
+/* width: 692px; */ /* TODO: forse meglio calcolare al pixel */
+  margin-bottom: 18px;
+}
+.table-show th,
+.table-show td {
+  padding: 8px 6px;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px dotted #ddd;
+}
+.table-show th {
+  width: 204px;
+  border-right: 1px dotted #ddd;
+  font-weight: normal;
+  color: #666;
+}
+.table-show td {
+  padding: 8px 0 8px 8px;
+}
+.table-show p {
+/*
+  margin: 0 0 13px 0;
+  padding: 0;
+*/
+}
+/* ??? */
+.table-show td .light {
+  color: #000;
+}
+
+/* Forms: custom IDS and CLASSES
+----------------------------------------------------- */
+h3.row-header {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+  color: #666;
+}
+.destroy {
+  margin-top: 5px;
+}
+.destroy label {
+  display: inline;
+  margin-left: 2px;
+  font-size: 11px;
+  font-weight: normal;
+}
+.row-group {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+textarea.x-short-content {
+  height: 3em;
+}
+textarea.short-content {
+  height: 6em;
+}
+textarea.medium-content {
+  height: 9em;
+}
+textarea.long-content {
+  height: 24em;
+}
+textarea.x-long-content {
+  height: 36em;
+}
+label.inline {
+  display: inline;
+  font-weight: normal;
+}
+#user-form input[type="text"], #user-form input[type="password"] {
+  width: 380px;
+}
+#user-form select {
+  width: 220px;
+}
+#user-form {
+  padding-bottom: 0;
+}
+
+/* Patterns
+----------------------------------------------------- */
+.blank {
+  color: #999;
+}
+.odd {
+  background: #fff;
+}
+.even {
+  background: #F9F9F9;
+}
+.inline-msg {
+  display: none;
+  font-size: 11px;
+  color: #f00;
+}
+.alert-success {
+  z-index: 3000;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  margin-top: 1px;
+  margin-left: -150px;
+}
+
+/* Fonds + headings: misc
+----------------------------------------------------- */
+#remove-node, #create {
+  padding: 10px;
+}
+.highlight {
+  font-weight: bold;
+}
+
+/* Units: modals + misc
+----------------------------------------------------- */
+#mass-classify-modal {
+  width: 700px;
+  margin-left: -350px; /* margine negativo = metà dell'ampiezza */
+}
+#mass-reorder-modal {
+  width: 860px;
+  margin-left: -430px;
+}
+/* FIXME: non vanno bene proprietà hover su elementi <a> jump-to-tree. Bootstrap sovrascrive jsTree */
+#jump-to-wrap {
+  float: left;
+}
+#jump-to {
+  margin: 6px 10px 6px 18px;
+}
+#jump-to-dialog {
+  margin: 0 18px;
+  width: 700px;
+  height: 460px;
+}
+#jump-to-tree {
+  padding: 10px 15px;
+  height: 440px;
+  overflow: auto;
+}
+#standalone-edit-command-wrapper {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 0;
+  margin-right: 3px;
+  text-decoration: none;
+}
+#standalone-edit-command {
+  color: #fff;
+  text-decoration: none;
+}
+#preferred-event-dialog {
+  width: 780px;
+  margin-left: -390px;
+}
+#unit-path-title {
+  line-height: 13px;
+  margin-bottom: 10px;
+}
+
+/* Relations
+----------------------------------------------------- */
+.relation-selection {
+  margin-bottom: 18px;
+}
+
+/* TMP / DEBUG
+----------------------------------------------------- */
+#debug-ancestry {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 6px 24px;
+  background: #ffc;
+}
+
+#footnotes_debug {
+  /*display: none;*/
+}
+

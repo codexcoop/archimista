@@ -1,0 +1,23 @@
+<%= render :partial => "shared/generic_error_message", :object => @heading %>
+
+<% form_for @heading do |f| %>
+  <div class="span9">
+
+    <%= f.label t('heading_type') %>
+    <%= terms_select(f, "headings.heading_type", {}, :class=> "span4") %>
+
+    <%= f.label t('heading_name') %>
+    <%= f.text_field :name, :class=> "span4" %>
+
+    <%= f.label t('heading_dates') %>
+    <%= f.text_field :dates, :class=> "span4" %>
+
+    <%= f.label t('heading_qualifier') %>
+    <%= f.text_field :qualifier, :class=> "span4"%>
+
+    <%= f.hidden_field :group_id, :value => current_user.group_id %>
+    <p><%= f.submit t('save'), :class => "btn btn-primary" %></p>
+  </div>
+<% end %>
+
+ 

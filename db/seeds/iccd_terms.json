@@ -1,0 +1,295 @@
+{"position":1,"term_value":"F","term_scope":null,"term_key":"F - fotografia","iccd_vocabulary_id":1}
+{"position":2,"term_value":"S","term_scope":null,"term_key":"S - stampa","iccd_vocabulary_id":1}
+{"position":3,"term_value":"D","term_scope":null,"term_key":"D - disegno","iccd_vocabulary_id":1}
+{"position":1,"term_value":"negativo","term_scope":"F","term_key":"negativo","iccd_vocabulary_id":2}
+{"position":2,"term_value":"positivo","term_scope":"F","term_key":"positivo","iccd_vocabulary_id":2}
+{"position":3,"term_value":"diapositiva","term_scope":"F","term_key":"diapositiva","iccd_vocabulary_id":2}
+{"position":4,"term_value":"unicum","term_scope":"F","term_key":"unicum","iccd_vocabulary_id":2}
+{"position":5,"term_value":"fotografia virtuale","term_scope":"F","term_key":"fotografia virtuale","iccd_vocabulary_id":2}
+{"position":6,"term_value":"vario","term_scope":"F","term_key":"vario","iccd_vocabulary_id":2}
+{"position":7,"term_value":"matrice digitale","term_scope":"F","term_key":"matrice digitale","iccd_vocabulary_id":2}
+{"position":8,"term_value":"bozzetto","term_scope":"D","term_key":"bozzetto","iccd_vocabulary_id":2}
+{"position":9,"term_value":"disegno","term_scope":"D","term_key":"disegno","iccd_vocabulary_id":2}
+{"position":10,"term_value":"manifesto","term_scope":"S","term_key":"manifesto","iccd_vocabulary_id":2}
+{"position":11,"term_value":"stampa","term_scope":"S","term_key":"stampa","iccd_vocabulary_id":2}
+{"position":1,"term_value":"cartella","term_scope":"F","term_key":"cartella","iccd_vocabulary_id":3}
+{"position":2,"term_value":"fotomontaggio","term_scope":"F","term_key":"fotomontaggio","iccd_vocabulary_id":3}
+{"position":3,"term_value":"album","term_scope":"F","term_key":"album","iccd_vocabulary_id":3}
+{"position":4,"term_value":"installazione","term_scope":"F","term_key":"installazione","iccd_vocabulary_id":3}
+{"position":5,"term_value":"assemblaggio","term_scope":"F","term_key":"assemblaggio","iccd_vocabulary_id":3}
+{"position":6,"term_value":"panoramica QTVR","term_scope":"F","term_key":"panoramica QTVR","iccd_vocabulary_id":3}
+{"position":7,"term_value":"portfolio","term_scope":"F","term_key":"portfolio","iccd_vocabulary_id":3}
+{"position":8,"term_value":"servizio","term_scope":"F","term_key":"servizio","iccd_vocabulary_id":3}
+{"position":9,"term_value":"stereoscopia","term_scope":"F","term_key":"stereoscopia","iccd_vocabulary_id":3}
+{"position":1,"term_value":"V","term_scope":"F","term_key":"per oggetti complessi con fotografie sia in bianco/nero sia a colori","iccd_vocabulary_id":4}
+{"position":2,"term_value":"BN","term_scope":"F","term_key":"per fotografie in bianco / nero","iccd_vocabulary_id":4}
+{"position":3,"term_value":"CM","term_scope":"F","term_key":"per fotografie colorate a mano","iccd_vocabulary_id":4}
+{"position":4,"term_value":"C","term_scope":"F","term_key":"per fotografie a colori","iccd_vocabulary_id":4}
+{"position":1,"term_value":"albumina / carta","term_scope":"F","term_key":"albumina / carta","iccd_vocabulary_id":5}
+{"position":2,"term_value":"autocromia","term_scope":"F","term_key":"autocromia","iccd_vocabulary_id":5}
+{"position":3,"term_value":"cianotipia","term_scope":"F","term_key":"cianotipia","iccd_vocabulary_id":5}
+{"position":4,"term_value":"dagherrotipo","term_scope":"F","term_key":"dagherrotipo","iccd_vocabulary_id":5}
+{"position":5,"term_value":"digitale / virtuale","term_scope":"F","term_key":"digitale / virtuale","iccd_vocabulary_id":5}
+{"position":6,"term_value":"fax / carta termica","term_scope":"F","term_key":"fax / carta termica","iccd_vocabulary_id":5}
+{"position":7,"term_value":"ferrotipo","term_scope":"F","term_key":"ferrotipo","iccd_vocabulary_id":5}
+{"position":8,"term_value":"fotocopia","term_scope":"F","term_key":"fotocopia","iccd_vocabulary_id":5}
+{"position":9,"term_value":"gelatina ai sali d'argento / carta","term_scope":"F","term_key":"gelatina ai sali d'argento / carta","iccd_vocabulary_id":5}
+{"position":10,"term_value":"gelatina bromuro d'argento / pellicola in rullo diapositiva","term_scope":"F","term_key":"gelatina bromuro d'argento / pellicola in rullo diapositiva","iccd_vocabulary_id":5}
+{"position":11,"term_value":"gelatina bromuro d'argento / pellicola in rullo negativa","term_scope":"F","term_key":"gelatina bromuro d'argento / pellicola in rullo negativa","iccd_vocabulary_id":5}
+{"position":12,"term_value":"gelatina bromuro d'argento / pellicola piana diapositiva","term_scope":"F","term_key":"gelatina bromuro d'argento / pellicola piana diapositiva","iccd_vocabulary_id":5}
+{"position":13,"term_value":"gelatina bromuro d'argento / pellicola piana negativa","term_scope":"F","term_key":"gelatina bromuro d'argento / pellicola piana negativa","iccd_vocabulary_id":5}
+{"position":14,"term_value":"gelatina bromuro d'argento / vetro","term_scope":"F","term_key":"gelatina bromuro d'argento / vetro","iccd_vocabulary_id":5}
+{"position":15,"term_value":"polaroid","term_scope":"F","term_key":"polaroid","iccd_vocabulary_id":5}
+{"position":16,"term_value":"provini / carta","term_scope":"F","term_key":"provini / carta","iccd_vocabulary_id":5}
+{"position":17,"term_value":"telefoto","term_scope":"F","term_key":"telefoto","iccd_vocabulary_id":5}
+{"position":18,"term_value":"varie","term_scope":"F","term_key":"varie","iccd_vocabulary_id":5}
+{"position":19,"term_value":"carta / acquarellatura","term_scope":"D","term_key":"carta / acquarellatura","iccd_vocabulary_id":5}
+{"position":20,"term_value":"cartoncino / inchiostro / grafite","term_scope":"D","term_key":"cartoncino / inchiostro / grafite","iccd_vocabulary_id":5}
+{"position":21,"term_value":"acquaforte","term_scope":"S","term_key":"acquaforte","iccd_vocabulary_id":5}
+{"position":22,"term_value":"stampa tipografica","term_scope":"S","term_key":"stampa tipografica","iccd_vocabulary_id":5}
+{"position":1,"term_value":"mm","term_scope":"F","term_key":"mm","iccd_vocabulary_id":6}
+{"position":2,"term_value":"cm","term_scope":"F","term_key":"cm","iccd_vocabulary_id":6}
+{"position":3,"term_value":"m","term_scope":"F","term_key":"m","iccd_vocabulary_id":6}
+{"position":4,"term_value":"px","term_scope":"F","term_key":"px","iccd_vocabulary_id":6}
+{"position":1,"term_value":"analisi stilistica","term_scope":"F","term_key":"analisi stilistica","iccd_vocabulary_id":7}
+{"position":2,"term_value":"analisi storica","term_scope":"F","term_key":"analisi storica","iccd_vocabulary_id":7}
+{"position":3,"term_value":"analisi tecnico-formale","term_scope":"F","term_key":"analisi tecnico-formale","iccd_vocabulary_id":7}
+{"position":4,"term_value":"bibliografia","term_scope":"F","term_key":"bibliografia","iccd_vocabulary_id":7}
+{"position":5,"term_value":"commento sonoro","term_scope":"F","term_key":"commento sonoro","iccd_vocabulary_id":7}
+{"position":6,"term_value":"comunicazione autore","term_scope":"F","term_key":"comunicazione autore","iccd_vocabulary_id":7}
+{"position":7,"term_value":"comunicazione orale","term_scope":"F","term_key":"comunicazione orale","iccd_vocabulary_id":7}
+{"position":8,"term_value":"confronto","term_scope":"F","term_key":"confronto","iccd_vocabulary_id":7}
+{"position":9,"term_value":"contesto","term_scope":"F","term_key":"contesto","iccd_vocabulary_id":7}
+{"position":10,"term_value":"copyright","term_scope":"F","term_key":"copyright","iccd_vocabulary_id":7}
+{"position":11,"term_value":"documentazione","term_scope":"F","term_key":"documentazione","iccd_vocabulary_id":7}
+{"position":12,"term_value":"documentazione testuale interna al file immagine","term_scope":"F","term_key":"documentazione testuale interna al file immagine","iccd_vocabulary_id":7}
+{"position":13,"term_value":"filigrana digitale","term_scope":"F","term_key":"filigrana digitale","iccd_vocabulary_id":7}
+{"position":14,"term_value":"firma","term_scope":"F","term_key":"firma","iccd_vocabulary_id":7}
+{"position":15,"term_value":"iscrizione","term_scope":"F","term_key":"iscrizione","iccd_vocabulary_id":7}
+{"position":16,"term_value":"marchio","term_scope":"F","term_key":"marchio","iccd_vocabulary_id":7}
+{"position":17,"term_value":"monogramma","term_scope":"F","term_key":"monogramma","iccd_vocabulary_id":7}
+{"position":18,"term_value":"provenienza","term_scope":"F","term_key":"provenienza","iccd_vocabulary_id":7}
+{"position":19,"term_value":"punzone","term_scope":"F","term_key":"punzone","iccd_vocabulary_id":7}
+{"position":20,"term_value":"riferimenti biografici","term_scope":"F","term_key":"riferimenti biografici","iccd_vocabulary_id":7}
+{"position":21,"term_value":"sigla","term_scope":"F","term_key":"sigla","iccd_vocabulary_id":7}
+{"position":22,"term_value":"timbro","term_scope":"F","term_key":"timbro","iccd_vocabulary_id":7}
+{"position":23,"term_value":"tradizione orale","term_scope":"F","term_key":"tradizione orale","iccd_vocabulary_id":7}
+{"position":24,"term_value":"n. r. [non rilevabile]","term_scope":"F","term_key":"n. r. [non rilevabile]","iccd_vocabulary_id":7}
+{"position":27,"term_value":"analisi diagnostiche","term_scope":"D","term_key":"analisi diagnostiche","iccd_vocabulary_id":7}
+{"position":28,"term_value":"analisi iconografica","term_scope":"D","term_key":"analisi iconografica","iccd_vocabulary_id":7}
+{"position":29,"term_value":"attributo figurato ","term_scope":"D","term_key":"attributo figurato","iccd_vocabulary_id":7}
+{"position":30,"term_value":"bollo","term_scope":"D","term_key":"bollo","iccd_vocabulary_id":7}
+{"position":31,"term_value":"contesto","term_scope":"D","term_key":"contesto","iccd_vocabulary_id":7}
+{"position":32,"term_value":"fonte archivistica ","term_scope":"D","term_key":"fonte archivistica","iccd_vocabulary_id":7}
+{"position":33,"term_value":"nota manoscritta","term_scope":"D","term_key":"nota manoscritta","iccd_vocabulary_id":7}
+{"position":34,"term_value":"tradizione orale","term_scope":"D","term_key":"tradizione orale","iccd_vocabulary_id":7}
+{"position":35,"term_value":"analisi diagnostiche","term_scope":"S","term_key":"analisi diagnostiche","iccd_vocabulary_id":7}
+{"position":36,"term_value":"analisi iconografica","term_scope":"S","term_key":"analisi iconografica","iccd_vocabulary_id":7}
+{"position":37,"term_value":"attributo figurato ","term_scope":"S","term_key":"attributo figurato","iccd_vocabulary_id":7}
+{"position":38,"term_value":"bollo","term_scope":"S","term_key":"bollo","iccd_vocabulary_id":7}
+{"position":39,"term_value":"contesto","term_scope":"S","term_key":"contesto","iccd_vocabulary_id":7}
+{"position":40,"term_value":"fonte archivistica ","term_scope":"S","term_key":"fonte archivistica","iccd_vocabulary_id":7}
+{"position":41,"term_value":"nota manoscritta","term_scope":"S","term_key":"nota manoscritta","iccd_vocabulary_id":7}
+{"position":42,"term_value":"tradizione orale","term_scope":"S","term_key":"tradizione orale","iccd_vocabulary_id":7}
+{"position":1,"term_value":"architetto","term_scope":"S","term_key":"architetto","iccd_vocabulary_id":8}
+{"position":2,"term_value":"argentiere","term_scope":"S","term_key":"argentiere","iccd_vocabulary_id":8}
+{"position":3,"term_value":"ceramista ","term_scope":"S","term_key":"ceramista","iccd_vocabulary_id":8}
+{"position":4,"term_value":"costumista","term_scope":"S","term_key":"costumista","iccd_vocabulary_id":8}
+{"position":5,"term_value":"decoratore","term_scope":"S","term_key":"decoratore","iccd_vocabulary_id":8}
+{"position":6,"term_value":"designer","term_scope":"S","term_key":"designer","iccd_vocabulary_id":8}
+{"position":7,"term_value":"disegnatore","term_scope":"S","term_key":"disegnatore","iccd_vocabulary_id":8}
+{"position":8,"term_value":"ebanista","term_scope":"S","term_key":"ebanista","iccd_vocabulary_id":8}
+{"position":9,"term_value":"grafico","term_scope":"S","term_key":"grafico","iccd_vocabulary_id":8}
+{"position":10,"term_value":"illustratore","term_scope":"S","term_key":"illustratore","iccd_vocabulary_id":8}
+{"position":11,"term_value":"incisore","term_scope":"S","term_key":"incisore","iccd_vocabulary_id":8}
+{"position":12,"term_value":"intarsiatore","term_scope":"S","term_key":"intarsiatore","iccd_vocabulary_id":8}
+{"position":13,"term_value":"litografo","term_scope":"S","term_key":"litografo","iccd_vocabulary_id":8}
+{"position":14,"term_value":"orafo","term_scope":"S","term_key":"orafo","iccd_vocabulary_id":8}
+{"position":15,"term_value":"pittore","term_scope":"S","term_key":"pittore","iccd_vocabulary_id":8}
+{"position":16,"term_value":"regista","term_scope":"S","term_key":"regista","iccd_vocabulary_id":8}
+{"position":17,"term_value":"scenografo","term_scope":"S","term_key":"scenografo","iccd_vocabulary_id":8}
+{"position":18,"term_value":"scultore","term_scope":"S","term_key":"scultore","iccd_vocabulary_id":8}
+{"position":19,"term_value":"xilografo","term_scope":"S","term_key":"xilografo","iccd_vocabulary_id":8}
+{"position":20,"term_value":"architetto","term_scope":"D","term_key":"architetto","iccd_vocabulary_id":8}
+{"position":21,"term_value":"argentiere","term_scope":"D","term_key":"argentiere","iccd_vocabulary_id":8}
+{"position":22,"term_value":"ceramista ","term_scope":"D","term_key":"ceramista","iccd_vocabulary_id":8}
+{"position":23,"term_value":"costumista","term_scope":"D","term_key":"costumista","iccd_vocabulary_id":8}
+{"position":24,"term_value":"decoratore","term_scope":"D","term_key":"decoratore","iccd_vocabulary_id":8}
+{"position":25,"term_value":"designer","term_scope":"D","term_key":"designer","iccd_vocabulary_id":8}
+{"position":26,"term_value":"disegnatore","term_scope":"D","term_key":"disegnatore","iccd_vocabulary_id":8}
+{"position":27,"term_value":"ebanista","term_scope":"D","term_key":"ebanista","iccd_vocabulary_id":8}
+{"position":28,"term_value":"grafico","term_scope":"D","term_key":"grafico","iccd_vocabulary_id":8}
+{"position":29,"term_value":"illustratore","term_scope":"D","term_key":"illustratore","iccd_vocabulary_id":8}
+{"position":30,"term_value":"incisore","term_scope":"D","term_key":"incisore","iccd_vocabulary_id":8}
+{"position":31,"term_value":"intarsiatore","term_scope":"D","term_key":"intarsiatore","iccd_vocabulary_id":8}
+{"position":32,"term_value":"litografo","term_scope":"D","term_key":"litografo","iccd_vocabulary_id":8}
+{"position":33,"term_value":"orafo","term_scope":"D","term_key":"orafo","iccd_vocabulary_id":8}
+{"position":34,"term_value":"pittore","term_scope":"D","term_key":"pittore","iccd_vocabulary_id":8}
+{"position":35,"term_value":"regista","term_scope":"D","term_key":"regista","iccd_vocabulary_id":8}
+{"position":36,"term_value":"scenografo","term_scope":"D","term_key":"scenografo","iccd_vocabulary_id":8}
+{"position":37,"term_value":"scultore","term_scope":"D","term_key":"scultore","iccd_vocabulary_id":8}
+{"position":38,"term_value":"xilografo","term_scope":"D","term_key":"xilografo","iccd_vocabulary_id":8}
+{"position":39,"term_value":"fotografo inventore","term_scope":"F","term_key":"fotografo inventore","iccd_vocabulary_id":8}
+{"position":40,"term_value":"fotografo principale","term_scope":"F","term_key":"fotografo principale","iccd_vocabulary_id":8}
+{"position":41,"term_value":"ideatore","term_scope":"F","term_key":"ideatore","iccd_vocabulary_id":8}
+{"position":42,"term_value":"regista","term_scope":"F","term_key":"regista","iccd_vocabulary_id":8}
+{"position":4,"term_value":"OA","term_scope":null,"term_key":"OA - opera d'arte","iccd_vocabulary_id":1}
+{"position":5,"term_value":"BDM","term_scope":null,"term_key":"BDM - bene demoetnoantropologico","iccd_vocabulary_id":1}
+{"position":43,"term_value":"analisi diagnostiche","term_scope":"OA","term_key":"analisi diagnostiche","iccd_vocabulary_id":7}
+{"position":44,"term_value":"analisi iconografica","term_scope":"OA","term_key":"analisi iconografica","iccd_vocabulary_id":7}
+{"position":45,"term_value":"attributo figurato ","term_scope":"OA","term_key":"attributo figurato","iccd_vocabulary_id":7}
+{"position":46,"term_value":"bollo","term_scope":"OA","term_key":"bollo","iccd_vocabulary_id":7}
+{"position":47,"term_value":"contesto","term_scope":"OA","term_key":"contesto","iccd_vocabulary_id":7}
+{"position":48,"term_value":"fonte archivistica ","term_scope":"OA","term_key":"fonte archivistica","iccd_vocabulary_id":7}
+{"position":49,"term_value":"nota manoscritta","term_scope":"OA","term_key":"nota manoscritta","iccd_vocabulary_id":7}
+{"position":50,"term_value":"tradizione orale","term_scope":"OA","term_key":"tradizione orale","iccd_vocabulary_id":7}
+{"position":51,"term_value":"analisi diagnostiche","term_scope":"BDM","term_key":"analisi diagnostiche","iccd_vocabulary_id":7}
+{"position":52,"term_value":"analisi iconografica","term_scope":"BDM","term_key":"analisi iconografica","iccd_vocabulary_id":7}
+{"position":53,"term_value":"attributo figurato ","term_scope":"BDM","term_key":"attributo figurato","iccd_vocabulary_id":7}
+{"position":54,"term_value":"bollo","term_scope":"BDM","term_key":"bollo","iccd_vocabulary_id":7}
+{"position":55,"term_value":"contesto","term_scope":"BDM","term_key":"contesto","iccd_vocabulary_id":7}
+{"position":56,"term_value":"fonte archivistica ","term_scope":"BDM","term_key":"fonte archivistica","iccd_vocabulary_id":7}
+{"position":57,"term_value":"nota manoscritta","term_scope":"BDM","term_key":"nota manoscritta","iccd_vocabulary_id":7}
+{"position":58,"term_value":"tradizione orale","term_scope":"BDM","term_key":"tradizione orale","iccd_vocabulary_id":7}
+{"position":5,"term_value":"mm","term_scope":"S","term_key":"mm","iccd_vocabulary_id":6}
+{"position":6,"term_value":"cm","term_scope":"S","term_key":"cm","iccd_vocabulary_id":6}
+{"position":7,"term_value":"m","term_scope":"S","term_key":"m","iccd_vocabulary_id":6}
+{"position":8,"term_value":"px","term_scope":"S","term_key":"px","iccd_vocabulary_id":6}
+{"position":9,"term_value":"mm","term_scope":"D","term_key":"mm","iccd_vocabulary_id":6}
+{"position":10,"term_value":"cm","term_scope":"D","term_key":"cm","iccd_vocabulary_id":6}
+{"position":11,"term_value":"m","term_scope":"D","term_key":"m","iccd_vocabulary_id":6}
+{"position":12,"term_value":"px","term_scope":"D","term_key":"px","iccd_vocabulary_id":6}
+{"position":13,"term_value":"mm","term_scope":"OA","term_key":"mm","iccd_vocabulary_id":6}
+{"position":14,"term_value":"cm","term_scope":"OA","term_key":"cm","iccd_vocabulary_id":6}
+{"position":15,"term_value":"m","term_scope":"OA","term_key":"m","iccd_vocabulary_id":6}
+{"position":16,"term_value":"px","term_scope":"OA","term_key":"px","iccd_vocabulary_id":6}
+{"position":17,"term_value":"mm","term_scope":"BDM","term_key":"mm","iccd_vocabulary_id":6}
+{"position":18,"term_value":"cm","term_scope":"BDM","term_key":"cm","iccd_vocabulary_id":6}
+{"position":19,"term_value":"m","term_scope":"BDM","term_key":"m","iccd_vocabulary_id":6}
+{"position":20,"term_value":"px","term_scope":"BDM","term_key":"px","iccd_vocabulary_id":6}
+{"position":43,"term_value":"architetto","term_scope":"OA","term_key":"architetto","iccd_vocabulary_id":8}
+{"position":44,"term_value":"argentiere","term_scope":"OA","term_key":"argentiere","iccd_vocabulary_id":8}
+{"position":45,"term_value":"ceramista ","term_scope":"OA","term_key":"ceramista","iccd_vocabulary_id":8}
+{"position":46,"term_value":"costumista","term_scope":"OA","term_key":"costumista","iccd_vocabulary_id":8}
+{"position":47,"term_value":"decoratore","term_scope":"OA","term_key":"decoratore","iccd_vocabulary_id":8}
+{"position":48,"term_value":"designer","term_scope":"OA","term_key":"designer","iccd_vocabulary_id":8}
+{"position":49,"term_value":"disegnatore","term_scope":"OA","term_key":"disegnatore","iccd_vocabulary_id":8}
+{"position":50,"term_value":"ebanista","term_scope":"OA","term_key":"ebanista","iccd_vocabulary_id":8}
+{"position":51,"term_value":"grafico","term_scope":"OA","term_key":"grafico","iccd_vocabulary_id":8}
+{"position":52,"term_value":"illustratore","term_scope":"OA","term_key":"illustratore","iccd_vocabulary_id":8}
+{"position":53,"term_value":"incisore","term_scope":"OA","term_key":"incisore","iccd_vocabulary_id":8}
+{"position":54,"term_value":"intarsiatore","term_scope":"OA","term_key":"intarsiatore","iccd_vocabulary_id":8}
+{"position":55,"term_value":"litografo","term_scope":"OA","term_key":"litografo","iccd_vocabulary_id":8}
+{"position":56,"term_value":"orafo","term_scope":"OA","term_key":"orafo","iccd_vocabulary_id":8}
+{"position":57,"term_value":"pittore","term_scope":"OA","term_key":"pittore","iccd_vocabulary_id":8}
+{"position":58,"term_value":"regista","term_scope":"OA","term_key":"regista","iccd_vocabulary_id":8}
+{"position":59,"term_value":"scenografo","term_scope":"OA","term_key":"scenografo","iccd_vocabulary_id":8}
+{"position":60,"term_value":"scultore","term_scope":"OA","term_key":"scultore","iccd_vocabulary_id":8}
+{"position":61,"term_value":"xilografo","term_scope":"OA","term_key":"xilografo","iccd_vocabulary_id":8}
+{"position":62,"term_value":"architetto","term_scope":"BDM","term_key":"architetto","iccd_vocabulary_id":8}
+{"position":63,"term_value":"argentiere","term_scope":"BDM","term_key":"argentiere","iccd_vocabulary_id":8}
+{"position":64,"term_value":"ceramista ","term_scope":"BDM","term_key":"ceramista","iccd_vocabulary_id":8}
+{"position":65,"term_value":"costumista","term_scope":"BDM","term_key":"costumista","iccd_vocabulary_id":8}
+{"position":66,"term_value":"decoratore","term_scope":"BDM","term_key":"decoratore","iccd_vocabulary_id":8}
+{"position":67,"term_value":"designer","term_scope":"BDM","term_key":"designer","iccd_vocabulary_id":8}
+{"position":68,"term_value":"disegnatore","term_scope":"BDM","term_key":"disegnatore","iccd_vocabulary_id":8}
+{"position":69,"term_value":"ebanista","term_scope":"BDM","term_key":"ebanista","iccd_vocabulary_id":8}
+{"position":70,"term_value":"grafico","term_scope":"BDM","term_key":"grafico","iccd_vocabulary_id":8}
+{"position":71,"term_value":"illustratore","term_scope":"BDM","term_key":"illustratore","iccd_vocabulary_id":8}
+{"position":72,"term_value":"incisore","term_scope":"BDM","term_key":"incisore","iccd_vocabulary_id":8}
+{"position":73,"term_value":"intarsiatore","term_scope":"BDM","term_key":"intarsiatore","iccd_vocabulary_id":8}
+{"position":74,"term_value":"litografo","term_scope":"BDM","term_key":"litografo","iccd_vocabulary_id":8}
+{"position":75,"term_value":"orafo","term_scope":"BDM","term_key":"orafo","iccd_vocabulary_id":8}
+{"position":76,"term_value":"pittore","term_scope":"BDM","term_key":"pittore","iccd_vocabulary_id":8}
+{"position":77,"term_value":"regista","term_scope":"BDM","term_key":"regista","iccd_vocabulary_id":8}
+{"position":78,"term_value":"scenografo","term_scope":"BDM","term_key":"scenografo","iccd_vocabulary_id":8}
+{"position":79,"term_value":"scultore","term_scope":"BDM","term_key":"scultore","iccd_vocabulary_id":8}
+{"position":80,"term_value":"xilografo","term_scope":"BDM","term_key":"xilografo","iccd_vocabulary_id":8}
+{"position":1,"term_value":"alterazioni chimiche","term_scope":"F","term_key":"alterazioni chimiche","iccd_vocabulary_id":9}
+{"position":2,"term_value":"alterazioni fisiche","term_scope":"F","term_key":"alterazioni fisiche","iccd_vocabulary_id":9}
+{"position":3,"term_value":"alterazioni biologiche","term_scope":"F","term_key":"alterazioni biologiche","iccd_vocabulary_id":9}
+{"position":4,"term_value":"abrasioni","term_scope":"F","term_key":"abrasioni","iccd_vocabulary_id":9}
+{"position":5,"term_value":"deformazioni","term_scope":"F","term_key":"deformazioni","iccd_vocabulary_id":9}
+{"position":6,"term_value":"distacchi","term_scope":"F","term_key":"distacchi","iccd_vocabulary_id":9}
+{"position":7,"term_value":"impronte","term_scope":"F","term_key":"impronte","iccd_vocabulary_id":9}
+{"position":8,"term_value":"lacune","term_scope":"F","term_key":"lacune","iccd_vocabulary_id":9}
+{"position":9,"term_value":"rotture","term_scope":"F","term_key":"rotture","iccd_vocabulary_id":9}
+{"position":10,"term_value":"polvere","term_scope":"F","term_key":"polvere","iccd_vocabulary_id":9}
+{"position":11,"term_value":"strappi","term_scope":"F","term_key":"strappi","iccd_vocabulary_id":9}
+{"position":12,"term_value":"tagli","term_scope":"F","term_key":"tagli","iccd_vocabulary_id":9}
+{"position":13,"term_value":"reticolazioni","term_scope":"F","term_key":"reticolazioni","iccd_vocabulary_id":9}
+{"position":14,"term_value":"sollevamenti","term_scope":"F","term_key":"sollevamenti","iccd_vocabulary_id":9}
+{"position":15,"term_value":"decomposizioni","term_scope":"F","term_key":"decomposizioni","iccd_vocabulary_id":9}
+{"position":16,"term_value":"ingiallimento","term_scope":"F","term_key":"ingiallimento","iccd_vocabulary_id":9}
+{"position":17,"term_value":"ossidazioni","term_scope":"F","term_key":"ossidazioni","iccd_vocabulary_id":9}
+{"position":18,"term_value":"solforazioni","term_scope":"F","term_key":"solforazioni","iccd_vocabulary_id":9}
+{"position":19,"term_value":"tacche","term_scope":"F","term_key":"tacche","iccd_vocabulary_id":9}
+{"position":20,"term_value":"vernici","term_scope":"F","term_key":"vernici","iccd_vocabulary_id":9}
+{"position":21,"term_value":"filamenti","term_scope":"F","term_key":"filamenti","iccd_vocabulary_id":9}
+{"position":22,"term_value":"gelatine","term_scope":"F","term_key":"gelatine","iccd_vocabulary_id":9}
+{"position":23,"term_value":"macchie","term_scope":"F","term_key":"macchie","iccd_vocabulary_id":9}
+{"position":24,"term_value":"microorganismi","term_scope":"F","term_key":"microorganismi","iccd_vocabulary_id":9}
+{"position":25,"term_value":"specchio d'argento","term_scope":"F","term_key":"specchio d'argento","iccd_vocabulary_id":9}
+{"position":26,"term_value":"residui di colle","term_scope":"F","term_key":"residui di colle","iccd_vocabulary_id":9}
+{"position":27,"term_value":"foxing","term_scope":"F","term_key":"foxing","iccd_vocabulary_id":9}
+{"position":28,"term_value":"alterazioni chimiche","term_scope":"S","term_key":"alterazioni chimiche","iccd_vocabulary_id":9}
+{"position":29,"term_value":"alterazioni fisiche","term_scope":"S","term_key":"alterazioni fisiche","iccd_vocabulary_id":9}
+{"position":30,"term_value":"alterazioni biologiche","term_scope":"S","term_key":"alterazioni biologiche","iccd_vocabulary_id":9}
+{"position":31,"term_value":"abrasioni","term_scope":"S","term_key":"abrasioni","iccd_vocabulary_id":9}
+{"position":32,"term_value":"deformazioni","term_scope":"S","term_key":"deformazioni","iccd_vocabulary_id":9}
+{"position":33,"term_value":"distacchi","term_scope":"S","term_key":"distacchi","iccd_vocabulary_id":9}
+{"position":34,"term_value":"impronte","term_scope":"S","term_key":"impronte","iccd_vocabulary_id":9}
+{"position":35,"term_value":"lacune","term_scope":"S","term_key":"lacune","iccd_vocabulary_id":9}
+{"position":36,"term_value":"rotture","term_scope":"S","term_key":"rotture","iccd_vocabulary_id":9}
+{"position":37,"term_value":"polvere","term_scope":"S","term_key":"polvere","iccd_vocabulary_id":9}
+{"position":38,"term_value":"strappi","term_scope":"S","term_key":"strappi","iccd_vocabulary_id":9}
+{"position":39,"term_value":"tagli","term_scope":"S","term_key":"tagli","iccd_vocabulary_id":9}
+{"position":40,"term_value":"reticolazioni","term_scope":"S","term_key":"reticolazioni","iccd_vocabulary_id":9}
+{"position":41,"term_value":"sollevamenti","term_scope":"S","term_key":"sollevamenti","iccd_vocabulary_id":9}
+{"position":42,"term_value":"decomposizioni","term_scope":"S","term_key":"decomposizioni","iccd_vocabulary_id":9}
+{"position":43,"term_value":"ingiallimento","term_scope":"S","term_key":"ingiallimento","iccd_vocabulary_id":9}
+{"position":44,"term_value":"ossidazioni","term_scope":"S","term_key":"ossidazioni","iccd_vocabulary_id":9}
+{"position":45,"term_value":"solforazioni","term_scope":"S","term_key":"solforazioni","iccd_vocabulary_id":9}
+{"position":46,"term_value":"tacche","term_scope":"S","term_key":"tacche","iccd_vocabulary_id":9}
+{"position":47,"term_value":"vernici","term_scope":"S","term_key":"vernici","iccd_vocabulary_id":9}
+{"position":48,"term_value":"filamenti","term_scope":"S","term_key":"filamenti","iccd_vocabulary_id":9}
+{"position":49,"term_value":"gelatine","term_scope":"S","term_key":"gelatine","iccd_vocabulary_id":9}
+{"position":50,"term_value":"macchie","term_scope":"S","term_key":"macchie","iccd_vocabulary_id":9}
+{"position":51,"term_value":"microorganismi","term_scope":"S","term_key":"microorganismi","iccd_vocabulary_id":9}
+{"position":52,"term_value":"specchio d'argento","term_scope":"S","term_key":"specchio d'argento","iccd_vocabulary_id":9}
+{"position":53,"term_value":"residui di colle","term_scope":"S","term_key":"residui di colle","iccd_vocabulary_id":9}
+{"position":54,"term_value":"foxing","term_scope":"S","term_key":"foxing","iccd_vocabulary_id":9}
+{"position":55,"term_value":"consunzione","term_scope":"S","term_key":"consunzione","iccd_vocabulary_id":9}
+{"position":56,"term_value":"corrosioni","term_scope":"S","term_key":"corrosioni","iccd_vocabulary_id":9}
+{"position":57,"term_value":"usura","term_scope":"S","term_key":"usura","iccd_vocabulary_id":9}
+{"position":58,"term_value":"alterazioni chimiche","term_scope":"D","term_key":"alterazioni chimiche","iccd_vocabulary_id":9}
+{"position":59,"term_value":"alterazioni fisiche","term_scope":"D","term_key":"alterazioni fisiche","iccd_vocabulary_id":9}
+{"position":60,"term_value":"alterazioni biologiche","term_scope":"D","term_key":"alterazioni biologiche","iccd_vocabulary_id":9}
+{"position":61,"term_value":"abrasioni","term_scope":"D","term_key":"abrasioni","iccd_vocabulary_id":9}
+{"position":62,"term_value":"deformazioni","term_scope":"D","term_key":"deformazioni","iccd_vocabulary_id":9}
+{"position":63,"term_value":"distacchi","term_scope":"D","term_key":"distacchi","iccd_vocabulary_id":9}
+{"position":64,"term_value":"impronte","term_scope":"D","term_key":"impronte","iccd_vocabulary_id":9}
+{"position":65,"term_value":"lacune","term_scope":"D","term_key":"lacune","iccd_vocabulary_id":9}
+{"position":66,"term_value":"rotture","term_scope":"D","term_key":"rotture","iccd_vocabulary_id":9}
+{"position":67,"term_value":"polvere","term_scope":"D","term_key":"polvere","iccd_vocabulary_id":9}
+{"position":68,"term_value":"strappi","term_scope":"D","term_key":"strappi","iccd_vocabulary_id":9}
+{"position":69,"term_value":"tagli","term_scope":"D","term_key":"tagli","iccd_vocabulary_id":9}
+{"position":70,"term_value":"reticolazioni","term_scope":"D","term_key":"reticolazioni","iccd_vocabulary_id":9}
+{"position":71,"term_value":"sollevamenti","term_scope":"D","term_key":"sollevamenti","iccd_vocabulary_id":9}
+{"position":72,"term_value":"decomposizioni","term_scope":"D","term_key":"decomposizioni","iccd_vocabulary_id":9}
+{"position":73,"term_value":"ingiallimento","term_scope":"D","term_key":"ingiallimento","iccd_vocabulary_id":9}
+{"position":74,"term_value":"ossidazioni","term_scope":"D","term_key":"ossidazioni","iccd_vocabulary_id":9}
+{"position":75,"term_value":"solforazioni","term_scope":"D","term_key":"solforazioni","iccd_vocabulary_id":9}
+{"position":76,"term_value":"tacche","term_scope":"D","term_key":"tacche","iccd_vocabulary_id":9}
+{"position":77,"term_value":"vernici","term_scope":"D","term_key":"vernici","iccd_vocabulary_id":9}
+{"position":78,"term_value":"filamenti","term_scope":"D","term_key":"filamenti","iccd_vocabulary_id":9}
+{"position":79,"term_value":"gelatine","term_scope":"D","term_key":"gelatine","iccd_vocabulary_id":9}
+{"position":80,"term_value":"macchie","term_scope":"D","term_key":"macchie","iccd_vocabulary_id":9}
+{"position":81,"term_value":"microorganismi","term_scope":"D","term_key":"microorganismi","iccd_vocabulary_id":9}
+{"position":82,"term_value":"specchio d'argento","term_scope":"D","term_key":"specchio d'argento","iccd_vocabulary_id":9}
+{"position":83,"term_value":"residui di colle","term_scope":"D","term_key":"residui di colle","iccd_vocabulary_id":9}
+{"position":84,"term_value":"foxing","term_scope":"D","term_key":"foxing","iccd_vocabulary_id":9}
+{"position":85,"term_value":"consunzione","term_scope":"D","term_key":"consunzione","iccd_vocabulary_id":9}
+{"position":86,"term_value":"corrosioni","term_scope":"D","term_key":"corrosioni","iccd_vocabulary_id":9}
+{"position":87,"term_value":"usura","term_scope":"D","term_key":"usura","iccd_vocabulary_id":9}
+{"position":0,"term_value":"esemplare singolo","term_scope":"F","term_key":"esemplare singolo","iccd_vocabulary_id":3}

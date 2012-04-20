@@ -1,0 +1,13 @@
+<% if object.present? %>
+  <ul>
+    <% object.each do |h| %>
+    <li>
+      <%= h.full_string %>
+      <%= link_to "[rimuovi]", "#", :'data-heading_id' => h.id,
+                                    :'data-related_entity' => params[:related_entity],
+                                    :'data-related_entity_id' => params[:related_entity_id],
+                                    :class => "heading-remove" %>
+    </li>
+    <% end %>
+  </ul>
+<%  end %>

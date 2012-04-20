@@ -1,0 +1,27 @@
+<h1><%= APP_NAME %> <small><%= "#{APP_VERSION} #{APP_STATUS}".strip %></small></h1>
+
+<%# OPTIMIZE: spostare in un helper, qualcosa di simile anche in application %>
+<% flash.each do |key, message| %>
+  <% if message.present? %>
+  <% status = key.to_s == "alert" ? "error" : "success" %>
+  <div class="alert alert-<%= status %>">
+    <%= message %>
+  </div>
+  <% end %>
+<% end %>
+
+<% form_for resource_name, resource, :url => session_path(resource_name) do |f| -%>
+
+  <%= f.label "login", t('devise.attributes.login') %>
+  <%= f.text_field :login, :class => "span4" %>
+
+  <%= f.label :password %>
+  <%= f.password_field :password, :class => "span4" %>
+
+  <% if devise_mapping.rememberable? -%>
+    <%= f.label :remember_me, t('devise.attributes.remember_me') + f.check_box(:remember_me), :class => "checkbox" %>
+  <% end -%>
+
+  <p><%= f.submit t('devise.sessions.link'), :class => "btn span2" %></p>
+
+<% end -%>

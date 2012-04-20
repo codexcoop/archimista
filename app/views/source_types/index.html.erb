@@ -1,0 +1,17 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_source_types') %></h2>
+<% end %>
+
+<div class="span6">
+  <ul>
+  <% @source_types.each do |source_type| %>
+    <li><%= source_type.source_type %>
+      <ul>
+        <% SourceType.subtypes_of(source_type.code).each do |source_subtype| %>
+          <li><%= source_subtype.source_type %></li>
+        <% end %>
+      </ul>
+    </li>
+  <% end %>
+  </ul>
+</div>

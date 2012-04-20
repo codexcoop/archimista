@@ -1,0 +1,46 @@
+<% content_for :status_bar do %>
+  <h2>Controllo qualità</h2>
+<% end %>
+
+<div class="span12">
+
+<% if @fonds.size > 0 %>
+  <h3>Complessi archivistici</h3>
+
+  <% if @fonds.size < 5 %>
+    <% @fonds.each do |fond| %>
+      <p><%= link_to fond.name, fond_quality_check_path(fond) %></p>
+    <% end %>
+  <% else %>
+    <%= render :partial => "form_fonds" %>
+  <% end %>
+
+  <h3>Soggetti produttori</h3>
+  <% case @creators.size
+  when 0 %>
+    <p>Non sono presenti schede soggetto produttore.</p>
+  <%  when 1..5 %>
+    <%  @creators.each do |creator| %>
+      <p><%= link_to creator.preferred_name.name, creator_quality_check_path(creator) %> </p>
+    <% end %>
+  <% else %>
+    <%= render :partial => "form_creators" %>
+  <% end %>
+
+  <h3>Soggetti conservatori</h3>
+  <% case @custodians.size
+  when 0 %>
+    <p>Non sono presenti schede soggetto conservatore.</p>
+  <%  when 1..5 %>
+    <%  @custodians.each do |custodian| %>
+      <p><%= link_to custodian.preferred_name.name, custodian_quality_check_path(custodian) %> </p>
+    <% end %>
+  <% else %>
+    <%= render :partial => "form_custodians" %>
+  <% end %>
+
+<% else %>
+  <p>Non sono presenti schede complesso archivistico. Controllo qualità non disponibile.</p>
+<% end %>
+
+</div>

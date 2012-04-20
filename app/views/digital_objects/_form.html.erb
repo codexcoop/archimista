@@ -1,0 +1,24 @@
+<%= render :partial => "shared/generic_error_message", :object => @digital_object %>
+
+<% form_for [@attachable, @digital_object], :html => { :multipart => true } do |f| %>
+<div id="record-main" class="span9">
+  <%# OPTMIZE: fare modal ?? blockUI al submit ?? %>
+
+  <div class="alert alert-info">Formato del file: <strong>JPEG</strong> oppure <strong>PDF</strong>.</div>
+
+  <%= f.label :asset, t('digital_objects_asset') + required_marker %>
+  <%= f.file_field :asset %>
+  <% if @digital_object.asset_file_name.present? %>
+    <p class="muted"><%= @digital_object.asset_file_name %></p>
+  <% end %>
+
+  <%= f.label :title, t('digital_objects_title') %>
+  <%= f.text_field :title, :class => "span9" %>
+
+  <%= f.label :description, t('digital_objects_description') %>
+  <%= f.text_area :description, :class => "span9 x-short-content" %>
+
+  <p style="margin: 1.5em 0 1em 0;"><%= f.submit t('upload_file'), :name => "save", :class => "btn btn-primary" %></p>
+<% end %>
+
+</div>

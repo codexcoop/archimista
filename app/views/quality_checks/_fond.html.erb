@@ -1,0 +1,24 @@
+<table class="table">
+  <thead>
+    <tr>
+      <th>tipologia</th>
+      <th>denominazione</th>
+      <th>&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% object.each do |fond| %>
+      <tr>
+        <td>
+          <%= fond.fond_type.present? ? fond.fond_type : warning_field %>
+        </td>
+        <td>
+          <%= fond.name.present? ? fond.name : warning_field %>
+        </td>
+        <td>
+          <%= link_to 'modifica', treeview_fond_path(fond) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

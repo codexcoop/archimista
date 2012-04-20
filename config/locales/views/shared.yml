@@ -1,0 +1,68 @@
+---
+en:
+  shared:
+    relations:
+      defaults: &defaults
+        search_invite: "%{available_related} <em>%{relation_name}</em> records available. Search the one you need:"
+        add_invite: "Add:"
+        no_related_records_available: "No <em>%{relation_name}</em> records available."
+        remove_item: "[delete]"
+        add_item: "[add]"
+        single_selection: "(only one selection)"
+        no_results: "no results"
+        link_item: "[+ link]"
+        detach_item: "[- detach]"
+      relation:
+        <<: *defaults
+      autocomplete:
+        item:
+          <<: *defaults
+        input:
+          <<: *defaults
+        suggested:
+          <<: *defaults
+        selected:
+          <<: *defaults
+      livesearch:
+        item:
+          <<: *defaults
+        input:
+          <<: *defaults
+        results:
+          <<: *defaults
+        selected:
+          <<: *defaults
+it:
+  shared:
+    relations:
+      defaults: &defaults
+        search_invite: "Sono presenti %{available_related} schede <em>%{relation_name}</em>. Cerca quella di tuo interesse:"
+        add_invite: "Aggiungi:"
+        no_related_records_available: "Non sono presenti schede <em>%{relation_name}</em>."
+        remove_item: "[rimuovi]"
+        add_item: "[aggiungi]"
+        single_selection: "(una sola selezione)"
+        no_results: "nessun risultato"
+        link_item: "[+ collega]"
+        detach_item: "[- scollega]"
+      relation:
+        <<: *defaults
+      autocomplete:
+        item:
+          <<: *defaults
+        input:
+          <<: *defaults
+        suggested:
+          <<: *defaults
+        selected:
+          <<: *defaults
+      livesearch:
+        item:
+          <<: *defaults
+        input:
+          <<: *defaults
+        results:
+          <<: *defaults
+        selected:
+          <<: *defaults
+

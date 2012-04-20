@@ -1,0 +1,32 @@
+# Example database configuration
+#
+# 1. Create a configuration file: config/database.yml
+# 2. Configure your database: either MySQL or PostgreSQL or SQLite
+# For more information read: http://guides.rubyonrails.org/v2.3.11/getting_started.html#configuring-a-database
+#
+# MySQL
+# production:
+#  adapter: mysql
+#  encoding: utf8
+#  database: archimista_production
+#  pool: 5
+#  username: root
+#  password:
+#  socket: /tmp/mysql.sock
+#
+# PostgreSQL
+# production:
+#  adapter: postgresql
+#  encoding: unicode
+#  database: archimista_production
+#  pool: 5
+#  username: rails
+#  password:
+#
+# SQLite
+# production:
+#  adapter: sqlite3
+#  database: db/archimista_production.sqlite3
+#  pool: 5
+#  timeout: 5000
+#

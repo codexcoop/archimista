@@ -1,0 +1,224 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+  <div id="links">
+    <%= link_to_index t('index_creators'), creators_path %>
+  </div>
+<% end %>
+
+<div id="record-main" class="span9">
+  <h3 class="section"><%= t('identification_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('creator_type') %></th>
+      <td><%= show_value(@creator.creator_type, "t") %></td>
+    </tr>
+
+    <% if @creator.is_corporate? %>
+      <tr>
+        <th><%= t('creator_corporate_type') %></th>
+        <td>
+          <% if @creator.creator_corporate_type.present? %>
+            <%= @creator.creator_corporate_type.corporate_type.capitalize %>
+          <% else %>
+            <%= blank_field %>
+          <% end %>
+        </td>
+      </tr>
+    <% end -%>
+
+    <tr>
+      <th><%= t('preferred_name') %></th>
+      <td><%= @creator.preferred_name.name %> <%= show_item(@creator.preferred_name.note, ["[","]"]) %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('other_names')%></th>
+      <td>
+        <% if @creator.other_names.present? %>
+          <ul>
+            <% @creator.other_names.each do |other_name| %>
+              <li>
+                <%= show_item(other_name.name) %>
+                <%= show_item(other_name.qualifier, ["<span>(",")</span>"], 't') %>
+                <%= show_item(other_name.note, ["[","]"]) %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th><%= t('date_event')%></th>
+      <td>
+        <% if @creator.events.present? %>
+          <% @creator.events.each do |ci| %>
+            <%= ci.full_display_date %> <%= ci.note %>
+          <% end %>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+
+
+    <% if @creator.is_corporate? %>
+      <tr>
+        <th><%= t('creator_legal_status')%></th>
+        <td>
+          <% if @creator.creator_legal_statuses.present? %>
+            <ul>
+              <% @creator.creator_legal_statuses.each do |cls| %>
+                <li><%= show_item(cls.legal_status, ['', ''], "t") %> <%= show_item(cls.note, ["[","]"]) %></li>
+              <% end %>
+            </ul>
+          <% else %>
+            <%= blank_field %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if @creator.is_corporate? %>
+      <tr>
+        <th><%= t('residence') %></th>
+        <td><%= show_value(@creator.residence) %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <th><%= t('creator_urls')%></th>
+      <td>
+        <% if @creator.creator_urls.present? %>
+          <ul>
+            <% @creator.creator_urls.each do |cu_name| %>
+              <li><%= show_item(cu_name.url) %> <%= show_item(cu_name.note, ["[","]"]) %></li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <th><%= t('creator_identifiers')%></th>
+      <td>
+        <% if @creator.creator_identifiers.present? %>
+          <ul>
+            <% @creator.creator_identifiers.each do |ci_name| %>
+              <li>
+                <%= show_item(ci_name.identifier) %>
+                <%= show_item(ci_name.identifier_source, ["<span>(",")</span>"]) %>
+                <%= show_item(ci_name.note, ["[","]"]) %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('description_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('abstract') %></th>
+      <td><%= show_value(textilize(@creator.abstract)) %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('creator_history') %></th>
+      <td><%= show_value(textilize(@creator.history)) %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('creator_note')%></th>
+      <td><%= show_value(@creator.note) %></td>
+    </tr>
+
+    <tr>
+      <th><%= t('activities')%></th>
+      <td>
+        <% if @creator.creator_activities.present? %>
+          <ul>
+            <% @creator.creator_activities.each do |creator_activity| %>
+              <li>
+                <%= show_item(creator_activity.activity) %>
+                <%= show_item(creator_activity.note, ["[","]"]) %>
+              </li>
+            <% end %>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <h3 class="section"><%= t('relationships_area') %></h3>
+  <table class="table-show">
+    <tr>
+      <th><%= t('fonds')%></th>
+      <%# FIXME: se fondo non root, dare path del fondo anziché solo nome %>
+      <td>
+        <% if @creator.fonds.present? %>
+          <ul>
+            <% @creator.fonds.each do |fond| %>
+              <li><%= link_to "#{fond.name}", fond_path(fond) %>
+                <%= fond.preferred_event.full_display_date if fond.preferred_event %></li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+
+    <% if @creator.is_corporate? %>
+      <tr>
+        <th><%= t('institutions')%></th>
+        <td>
+          <% if @creator.institutions.present? %>
+            <ul>
+              <% @creator.institutions.each do |institution| %>
+                <li><%= link_to "#{institution.name}", institution_path(institution) %></li>
+              <% end -%>
+            </ul>
+          <% else %>
+            <%= blank_field %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <th><%= t('linked_creators')%></th>
+      <td>
+        <% if @creator.rel_creator_creators.present? %>
+          <ul>
+            <% @creator.rel_creator_creators.each do |rel| %>
+              <li>
+    <%# FIXME: creator_association_type_id sarà sempre popolato %>
+                (<%= rel.creator_association_type ? rel.creator_association_type.association_type : "legacy data: qualifica non presente" %>)
+                <%= link_to rel.related_creator.preferred_name.name, edit_creator_path(rel.related_creator) %>
+                <%= rel.related_creator.preferred_event.full_display_date if rel.related_creator.preferred_event %>
+              </li>
+            <% end -%>
+          </ul>
+        <% else %>
+          <%= blank_field %>
+        <% end %>
+      </td>
+    </tr>
+  </table>
+
+  <%= render :partial => "shared/show_sources", :object => @creator.sources %>
+
+  <%= render :partial => "shared/show_editors", :object => @creator.creator_editors %>
+
+</div>
+
+<%= render :partial => "shared/side", :object => @creator %>

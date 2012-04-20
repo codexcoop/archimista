@@ -1,0 +1,65 @@
+/* #mass-reorder-modal: width: 860px; */
+.reorder-attributes {
+  overflow: auto;
+  height: 300px;
+  border: 1px solid #ccc;
+}
+.reorder-attributes.available {
+  float: left;
+  width: 360px;
+}
+.reorder-attributes.selected {
+  float: right;
+  width: 440px;
+}
+/* item */
+.reorder-attribute {
+  height: 32px;
+  margin: 4px;
+  padding: 0 8px;
+  border: 1px dotted #ccc;
+  background: #f5f5f5;
+}
+.reorder-attributes.available .reorder-attribute {
+  color: #666;
+}
+.reorder-attributes.selected .reorder-attribute {
+  color: #000;
+}
+.reorder-attribute label, .reorder-attribute select {
+  margin: 0;
+  padding: 0;
+}
+.reorder-attribute label {
+  padding-top: 8px;
+}
+.reorder-label {
+  display: inline-block;
+  /* IE7 inline-block hack */
+  *display: inline;
+  *zoom: 1;
+  width: 200px;
+}
+.reorder-direction {
+  display: inline-block;
+  /* IE7 inline-block hack */
+  *display: inline;
+  *zoom: 1;
+  width: 120px;
+}
+.reorder-add {
+  float: right;
+  padding-top: 8px;
+  font-size: 11px;
+}
+.reorder-add a {
+  color: green;
+}
+.reorder-remove {
+  float: right;
+  padding-top: 8px;
+  font-size: 11px;
+}
+.reorder-remove a {
+  color: red;
+}

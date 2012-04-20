@@ -1,0 +1,9 @@
+<div class="fields row-fluid">
+  <div class="span5">
+  <%= f.collection_select(:code, @langs, :code, "#{I18n.locale}_name".to_sym, {:prompt => true}, :class => "span3") %>
+  </div>
+  <div class="span1 destroy">
+    <%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %>
+  </div>
+</div>
+

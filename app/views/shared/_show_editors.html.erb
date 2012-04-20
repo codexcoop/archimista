@@ -1,0 +1,17 @@
+<h3 class="section"><%= t('editors') %></h3>
+<table class="table-show">
+  <tr>
+    <th><%= t('editors') %></th>
+    <td>
+      <% if object.present? %>
+        <ul>
+          <% object.each do |editor| %>
+            <li><%= show_editor(editor) %></li>
+          <% end %>
+        </ul>
+      <%  else %>
+        <%= blank_field %>
+      <% end %>
+    </td>
+  </tr>
+</table>

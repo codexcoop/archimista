@@ -1,0 +1,8 @@
+<% content_for :status_bar do %>
+  <h2><%= t('headings') %><%= path_separator %><%= t('edit_heading') %></h2>
+  <div id="links">
+    <%= link_to_index t('listing_headings'), headings_path %>
+  </div>
+<% end %>
+
+<%= render :partial => "form" %>

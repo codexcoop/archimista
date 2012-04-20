@@ -1,0 +1,32 @@
+<% content_for :status_bar do %>
+  <h2>Report<%= path_separator %><%= link_to @root_fond_name, dashboard_report_path %><%= path_separator %><%= t('custodians') %> </h2>
+  <div id="links">
+    <%= link_to_index "Report", reports_path %>
+  </div>
+<% end %>
+
+<div class="span12">
+  <div id="index-controls">
+    <%= link_to '<i class="icon-download-alt"></i> scarica PDF', custodians_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small pdf"}  %>
+  </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th><%= t('name') %></th>
+        <th><%= t('building') %> </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @custodians.each do |custodian|  %>
+        <tr>
+          <td><div class="pbi_avoid"><%= custodian.preferred_name.try(:name) %></div></td>
+          <td>
+            <div  class="pbi_avoid">
+              <%= custodian.custodian_headquarter.try(:postcode) %> <%= custodian.custodian_headquarter.try(:city) %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

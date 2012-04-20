@@ -1,0 +1,17 @@
+<h3 class="section"><%= t('sources_area') %></h3>
+<table class="table-show">
+  <tr>
+    <th><%= t('sources') %></th>
+    <td>
+      <% if object.present? %>
+        <ul>
+          <% object.each do |source| %>
+            <li><%= formatted_source(source) %></li>
+          <% end %>
+        </ul>
+      <%  else %>
+        <%= blank_field %>
+      <% end %>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,107 @@
+<!DOCTYPE html><%# OPTIMIZE: aggiungere file shim per IE %>
+<html lang="<%= I18n.default_locale.to_s %>">
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <% if controller_name == "reports" %>
+    <meta name="pdfkit-title" content="<%= @root_fond_name %>" />
+    <% if action_name != "labels" && action_name != "inventory" %>
+    <meta name="pdfkit-orientation" content="Landscape" />
+    <meta name="pdfkit-dpi" content="150" />
+    <% else %>
+    <meta name="pdfkit-dpi" content="600" />
+    <% end %>
+  <% end %>
+  <title><%= controller_name %> - <%= action_name %></title>
+  <%= stylesheet_link_tag "bootstrap.min",
+                          "jquery-ui-1.8.18",
+                          "master",
+                          "new_master", # FIXME: eliminare a fine lavoro
+                          "markitup",
+                          "fancybox",
+                          :cache => "/assets/application" %>
+  <%= stylesheet_link_tag "treeview" %>
+  <% if controller_name == "reports" %>
+    <%= stylesheet_link_tag "reports-print", :media => "print" %>
+    <%= stylesheet_link_tag "reports-screen", :media => "screen" %>
+  <% end %>
+  <% if controller_name == "quality_checks" %>
+    <%= stylesheet_link_tag "quality_checks" %>
+  <% end %>
+  <%= yield :stylesheets %>
+  <%# JAVASCRIPTS -%>
+  <%= javascript_include_tag "jquery-1.7.1.min",
+                             "bootstrap.min",
+                             "jquery-ui-1.8.18.min",
+                             "jquery.ui.datepicker-it",
+                             "jquery.cookie",
+                             "jquery.blockUI",
+                             "markitup/jquery.markitup",
+                             "markitup/settings",
+                             "jquery.fancybox-1.3.4.pack.js",
+                             :cache => "/assets/libraries" -%>
+  <%= javascript_include_tag "application",
+                             "archimate_autocomplete",
+                             "archidate",
+                             # "wordcount", # FIXME: non funziona. Ripristinare o dismettere
+                             :cache => "/assets/application" -%>
+  <%# if APP_EDITION == 'standalone' %>
+    <%#= javascript_include_tag "no-contextmenu" %>
+  <%# end %>
+  <% if controller_name == "fonds" %>
+    <%= javascript_include_tag "jsTree/jquery.jstree.min" %>
+    <%= javascript_include_tag "fonds-treeview" %>
+    <%= javascript_include_tag "fonds-merge" %>
+  <% end %>
+  <% if controller_name == "reports" %>
+    <%= javascript_include_tag "reports" %>
+  <% end %>
+  <% if controller_name == "quality_checks" %>
+    <%= javascript_include_tag "quality_checks" %>
+  <% end %>
+  <% if ["fonds", "units"].include?(controller_name) %>
+    <%= javascript_include_tag "livesearch2" %>
+    <%= javascript_include_tag "headings" %>
+  <% end %>
+  <% if ["imports", "exports"].include?(controller_name) %>
+    <%= javascript_include_tag "imports-exports" %>
+  <% end %>
+  <%= yield :javascripts %>
+</head>
+
+<body<%= body_id %>>
+  <div id="header">
+    <%= render :partial => "shared/navbar" %>
+    <div id="status-bar"><%= yield :status_bar %></div>
+  </div>
+
+  <div id="content">
+  <% container_class = yield(:container_class) || "container" %>
+  <div<%= container_id %> class="<%= container_class %>">
+
+    <% flash.each do |key, message| %><%# OPTIMIZE: da rivedere, c'è anche in login e valutare se prendere lo shared %>
+      <% if [:notice, :alert].include?(key) && message.present? %>
+        <% status = key.to_s == "alert" ? "error" : "success" %>
+        <div class="row">
+          <div class="span9">
+            <div class="alert alert-<%= status %>">
+              <a class="close" data-dismiss="alert">×</a>
+              <%= message %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <div class="<%= row_class(container_class) %>">
+      <%= yield %>
+    </div>
+  </div>
+  </div>
+
+  <div id="footer">
+    <div class="pull-right"><%= link_to "Informazioni e Copyright", "/about" %></div>
+    <%= "#{APP_NAME} #{APP_VERSION} #{APP_STATUS}" %>
+  </div>
+</body>
+</html>
+

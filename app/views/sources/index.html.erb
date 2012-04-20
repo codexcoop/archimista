@@ -1,0 +1,60 @@
+<% content_for :status_bar do %>
+  <h2><%= status_bar_context %></h2>
+<% end %>
+
+<%# FIXME: troppo stile in linea qui e in creators/index %>
+<%# FIXME: i18n ==> testo di ul.dropdown %>
+<div class="span12">
+  <div id="index-controls" class="clearfix">
+    <% if @sources.total_entries > Source.per_page || params[:q].present? %>
+      <% form_tag('/sources', :method => :get, :class => "skip-prompt form-search pull-right", :style => "margin-bottom: 0") do %>
+        <%= text_field_tag :q, params[:q], :class => "search-query", :placeholder => "Titolo" %>
+        <%= submit_tag "Cerca", :name => "", :class => "btn btn-small" %>
+      <% end %>
+    <% end %>
+    <div class="btn-group pull-left">
+      <%= link_to t('new') + '<span class="caret" style="margin-top: 7px; margin-left: 4px"></span>', "#", { :class => "btn btn-small dropdown-toggle new", :'data-toggle' => "dropdown" } %>
+      <ul class="dropdown-menu">
+        <li><%= link_to "Bibliografia", new_source_path(:type => 1) %></li>
+        <li><%= link_to "Strumento di corredo", new_source_path(:type => 2) %></li>
+        <li><%= link_to "Fonte archivistica", new_source_path(:type => 3) %></li>
+        <li><%= link_to "Fonte normativa", new_source_path(:type => 4) %></li>
+      </ul>
+    </div>
+  </div>
+
+  <% if @sources.size > 0 %>
+  <%= display_page_entries_info @sources %>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th class="span2"><%= t('short_title') %></th>
+      <th class="span5"><%= t('full_title') %></th>
+      <th class="span2"><%= t('updated_at') %></th>
+      <th class="span1">&nbsp;</th>
+      <th class="span1">&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @sources.each do |source| %>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td><%= link_to source.short_title, edit_source_path(source) %></td>
+        <td><%= formatted_source(source) %>
+          <%= "<span class='light'>[#{source.source_type.source_type}]</span>" if source.source_type.present? %>
+          <%#= @source_types.select {|x| x.code == source.source_subtype_code }.map(&:source_type) %>
+        </td>
+        <td><%= l source.updated_at, :format => :long %></td>
+        <td><%= '<span class="label">importato</span>' if source.use_legacy? %></td>
+        <td><%= link_to t('destroy'), source, :confirm => t('are_you_sure'), :method => :delete %></td>
+      </tr>
+    <% end %>
+    </tbody>
+</table>
+
+<%= will_paginate @sources %>
+
+<% else %>
+  <p>Non sono presenti schede fonte.</p>
+<% end %>
+</div>  

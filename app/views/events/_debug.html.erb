@@ -1,0 +1,102 @@
+<style type="text/css">
+  table#debug {
+    margin: 12px 0 24px 0;
+    border-collapse: collapse;
+  }
+  #debug th, #debug td {
+    padding: 2px 6px;
+    border: 1px solid #ccc;
+    text-align: left;
+  }
+  #debug th {
+    font-weight: normal;
+    color: #666;
+}
+</style>
+
+<% if event %>
+  <% if flash[:last_event] %>
+    <p class="display"><%= event.full_display_date %></p>
+  <% end %>
+  <table id="debug">
+    <tr>
+      <th>start_date_spec</th>
+      <td><%=event.start_date_spec%></td>
+      <th>end_date_spec</th>
+      <td><%=event.end_date_spec%></td>
+    </tr>
+    <tr>
+      <th>start_date_from</th>
+      <td><%=event.start_date_from%></td>
+      <th>end_date_from</th>
+      <td><%=event.end_date_from%></td>
+    </tr>
+    <tr>
+      <th>start_date_to</th>
+      <td><%=event.start_date_to%></td>
+      <th>end_date_to</th>
+      <td><%=event.end_date_to%></td>
+    </tr>
+    <tr>
+      <th>start_date_format</th>
+      <td><%=event.start_date_format%></td>
+      <th>end_date_format</th>
+      <td><%=event.end_date_format%></td>
+    </tr>
+    <tr>
+      <th>start_date_top_level_format</th>
+      <td><%=event.start_date_top_level_format%></td>
+      <th>end_date_top_level_format</th>
+      <td><%=event.end_date_top_level_format%></td>
+    </tr>
+    <tr>
+      <th>start_date_valid</th>
+      <td><%=event.start_date_valid%></td>
+      <th>end_date_valid</th>
+      <td><%=event.end_date_valid%></td>
+    </tr>
+    <tr>
+      <th>start_date_display</th>
+      <td><%=event.start_date_display.no_leading_zeros%></td>
+      <th>end_date_display</th>
+      <td><%=event.end_date_display.no_leading_zeros%></td>
+    </tr>
+    <tr>
+      <th>start_date_from_year</th>
+      <td><%=event.start_date_from_year%></td>
+      <th>end_date_from_year</th>
+      <td><%=event.end_date_from_year%></td>
+    </tr>
+    <tr>
+      <th>start_date_from_month</th>
+      <td><%=event.start_date_from_month%></td>
+      <th>end_date_from_month</th>
+      <td><%=event.end_date_from_month%></td>
+    </tr>
+    <tr>
+      <th>start_date_from_day</th>
+      <td><%=event.start_date_from_day%></td>
+      <th>end_date_from_day</th>
+      <td><%=event.end_date_from_day%></td>
+    </tr>
+    <tr>
+      <th>shifted_start_date_from</th>
+      <td><%=event.shifted_start_date_from%></td>
+      <th>shifted_end_date_from</th>
+      <td><%=event.shifted_end_date_from%></td>
+    </tr>
+    <tr>
+      <th>shifted_start_date_to</th>
+      <td><%=event.shifted_start_date_to%></td>
+      <th>shifted_end_date_to</th>
+      <td><%=event.shifted_end_date_to%></td>
+    </tr>
+    <tr>
+      <th colspan="2">order_date</th>
+      <td colspan="2"><%=event.order_date%></td>
+    </tr>
+  </table>
+<% end %>
+
+<%= debug event.errors if event.errors.present? %>
+

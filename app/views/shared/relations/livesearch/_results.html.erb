@@ -1,0 +1,26 @@
+<%# partial rendered via response to ajax call %>
+<% if sources.empty? %>
+  <p>
+    <em><%= t('.no_results') %></em>
+  </p>
+<% else %>
+  <% content_tag :table, :class => 'show', :'data-excluded-ids' => excluded_ids.to_json, :style => 'width:670px;' do %>
+    <% sources.each do |source| %>
+      <% content_tag :tr, :'data-related-id' => source.id.to_json,
+                          :class => "choice-item suggested-item" do %>
+        <td>
+          <span class="choice-item-label-short"><%= selected_label_short.call(source) %></span><br />
+          <span class="choice-item-label-full"><%= selected_label_full.call(source, self) %></span>
+        </td>
+        <td style="width:70px; text-align:right;">
+          <%= link_to t('.link_item'), "#", :style => "color:green; font-size:0.85em;",
+                                            :class => "item-action-add-suggested",
+                                            :'data-selected-id' => source.id.to_json,
+                                            :'data-selected-value-short' => selected_label_short.call(source),
+                                            :'data-selected-value-full' => selected_label_full.call(source, self) %>
+        </td>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+

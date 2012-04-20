@@ -1,0 +1,31 @@
+<% if entity_form.object.class.cardinality == 'n' %>
+  <p><%= link_to t('new_event'), "#nogo", :class => "add-archidate add_child" %></p>
+<% end %>
+
+<% content_tag  :div,
+                :id => 'archidate-formarea',
+                :class => 'archidates-area',
+                :'data-archidate-cardinality' => entity_form.object.class.cardinality,
+                :'data-controller' => controller_name,
+                :'data-action' => action_name do %>
+  <% events.each_with_index do |event, index| %>
+    <%= "<p>" + event.legacy_display_date + "</p>" if event.legacy_display_date.present? %>
+    <%= render  :partial => "events/event",
+                :locals => {:entity_form => entity_form,
+                            :event => event,
+                            :index => index,
+                            :child_index => nil,
+                            :is_template => false } %>
+  <% end %>
+<% end %>
+
+<% if entity_form.object.class.cardinality == 'n' %>
+  <% dummy_event = entity_form.object.events.build %>
+  <%= render  :partial => "events/event",
+              :locals => {:entity_form => entity_form,
+                          :event => dummy_event,
+                          :index => 0,
+                          :child_index => "new_archidate",
+                          :is_template => true } %>
+<% end %>
+

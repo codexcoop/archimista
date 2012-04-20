@@ -1,0 +1,35 @@
+it:
+  access_denied: 'Non hai i privilegi sufficienti per accedere alla pagina.'
+  devise:
+    user: 'Utente'
+    attributes:
+      login: 'Email o nome utente'
+      username: 'Nome utente'
+      full_name: 'Nome'
+      remember_me: 'Ricordami su questo computer'
+      password: 'Password'
+      password_confirmation: 'Conferma password'
+      group_id: 'Gruppo'
+      role: 'Ruolo'
+      group_id_prompt: 'Seleziona gruppo'
+      role_prompt: 'Seleziona ruolo'
+    sessions:
+      link: 'Accedi'
+      signed_in: '' # 'Ora sei collegato.'
+      signed_out: 'Ti sei scollegato.'
+      unauthenticated: '' # 'Inserisci email e password per continuare.'
+      invalid: 'Email o password non validi.'
+      # added by Codex
+      sign_out: "Esci"
+    registrations:
+      link: 'Crea account'
+      updated: 'Il tuo account &egrave; stato aggiornato.'
+      destroyed: 'L&#039;account &egrave; stato cancellato.'
+      # added by Codex
+      edit_account: "Modifica account"
+      username_characters: "Puoi usare lettere, numeri e il segno underscore. No spazi."
+      keep_current_password: "Lascia il campo vuoto se vuoi mantenere la password attuale."
+    messages:
+      create_ok: "Utente creato"
+      save_ok: "Utente modificato"
+

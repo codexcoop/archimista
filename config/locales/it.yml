@@ -1,0 +1,191 @@
+# Common keys
+
+it:
+  updated_at: "Data modifica"
+  updated_by: "Aggiornato da utente"
+  unsaved_record: "Scheda non ancora salvata"
+  identifier: "Codice identificativo"
+  previous: "&laquo; precedente"
+  next: "successivo &raquo;"
+  dashboard: "Bacheca"
+  loading_message: "Caricamento..."
+  new: "Nuova scheda"
+  save: "Salva"
+  preview: "Anteprima" # "Anteprima modifiche"
+  save_and_continue: "Salva" # "Salva e aggiungi nuovo"
+  save_and_add_new: "Aggiungi nuovo"
+  show: "Mostra"
+  edit: "Modifica"
+  close: "Chiudi"
+  cancel: "Annulla"
+  destroy: "Elimina"
+  alert_no_recovery: "Non puoi annullare questa azione."
+  back: "Indietro"
+  are_you_sure: "Sei sicuro?"
+  description_area: "Descrizione"
+  identification_area: "Identificazione"
+  access_area: "Accesso" # "Accesso e utilizzazione"
+  contact_area: "Contatti"
+  relationships_area: "Relazioni"
+  sources_area: "Fonti" # "Bibliografia"
+  headings_area: "Indici"
+  other_information_area: "Altre informazioni"
+  active: "attivo"
+  places: "Toponimi"
+  date_event: "Estremi cronologici"
+  start_date_event: "Estremo cronologico iniziale"
+  end_date_event: "Estremo cronologico finale"
+  event_note: "Note alla data"
+  new_event: "Aggiungi estremi cronologici"
+  activate: "attiva"
+  deactivate: "disattiva"
+  new_record: "Nuova scheda"
+  edit_record: "Modifica scheda"
+  show_record: "Anteprima scheda"
+  O: "in corso"
+  C: "concluso"
+  PU: "pubblico"
+  PR: "privato"
+  AU: "altra denominazione principale"
+  PA: "denominazione parallela"
+  AC: "acronimo"
+  OT: "altra denominazione"
+  blank_field: "[non compilato]"
+  warning_field: "[non presente]"
+  merge_with: "Unisci a..."
+  count:
+    creators:
+        one: "&Egrave; stato trovato %{count} soggetto produttore."
+        other: "Sono stati trovati %{count} soggetti produttori."  
+    custodians:
+        one: "&Egrave; stato trovato %{count} soggetto conservatore."
+        other: "Sono stati trovati %{count} soggetti conservatori."
+    fonds:
+        success:
+          one: "Il complesso archivistico ha il campo &quot;%{field}&quot; compilato."
+          other: "Tutti i %{count} complessi archivistici hanno il campo &quot;%{field}&quot; compilato."
+        failure:
+          one: "%{count} complesso archivistico su %{total} (%{percentage}) ha il campo &quot;%{field}&quot; vuoto."
+          other: "%{count} complessi archivistici su %{total} (%{percentage}) hanno il campo &quot;%{field}&quot; vuoto."
+  time:
+    formats:
+      file_timestamp: "%Y-%m-%d_%H-%M-%S"
+  activerecord:
+    blank_defaults:
+      fond:
+        name: "[nome non compilato]"
+      unit:
+        title: "[titolo non compilato]"
+      project:
+        name: "[nome non compilato]"
+      creator:
+        creator_type: "C"
+      creator_name:
+        name: "[nome non compilato]"
+      custodian_name:
+        name: "[nome non compilato]"
+    errors:
+      # activerecord.errors.models.[model_name].attributes.[attribute_name]
+      # activerecord.errors.models.[model_name]
+      # activerecord.errors.messages
+      models:
+        unit:
+          not_matching_parent_and_fond: "Il complesso specificato non corrisponde all'unità di livello superiore"
+          not_matching_fond_and_root_fond: "Il complesso principale non è compatibile con il complesso di appartenenza"
+          not_allowed_ancestry_depth: "Non &egrave; possibile creare sottounit&agrave; a questo livello"
+        fond:
+          at_most_one_custodian: "Un complesso può avere un solo soggetto conservatore"
+    models:
+      fond:
+        one: "Complesso archivistico"
+        other: "Complessi archivistici"
+      unit:
+        one: "Unità archivistica"
+        other: "Unità archivistiche"
+      creator:
+        one: "Soggetto produttore"
+        other: "Soggetti produttori"
+      project:
+        one: "Progetto"
+        other: "Progetti"
+      custodian:
+        one: "Soggetto conservatore"
+        other: "Soggetti conservatori"
+      institution:
+        one: "Profilo istituzionale"
+        other: "Profili istituzionali"
+      document_form:
+        one: "Profilo documentario"
+        other: "Profili documentari"
+      source:
+        one: "Fonte"
+        other: "Fonti"
+      heading:
+        one: "Indice"
+        other: "Indici"
+      user:
+        one: "Utente"
+        other: "Utenti"
+      group:
+        one: "Gruppo"
+        other: "Gruppi"
+      editor:
+        one: "Compilatore"
+        other: "Compilatori"
+      #document:
+      #  one: "Allegato"
+      #  other: "Allegati"
+      import:
+        one: "Import"
+        other: "Imports"
+      export:
+        one: "Export"
+        other: "Exports"
+    attributes:
+      unit:
+        id: 'ID'
+        position: "Posizione"
+        tmp_reference_number: "Segnatura provvisoria - numero"
+        tmp_reference_string: "Segnatura provvisoria - testo"
+        folder_number: "Busta"
+        file_number: "Fascicolo"
+        reference_number: "Segnatura definitiva"
+        sort_letter: "Lettera di ordinamento"
+        sort_number: "Numero di ordinamento"
+        sequence_number: "Sequenza"
+        title: "Titolo"
+        given_title: "Attribuito"
+        unit_type: "Tipologia"
+        content: "Contenuto"
+        arrangement_note: "Nota dell'archivista"
+        related_materials: "Documentazione collegata"
+        note: "Appunti di servizio"
+        physical_type: "Tipologia fisica"
+        physical_description: "Descrizione estrinseca"
+        physical_container_type: "Tipologia contenitore"
+        physical_container_title: "Titolo contenitore"
+        physical_container_number: "Numero contenitore"
+        preservation: "Stato di conservazione"
+        preservation_note: "Note sullo stato di conservazione"
+        damages: "Danni"
+        restoration: "Restauri"
+        access_condition: "Accesso"
+        access_condition_note: "Nota alla condizione di accesso"
+        use_condition: "Riproduzione"
+        use_condition_note: "Nota alla condizione di riproduzione"
+        created_at: "Creazione"
+        updated_at: "Aggiornamento"
+        fond_id: "Complesso archivistico"
+        ancestry: "Gerarchia"
+        ancestry_depth: "Livello"
+        root_fond_id: "Complesso"
+        legacy_position: "Posizione"
+        legacy_sequence_number: "Corda"
+        legacy_id: "ID"
+        legacy_parent_fond_id: "Complesso archivistico"
+        legacy_parent_unit_id: "Gerarchia"
+        medium: "Supporto"
+        creation_number: "Numero scheda"
+        fond_name: "Classificazione"
+        preferred_event: "Estremi cronologici"
+

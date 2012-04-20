@@ -1,0 +1,18 @@
+<div class="modal hide fade" id="mass-remove-modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Elimina unità</h3>
+  </div>
+  <div id="remove-rows-dialog" class="modal-body">
+    <p><%= t('confirm_destroy') %></p>
+    <p class="light"><%= t('alert_no_recovery') %></p>
+    <% form_tag({:action => 'remove_rows'}, {:method => :put, :id => "confirm-remove-rows-form", :class => "skip-prompt"}) do %>
+      <div class="fields-wrapper"><%# filled by javascript %></div>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button id="close-mass-remove" class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="confirm-mass-remove" class="submit btn btn-primary btn-danger"><%= t('destroy') %></button>
+  </div>
+</div>
+

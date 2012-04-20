@@ -1,0 +1,12 @@
+en:
+  listing_imports: "Imports"
+  index_imports: "Listing imports"
+  new_import: "New import"
+  data: "File"
+  import_file: "Import file"
+it:
+  listing_imports: "Importa"
+  index_imports: "Lista importazioni"
+  new_import: "Nuova importazione"
+  data: "File"
+  import_file: "Importa file"

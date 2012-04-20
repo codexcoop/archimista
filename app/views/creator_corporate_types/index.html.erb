@@ -1,0 +1,19 @@
+<% content_for :status_bar do %>
+  <h2><%= t('listing_creator_corporate_types') %></h2>
+<% end %>
+<div class="span9">
+<table class="table">
+  <thead>
+    <tr>
+      <th><%= t('creator_corporate_type') %></th>
+    </tr>
+  </thead>
+  <tbody>
+  <% @creator_corporate_types.each do |creator_corporate_type| %>
+    <tr class="<%= cycle("odd", "even") %>">
+      <td><%=h creator_corporate_type.corporate_type.capitalize %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+</div>

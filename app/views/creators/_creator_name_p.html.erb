@@ -1,0 +1,13 @@
+<div class="fields row">
+  <div class="span3">
+    <%= f.hidden_field :preferred, :value => f.object.preferred %>
+    <%= f.text_field :first_name %>
+  </div>
+  <div class="span3">
+    <%= f.text_field :last_name %>
+  </div>
+  <div class="span3">
+    <% n = f.object.note || f.object.note_p %>
+    <%= f.text_field :note_p, :value => n %>
+  </div>
+</div>

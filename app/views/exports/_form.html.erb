@@ -1,0 +1,16 @@
+<p>Seleziona un complesso archivistico</p>
+<% form_tag("/exports", :method => :get, :id => "exports-fond-choice", :class => "skip-prompt export-wait") do %>
+  <div style="margin: 7px 0 0 0;">
+    <div>
+      <span class="ui-icon ui-icon-search" style="display:inline; float:left; margin: 5px 0 0 0;">&nbsp;</span>
+    </div>
+    <div style="margin-left:16px; padding-left:10px;">
+      <%= text_field_tag :q, params[:q], :id => "exports-fond-name-autocomplete",
+        :class => "autocomplete",
+        :'data-autocompletion-controller' => 'fonds',
+        :'data-autocompletion-action' => 'list',
+        :style => "width:600px;" %>
+      <%= hidden_field_tag :f, "", :id => "exports-fond-id-autocomplete" %>
+    </div>
+  </div>
+<% end %>

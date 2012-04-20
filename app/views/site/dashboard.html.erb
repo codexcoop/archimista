@@ -1,0 +1,89 @@
+<% content_for :stylesheets do %>
+  <style type="text/css">
+    body { padding-top: 40px; }
+    #status-bar { display: none; }
+    .thumbnails li { border: 1px solid #ccc; }
+  </style>
+<% end %>
+
+<div class="span6">
+<h2 style="font-size: 14px; font-weight: normal;">Schede principali</h2>
+  <table class="summary">
+    <tr>
+      <td><%= link_to t('fonds'), fonds_path %>
+          (<%= number_with_delimiter(@fonds_count) %>)</td>
+      <td><%= link_to t('new') + '&nbsp;&nbsp;&nbsp;', "#add_fond_modal",
+           { :"data-toggle" => "modal", :class => "btn btn-mini new" } %></td>
+    </tr>
+    <tr>
+      <td><%= link_to t('creators'), creators_path%>
+          (<%= number_with_delimiter(@creators_count) %>)</td>
+      <td>
+        <div class="btn-group">
+          <%= link_to t('new') + '&nbsp;<span class="caret"></span>', "#",
+                            { :class => "btn btn-mini dropdown-toggle new", :'data-toggle' => "dropdown" } %>
+          <ul class="dropdown-menu">
+            <li><%= link_to t('C'), new_creator_path(:type => "C") %></li>
+            <li><%= link_to t('P'), new_creator_path(:type => "P") %></li>
+            <li><%= link_to t('F'), new_creator_path(:type => "F") %></li>
+          </ul>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td><%= link_to t('custodians'), custodians_path %>
+          (<%= number_with_delimiter(@custodians_count) %>)</td>
+      <td><%= link_to t('new')+ '&nbsp;&nbsp;&nbsp;', new_custodian_path, :class => "btn btn-mini new" %></td>
+    </tr>
+  </table>
+</div>
+
+<div class="span10" style="margin-top: 4em; padding-top: 1em; border-top: 2px solid #eee;">
+  <h2 style="font-size: 14px; font-weight: normal;">
+    Benvenuto su <strong><%= "#{APP_NAME} #{APP_VERSION} #{APP_STATUS}" %></strong>
+  </h2>
+  <p>Applicazione web multipiattaforma gratuita ed open source per la descrizione di archivi storici e la realizzazione di inventari, censimenti e guide.</p>
+</div>
+
+<div class="span12">
+  <p><strong>Sito ufficiale</strong>:
+  <%= link_to_unless(APP_EDITION == "standalone", "http://www.archimista.it", "http://www.archimista.it") %><br />
+  Contiene informazioni e notizie relative ad Archimista, il manuale d'uso e la versione standalone per Windows.</p>
+
+  <p style="margin-bottom: 2em;"><strong>Forum</strong>:
+  <%= link_to_unless(APP_EDITION == "standalone", "http://www.archiviando.org/forum/viewforum.php?f=64", "http://www.archiviando.org/forum/viewforum.php?f=64") %><br />
+  Forum di discussione, ospitato all'interno del forum Archiviando dell'Anai Lombardia.
+  </dl>
+</div>
+
+<div class="span7">
+  <p>Archimista è un progetto promosso da:</p>
+  <ul class="thumbnails">
+    <li class="span2">
+      <%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-mibac-dga.jpg'), 'http://www.archivi.beniculturali.it') %>
+    </li>
+    <li class="span2">
+      <%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-lombardia.jpg'), 'http://www.cultura.regione.lombardia.it') %>
+    </li>
+    <li class="span2">
+      <%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-piemonte.jpg'),
+          'http://www.regione.piemonte.it/cultura/cms/patrimonio-culturale/archivi.html') %>
+    </li>
+  </ul>
+</div>
+<div class="span2">
+  <p>Soggetto coordinatore:</p>
+  <ul class="thumbnails">
+    <li class="span2"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-unipv.jpg'), 'http://www.unipv.eu') %></li>
+  </ul>
+</div>
+
+<div class="span9">
+  <p>Il progetto di Archimista nasce da una convenzione tra Regione Lombardia, Regione Piemonte e Direzione Generale per gli Archivi, con il coinvolgimento di CSI Piemonte e Università degli Studi di Pavia. Archimista è sviluppato da Codex Società Cooperativa di Pavia.</p>
+  <p>Archimista viene rilasciato con licenza open source GPL nella prospettiva di incentivarne lo sviluppo e la crescita.</p>
+  <p>Archimista è realizzato nel rispetto degli standard archivistici, dei parametri del SAN e di NIERA. Gestisce oggetti digitali, profili istituzionali e profili documentali, vocabolari e tesauri, oltre a schede speciali per fotografie, disegni, stampe e oggetti.</p>
+  <p>Pur essendo un prodotto nuovo, Archimista si richiama alle esperienze di Sesamo e Guarini-Archivi.</p>
+</div>
+
+<%# hidden dialog %>
+<%= render :partial => "fonds/new_fond" %>

@@ -1,0 +1,10 @@
+en:
+  users: "Users"
+  user: "User"
+  index_users: "Users list"
+  create_user: "Create user"
+it:
+  users: "Utenti"
+  user: "Utente"
+  index_users: "Lista utenti"
+  create_user: "Crea utente"

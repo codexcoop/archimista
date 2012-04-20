@@ -1,0 +1,56 @@
+<% entity = entity_form.object %>
+
+<%
+  needs_editing = child_index || event.new_record? || event.invalid? || entity.class.cardinality == '1'
+  completed     = !needs_editing
+  archidate_wrapper_css_class = 'archidate-wrapper'
+  archidate_wrapper_css_class << ' editing' if needs_editing
+  archidate_wrapper_css_class << ' completed' if completed
+%>
+
+<% content_tag  :div,
+                :class => archidate_wrapper_css_class,
+                :id => (is_template ? "archidate-template" : nil),
+                :'data-record-id' => event.id,
+                :'data-archidate-cardinality' => entity.class.cardinality do %>
+
+  <% entity_form.fields_for :events, event, :child_index => child_index do |event_form| %>
+    <% if entity.class.cardinality == 'n' %>
+      <div class="archidate-title">
+        <%= event.full_display_date if event.full_display_date.squish != "-" %>
+        <% if entity.class.cardinality == 'n' %>
+          <div class="archidate-commands-wrapper">
+            <%= link_to t('.remove_event'), "#nogo", :class => "remove-archidate" %>
+            <%= link_to t('.restore_event'), "#nogo", :class => "restore-archidate" %>
+            <%= link_to t('.show'), "#nogo", :class => "show-archidate" %>
+            <%= link_to t('.hide'), "#nogo", :class => "hide-archidate" %>
+            <span class="title-command">
+              <%= event_form.label :preferred %>
+              <%= event_form.check_box :preferred, :class => 'archidate-field preferred-event' %>
+              &nbsp;|&nbsp;
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <div class="archidate-inner">
+        <%#= event_form.error_messages %>
+        <%= event_form.hidden_field :_destroy, :value => '0', :class => 'destroy-archidate' %>
+        <%= render :partial => "events/bounds/start_date", :locals => {:event_form => event_form, :entity_form => entity_form} %>
+        <%= render :partial => "events/bounds/end_date", :locals => {:event_form => event_form, :entity_form => entity_form} %>
+        <p class="date-note-wrapper">
+          <%
+            note_css_class = "archidate-note"
+            note_css_class << " active" if is_template
+          %>
+          <%# NOTA: per il momento decidiamo di non usare toggle di campo note (che per altro non stava funzionando) %>
+          <%= event_form.label :note, t('event_note'), :class => 'date-note-toggler' %>
+          <%= event_form.text_field :note, :class => note_css_class + ' span9', :id => "archidate-text-note" %>
+        </p>
+      <%#= render :partial => "events/debug", :locals => {:event => (flash[:last_event] || event)} %>
+    </div>
+  <% end %>
+
+<% end %>
+

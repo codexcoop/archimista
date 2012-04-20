@@ -1,0 +1,19 @@
+<% content_for :status_bar do %>
+  <div class="dropdown" id="jump-to-wrap">
+    <button id="jump-to" class="btn btn-small dropdown-toggle" data-toggle="dropdown" title="Vai alle unit&agrave;" tabindex="-1">
+      <i class="icon-align-left"></i>
+    </button>
+    <%= render :partial => 'units/jump_to', :locals => {:fond => @fond, :root => @fond.root} %>
+  </div>
+
+  <h2>
+  <%= t('listing_units') %>:
+    <% @fond.path_items.each_with_index do |item, index| %>
+      <%= path_separator unless index == 0 %>
+      <%= link_to_unless (item.id == params[:fond_id].to_i, item.name, fond_units_path(item.id)) %>
+    <% end %>
+  </h2>
+  <div id="links">
+    <%= link_to_index "Scheda complesso", treeview_fond_path(@fond.id) %>
+  </div>
+<% end %>

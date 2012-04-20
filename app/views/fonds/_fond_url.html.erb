@@ -1,0 +1,11 @@
+<div class="fields row">
+  <div class="span4">
+    <%= f.text_field :url, :class => "span4" %>
+  </div>
+  <div class="span4">
+    <%= f.text_field :note, :class => "span4" %>
+  </div>
+  <div class="span1 destroy">
+    <%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %>
+  </div>
+</div>

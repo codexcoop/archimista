@@ -1,0 +1,234 @@
+<%= javascript_include_tag "application" %>
+<%= javascript_include_tag "relations" %>
+<%= javascript_include_tag "live_search" %>
+<%= javascript_include_tag "sources" %>
+
+<% node_info = {
+  :'data-node-id' => "node-#{@fond.id}",
+  :'data-node-description' => @fond.name,
+  :'data-record-id' => @fond.id
+}
+%>
+
+<% form_for @fond, {:url => {:action => 'ajax_update'}, :html => node_info} do |f| %>
+  <div id="main-form-controls" class="row" style="left: <%= css_size_by_cookie("tree_width", "281", 1) %>">
+    <div class="span2" style="margin-left: 15px;">
+      <%= f.submit t('save_and_continue'), :name => "save_and_continue", :class => "span2 btn btn-mini btn-primary" %>
+    </div>
+    <div class="span2" style="margin-left: 0;">
+      <%= link_to t('preview'), fond_path(@fond), :id => "fond-preview", :class => "span2 btn btn-mini" %>
+    </div>
+    <div class="offset4">
+      <% total_count = @fond.is_root? ? @fond.active_descendant_units_count : @fond.units_count %>
+      <strong><%= link_to "#{number_with_delimiter(total_count)} " + t('view_unit').downcase, fond_units_path(@fond) %></strong>
+      <%= "(totale del complesso)" if @fond.is_root? %>
+      <%= link_to t('new_unit'), new_fond_unit_path(@fond), :class => 'btn btn-mini' %>
+    </div>
+  </div>
+
+  <div class="tabbable">
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#tab-description" data-toggle="tab"><%= t('description_area') %></a></li>
+      <li><a href="#tab-other-information" data-toggle="tab"><%= t('other_information_area') %></a></li>
+      <li><a href="#tab-access" data-toggle="tab"><%= t('access_area') %></a></li>
+      <li><a href="#tab-relations" data-toggle="tab"><%= t('relationships_area') %></a></li>
+      <li><a href="#tab-sources" data-toggle="tab"><%= t('sources_area') %></a></li>
+      <li><a href="#tab-credits" data-toggle="tab"><%= t('editors') %></a></li>
+    </ul>
+
+    <div class="tab-content">
+    <%# FIXME: posizione errors e/o notice %>
+      <%= f.error_messages %>
+      <% if notice %>
+        <div class="alert alert-success">
+          <a class="close" data-dismiss="alert">×</a>
+          <%= notice %>
+        </div>
+      <% end %>
+
+      <div class="tab-pane active" id="tab-description">
+        <%= f.label :fond_type, t('fond_type') %>
+        <%= terms_select(f, "fonds.fond_type", {:prompt => true}) %>
+
+        <%= f.label :name, t('name') %>
+        <%= f.text_field :name %>
+
+        <div id="other_names" class="row-fluid">
+          <% @other_names = build_or_retrieve(f.object.other_names) %>
+          <div class="span12">
+            <h3 class="row-header"><%= t('other_names') %></h3>
+            <div class="row-fluid">
+              <div class="span6"><%= f.label :other_name, t('name') %></div>
+              <div class="span5"><%= f.label :qualifier, t('note') %></div>
+            </div>
+            <% f.fields_for :other_names do |name_form| %>
+              <%= render :partial => "fond_name", :locals => { :f => name_form } %>
+            <% end %>
+            <p><%= add_child_link t('new_name'), "other_names" %></p>
+          </div>
+        </div> <%# /other_names %>
+
+        <%= render :partial => "events/form", :locals => {:entity_form => f, :events => @events} %>
+
+        <%= f.label :length, t('length') %>
+        <%= f.text_field :length, :id => 'fond_length', :class => "input-mini" %>
+
+        <%= f.label :extent, t('archival_extent') %>
+        <%= f.text_area :extent, :class=> "short-content" %>
+
+        <% if @fond.is_root? %>
+          <%= f.label :abstract, t('abstract') %>
+          <%= f.text_area :abstract, :class => "textile medium-content wordcount", :"data-count" =>"abstract-1000", :id => "fond-abstract" %>
+          <span class="counter" id="counter-abstract">&nbsp;</span>
+        <% end %>
+
+        <%= f.label :description, t('fond_description') %>
+        <%= f.text_area :description, :class => "textile long-content", :id => "fond-description" %>
+
+        <%= f.label :history, t('history') %>
+        <%= f.text_area :history, :class => "textile long-content", :id => "fond-history" %>
+
+        <%= f.label :arrangement_note, t('arrangement_note') %>
+        <%= f.text_area :arrangement_note, :class => "textile medium-content" %>
+
+      </div> <%# /tab-description %>
+
+      <div class="tab-pane" id="tab-other-information">
+        <div id="fond_langs" class="row-fluid">
+          <% @fond_langs = build_or_retrieve(f.object.fond_langs) %>
+          <div class="span12">
+            <h3 class="row-header"><%= f.label :fond_langs, t('fond_langs') %></h3>
+          </div>
+          <% f.fields_for :fond_langs do |fl_form| %>
+            <%= render :partial => "fond_lang", :locals => { :f => fl_form } %>
+          <% end %>
+          <p><%= add_child_link t('new_fond_lang'), "fond_langs" %></p>
+        </div>
+
+        <div id="fond_owners" class="row-fluid">
+          <% @fond_owners = build_or_retrieve(f.object.fond_owners) %>
+          <div class="span12">
+            <h3 class="row-header"><%= f.label :owners, t('owners') %></h3>
+          </div>
+          <% f.fields_for :fond_owners do |fo_form| %>
+            <%= render :partial => "fond_owner", :locals => { :f => fo_form } %>
+          <% end %>
+          <p><%= add_child_link t('new_owner'), "fond_owners" %></p>
+        </div>
+
+        <%= f.label :related_materials, t('related_materials') %>
+        <%= f.text_area :related_materials, :class => "textile medium-content" %>
+
+        <%= f.label :note, t('fond_note') %>
+        <%= f.text_area :note, :class => "short-content" %>
+
+        <div id="fond_urls" class="row-fluid">
+          <% @fond_urls = build_or_retrieve(f.object.fond_urls) %>
+          <div class="span12">
+            <h3  class="row-header"><%= t('fond_urls') %></h3>
+            <div class="row">
+              <div class="span4"><%= t('url') %></div>
+              <div class="span4"><%= t('note') %></div>
+            </div>
+            <% f.fields_for :fond_urls do |cf_form| %>
+              <%= render :partial => "fond_url", :locals => { :f => cf_form } %>
+            <% end %>
+            <p><%= add_child_link t('new_url'), "fond_urls" %></p>
+          </div>
+        </div> <%# fond_urls %>
+
+        <div id="fond_identifiers" class="row-fluid">
+          <% @fond_identifiers = build_or_retrieve(f.object.fond_identifiers) %>
+          <div class="span12">
+            <h3  class="row-header"><%= t('fond_identifiers') %></h3>
+            <div class="row">
+              <div class="span3"><%= t('identifier') %></div>
+              <div class="span3"><%= t('identifier_source') %></div>
+              <div class="span2"><%= t('note') %></div>
+            </div>
+            <% f.fields_for :fond_identifiers do |cf_form| %>
+              <%= render :partial => "fond_identifier", :locals => { :f => cf_form } %>
+            <% end %>
+            <p><%= add_child_link t('new_identifier'), "fond_identifiers" %></p>
+          </div>
+        </div> <%# fond_identifiers %>
+
+      </div> <%# /tab-other-information %>
+
+      <div class="tab-pane" id="tab-access">
+        <%= f.label :access_condition, t('access_condition') %>
+        <%= terms_select(f, "fonds.access_condition", {:prompt => true}, { :class => "span4"}) %>
+
+        <%= f.label :access_condition_note, t('access_condition_note') %>
+        <%= f.text_area :access_condition_note, :class => "textile medium-content wordcount",
+          :"data-count" =>"access_condition_note-1000" %>
+        <span class="counter" id="counter-access_condition_note">&nbsp;</span>
+
+        <%= f.label :use_condition, t('use_condition') %>
+        <%= terms_select(f, "fonds.use_condition", {:prompt => true}, { :class => "span4"}) %>
+
+        <%= f.label :use_condition_note, t('use_condition_note') %>
+        <%= f.text_area :use_condition_note, :class => "textile medium-content wordcount",
+          :"data-count" =>"use_condition_note-1000"  %>
+        <span class="counter" id="counter-use_condition_note">&nbsp;</span>
+
+        <%= f.label :preservation, t('preservation') %>
+        <%= terms_select(f, "fonds.preservation", {:prompt => true}, { :class => "span4"} ) %>
+
+        <%= f.label :preservation_note, t('preservation_note') %>
+        <%= f.text_area :preservation_note, :class => "span9 textile medium-content wordcount",
+          :"data-count" =>"preservation_note-1000" %>
+        <span class="counter" id="counter-preservation_note">&nbsp;</span>
+      </div> <%# /tab-access %>
+
+      <div class="tab-pane" id="tab-relations">
+        <%= render_relation_for f, :creators, @rel_creator_fonds,
+          :selected_label => lambda{|rel_creator_fond| h rel_creator_fond.creator.try(:name_with_preferred_date) },
+          :suggested_label => lambda{|creator| h creator.try(:name_with_preferred_date) },
+          :excluded_ids => @fond.excluded_creator_ids %>
+
+        <% if @fond.is_root? %>
+          <%= render_relation_for f, :custodians, @rel_custodian_fonds,
+            :selected_label => lambda{|rel_custodian_fond| h rel_custodian_fond.custodian.try(:preferred_name).try(:name) },
+            :suggested_label => lambda{|custodian| h custodian.try(:preferred_name).try(:name) },
+            :cardinality => 1 %>
+
+          <%= render_relation_for f, :projects, @rel_project_fonds,
+            :selected_label => lambda{|rel_project_fond| h rel_project_fond.project.try(:name) },
+            :suggested_label => lambda{|project| h project.try(:name) } %>
+        <% end %>
+
+        <%= render_relation_for f, :document_forms, @rel_fond_document_forms,
+          :selected_label => lambda{|rel_fond_document_form| h rel_fond_document_form.document_form.try(:name) },
+          :suggested_label => lambda{|document_form| h document_form.try(:name) } %>
+      </div> <%# /tab-relations %>
+
+      <div class="tab-pane" id="tab-sources">
+        <%= render_relation_for f, :sources, @rel_fond_sources,
+          :variant => 'livesearch',
+          :selected_label_full => lambda{|rel_fond_source| formatted_source(rel_fond_source.source)  },
+          :selected_label_short => lambda{|rel_fond_source| h rel_fond_source.source.short_title } %>
+      </div> <%# <tab-sources /> %>
+
+      <div class="tab-pane" id="tab-credits">
+        <div id="fond_editors" class="row">
+          <% @fond_editors = build_or_retrieve(f.object.fond_editors) %>
+          <div class="span9 row-header">
+            <a id="add-editor-modal" class="btn btn-mini pull-right" href="#">  <%= t('new_editor') %></a>
+            <h3 class="row-header"><%= t('fond_editors') %></h3>
+          </div>
+
+          <div class="span9">
+            <%= render :partial => "shared/editors_labels", :locals => { :f => f } %>
+
+            <% f.fields_for :fond_editors do |dfe_form| %>
+              <%= render :partial => "shared/editor", :locals => { :f => dfe_form } %>
+            <% end %>
+            <p><%= add_child_link t('add_editor'), "fond_editors" %></p>
+          </div>
+        </div>
+      </div> <!-- <tab-credits > -->
+    </div> <!-- tab content -->
+  </div> <!-- /tab-tabbable -->
+
+<% end %>

@@ -1,0 +1,21 @@
+<% content_tag :table,  :id => "selected-#{related_to}", # => "selected-creators"
+                        :class => 'interactive-list selected-list',
+                        :style => 'width:670px;' do %>
+  <% related_through.each_with_index do |through_record, child_index| %>
+    <%= render  :partial => "shared/relations/autocomplete/item",
+                :locals => {
+                  :f                        => f,
+                  :through_association_name => through_association_name,
+                  :through_record           => through_record,
+                  :child_index              => child_index,
+                  :selected_label           => selected_label,
+                  :selected_label_short     => selected_label_short,
+                  :selected_label_full      => selected_label_full,
+                  :foreign_key              => foreign_key,
+                  :cardinality              => cardinality,
+                  :fields_before            => fields_before,
+                  :fields_after             => fields_after
+                } %>
+  <% end %>
+<% end %>
+

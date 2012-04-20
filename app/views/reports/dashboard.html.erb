@@ -1,0 +1,57 @@
+<% content_for :status_bar do %>
+  <h2>Report<%= path_separator %><%= @fond.name %></h2>
+  <div id="links">
+    <%= link_to_index "Report", reports_path %>
+  </div>
+<% end %>
+
+<div class="span6">
+
+  <table class="table">
+    <tbody>
+      <tr>
+        <td><strong>Inventario</strong></td>
+        <td><%= link_to '<i class="icon-download-alt"></i> RTF', inventory_report_path(@fond, :format => "rtf"),  {:class => "rtf btn btn-small"}  %></td>
+        <td><%= link_to '<i class="icon-download-alt"></i> PDF', inventory_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small"}  %></td>
+      </tr>
+      <% unless @units_count.size.zero? %>
+        <tr>
+          <td><strong>Etichette unità</strong></td>
+          <td>&nbsp;</td>
+          <td><%= link_to '<i class="icon-download-alt"></i> PDF', labels_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small"}  %></td>
+        </tr>
+      <% end %>
+      <tr>
+        <td>Struttura complesso archivistico</td>
+        <td><%= link_to '<i class="icon-list-alt"></i> HTML', summary_report_path(@fond), {:class => "btn btn-small"}  %></td>
+        <td><%= link_to '<i class="icon-download-alt"></i> PDF', summary_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small"}  %></td>
+      </tr>
+      <% unless @units_count.size.zero? %>
+        <tr>
+          <td>Lista unità per segnatura</td>
+          <td><%= link_to '<i class="icon-list-alt"></i> HTML', units_by_reference_number_report_path(@fond), {:class => "btn btn-small"} %></td>
+          <td><%= link_to '<i class="icon-download-alt"></i> PDF', units_by_reference_number_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small pdf"}  %></td>
+        </tr>
+        <tr>
+          <td>Lista unità per sequenza</td>
+          <td><%= link_to '<i class="icon-list-alt"></i> HTML', units_by_sequence_number_report_path(@fond), {:class => "btn btn-small"} %></td>
+          <td><%= link_to '<i class="icon-download-alt"></i> PDF', units_by_sequence_number_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small"} %></td>
+        </tr>
+      <% end %>
+      <% unless @fond.creators.blank? %>
+        <tr>
+          <td>Lista soggetti produttori</td>
+          <td><%= link_to '<i class="icon-list-alt"></i> HTML', creators_report_path(@fond), {:class => "btn btn-small"} %></td>
+          <td><%= link_to '<i class="icon-download-alt"></i> PDF', creators_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small"}  %></td>
+        </tr>
+      <% end %>
+      <% unless @fond.custodians.blank? %>
+        <tr>
+          <td>Lista soggetti conservatori</td>
+          <td><%= link_to '<i class="icon-list-alt"></i> HTML', custodians_report_path(@fond), {:class => "btn btn-small"} %></td>
+          <td><%= link_to '<i class="icon-download-alt"></i> PDF', custodians_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small"}  %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,15 @@
+<div class="fields row">
+  <div class="span3">
+    <%= f.hidden_field :preferred, :value => f.object.preferred %>
+    <%= f.text_field :name, :class => "span3" %>
+  </div>
+  <div class="span3">
+    <%= terms_select(f, "creator_names.qualifier", {:prompt => true}, :class => "span3") %>
+  </div>
+  <div class="span2">
+    <%= f.text_field :note, :class => "span2" %>
+  </div>
+  <div class="span1 destroy">
+    <%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy') %>
+  </div>
+</div>

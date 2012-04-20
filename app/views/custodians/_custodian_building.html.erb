@@ -1,0 +1,52 @@
+<div class="fields row-group">
+  <%= f.hidden_field :custodian_id, :value => f.object.custodian_id %>
+
+  <div class="row">
+    <div class="span6"><%= f.label :building_name, t('building_name') %></div>
+    <div class="span3"><%= f.label :building_name, t('building_type') %></div>
+  </div>
+  <div class="row">
+    <div class="span6"><%= f.text_field :name, :class => "span6"%></div>
+    <div class="span3"><%= terms_select(f, "custodian_buildings.custodian_building_type", {:include_blank => true}, :class => "span3") %></div>
+  </div>
+
+  <div class="row">
+    <div class="span9">
+      <%= f.label :building_address, t('building_address') %>
+      <%= f.text_field :address, :class => "span9" %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="span4"><%= f.label :city, t('city') %></div>
+    <div class="span1"><%= f.label :postcode, t('postcode') %></div>
+    <div class="span4"><%= f.label :country, t('country') %></div>
+  </div>
+  <div class="row">
+    <div class="span4">
+      <%= f.text_field :city,
+        :class => "autocomplete span4",
+        :"data-autocompletion-controller" => "places",
+        :"data-autocompletion-action" => "cities" %>
+    </div>
+    <div class="span1">
+      <%= f.text_field :postcode, :class => "span1" %>
+    </div>
+    <div class="span4">
+      <%= f.text_field :country,
+        :class => "autocomplete span4",
+        :"data-autocompletion-controller" => "places",
+        :"data-autocompletion-action" => "countries" %>
+    </div>
+    <div class="span9">
+      <%= f.label :building_description, t('building_description') %>
+      <%= f.text_area :description, :class => "textile long-content span9" %>
+    </div>
+  </div>
+  <div class="row">
+    <div class="span1 destroy">
+      <%= f.check_box :_destroy %> <%= f.label :_destroy, t('destroy'), :class => "destroy" %>
+    </div>
+  </div>
+</div>
+<%#= f.text_field :state lo stato(USA) è stato rimosso %>

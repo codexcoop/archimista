@@ -1,0 +1,17 @@
+<div class="modal hide fade" id="text-field-dialog">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3><%= t(field.match(/\[.*\]/)[0].gsub(/\[|\]/,'')) %></h3>
+  </div>
+  <div class="modal-body">
+    <% form_tag({:controller => 'units', :action => 'ajax_update', :id => @unit.id}, {:method => :put, :id => "text-field-form", :class => "skip-prompt modal-form"}) do %>
+      <div>
+        <%= text_area_tag field, @unit.send(field.match(/\[.*\]/)[0].gsub(/\[|\]/,'')), :id => 'text-field-name', :class => "medium-content span7" %>
+      </div>
+    <% end %>
+  </div>
+  <div class="modal-footer">
+    <button id="close-text-field-dialog" class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="save-text-field-dialog" class="btn btn-primary"><%= t('save') %></button>
+  </div>
+</div>

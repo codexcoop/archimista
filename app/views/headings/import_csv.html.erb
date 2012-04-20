@@ -1,0 +1,17 @@
+<% content_for :status_bar do %>
+  <h2><%= t('headings') %><%= path_separator %><%= t('import_heading') %></h2>
+  <div id="links">
+    <%= link_to_index t('listing_headings'), headings_path %>
+  </div>
+<% end %>
+
+<div class="span12">
+  <%# FIXME: spiegare come deve essere strutturato il file CSV e magari fornire file di esempio %>
+  <p>Puoi importare i lemmi da un file in formato <code>CSV</code> strutturato.</p>
+
+  <% form_for :upload, :url => preview_csv_headings_path, :html => {:multipart => true } do |f| %>
+    <p style="margin: 1.5em 0 1em 0;"><%= f.file_field :csv %></p>
+    <p><%= f.submit t('import_file'), :class => "btn btn-primary" %></p>
+  <% end %>
+</div>
+

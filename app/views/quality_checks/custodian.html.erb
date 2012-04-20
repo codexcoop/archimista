@@ -1,0 +1,9 @@
+<% content_for :status_bar do %>
+  <h2>Controllo qualità<%= path_separator %><%= t('custodians') %></h2>
+  <div id="links">
+    <%= link_to_index "Controllo qualità", quality_checks_path %>
+  </div>
+<% end %>
+<div class="span12">
+  <%= render :partial => "custodian" %>
+</div>

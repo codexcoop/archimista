@@ -1,0 +1,36 @@
+<%
+  item_css_class  = child_index == '_new_' ? "choice-item template" : "choice-item"
+  item_style      = child_index == '_new_' ? "display:none;" : nil
+%>
+
+<%# example: f.fields_for :rel_creator_fonds %>
+<% f.fields_for(through_association_name, through_record, :child_index => child_index) do |through_record_form| %>
+  <% content_tag :tr, :class => item_css_class, :style => item_style do %>
+    <td style="width:22px; padding-top:6px;">
+      <span class="ui-icon ui-icon-radio-on">&nbsp;</span>
+    </td>
+    <%= render(:partial => fields_before, :locals => {:through_record_form => through_record_form}) if fields_before %>
+    <td style="padding-top:6px;">
+      <% content_tag :span, :class => 'choice-item-label' do %>
+        <%= selected_label.call(through_record) if selected_label %>
+      <% end %>
+      <% unless through_record.new_record? %>
+        <%= through_record_form.hidden_field :id %>
+      <% end %>
+    </td>
+    <td style="width:70px; text-align:right; padding-top:6px;">
+      <span class="item-action-trash" style="cursor:pointer; font-size:0.85em; color:red;">
+        <%= t('.remove_item') %>
+      </span>
+      <%# example: foreign_key.to_sym # => :creator_id %>
+      <%= through_record_form.hidden_field  foreign_key.to_sym,
+                                            :class => 'related-id',
+                                            :value => through_record.send(foreign_key.to_sym) %>
+      <%= through_record_form.hidden_field  :_destroy,
+                                            :class => 'destroy-relation',
+                                            :value => through_record.marked_for_destruction? %>
+    </td>
+    <%= render(:partial => fields_after, :locals => {:through_record_form => through_record_form}) if fields_after %>
+  <% end %> <%# /tr %>
+<% end %> <%# /fields_for %>
+

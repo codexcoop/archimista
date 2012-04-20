@@ -1,0 +1,35 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#term').liveUpdate('#headings-list', {
+      url: '/headings/list.json',
+      field: 'heading_id',
+      exclude : {exclude: [<%= object.join(',') %>]}
+    });
+  });
+</script>
+
+<div class="modal hide fade" id="link-heading-dialog">
+  <div class="modal-header">
+    <a class="close close-link-heading-dialog" data-dismiss="modal">×</a>
+    <h3><%= t('link_heading')  %></h3>
+  </div>
+  <div class="modal-body">
+    <div id="heading_form_error"></div>
+    <form>
+      <%= text_field_tag :term, '', :id => "term",
+        :class => "span6",
+        :placeholder => "Cerca un lemma" %>
+    </form>
+    <% form_tag({:controller => 'headings', :action => 'modal_link'}, {:method => :post, :id => "link-heading-form"}) do %>
+      <%= hidden_field_tag 'related_entity_id', params['related_entity_id'] %>
+      <%= hidden_field_tag 'related_entity', params['related_entity'] %>
+      <ul id="headings-list" class="unstyled">
+      </ul>
+    <% end %>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="link-heading-btn" class="btn btn-primary disabled"><%= t('link') %></button>
+  </div>
+</div>

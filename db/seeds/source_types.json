@@ -1,0 +1,32 @@
+{"position":1,"code":1,"parent_code":null,"source_type":"bibliografia"}
+{"position":2,"code":2,"parent_code":null,"source_type":"strumento di corredo"}
+{"position":3,"code":3,"parent_code":null,"source_type":"fonte archivistica"}
+{"position":4,"code":4,"parent_code":null,"source_type":"fonte normativa"}
+{"position":1,"code":1001,"parent_code":1,"source_type":"libro"}
+{"position":2,"code":1002,"parent_code":1,"source_type":"capitolo di libro"}
+{"position":3,"code":1003,"parent_code":1,"source_type":"articolo di rivista"}
+{"position":4,"code":1004,"parent_code":1,"source_type":"atti di convegno"}
+{"position":5,"code":1005,"parent_code":1,"source_type":"intervento in convegno"}
+{"position":6,"code":1006,"parent_code":1,"source_type":"altro"}
+{"position":1,"code":2001,"parent_code":2,"source_type":"banca dati"}
+{"position":2,"code":2002,"parent_code":2,"source_type":"censimento"}
+{"position":3,"code":2003,"parent_code":2,"source_type":"documenti"}
+{"position":4,"code":2004,"parent_code":2,"source_type":"edizione di fonti"}
+{"position":5,"code":2005,"parent_code":2,"source_type":"elenco"}
+{"position":6,"code":2006,"parent_code":2,"source_type":"elenco di consistenza"}
+{"position":7,"code":2007,"parent_code":2,"source_type":"elenco di deposito"}
+{"position":8,"code":2008,"parent_code":2,"source_type":"elenco di versamento"}
+{"position":9,"code":2009,"parent_code":2,"source_type":"guida"}
+{"position":10,"code":2010,"parent_code":2,"source_type":"indice"}
+{"position":11,"code":2011,"parent_code":2,"source_type":"inventario"}
+{"position":12,"code":2012,"parent_code":2,"source_type":"inventario analitico"}
+{"position":13,"code":2013,"parent_code":2,"source_type":"inventario sommario"}
+{"position":14,"code":2014,"parent_code":2,"source_type":"inventario topografico"}
+{"position":15,"code":2015,"parent_code":2,"source_type":"regesto"}
+{"position":16,"code":2016,"parent_code":2,"source_type":"repertorio"}
+{"position":17,"code":2017,"parent_code":2,"source_type":"repertorio alfabetico"}
+{"position":18,"code":2018,"parent_code":2,"source_type":"repertorio cronologico"}
+{"position":19,"code":2019,"parent_code":2,"source_type":"rubrica"}
+{"position":20,"code":2020,"parent_code":2,"source_type":"schedario"}
+{"position":21,"code":2021,"parent_code":2,"source_type":"schedatura"}
+{"position":22,"code":2022,"parent_code":2,"source_type":"titolario"}

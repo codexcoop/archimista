@@ -1,0 +1,41 @@
+<h3 class="section">Requisiti minimi</h3>
+<table class="table">
+  <tr>
+    <th style="width:25%;"><%= t('preferred_name') %></th>
+    <td>
+      <% if custodian.preferred_name.name.present? %>
+        <%= custodian.preferred_name.name %>
+      <% else %>
+        <%= warning_field %>
+      <% end %>
+    </td>
+  </tr>
+  <tr>
+    <th><%= t('custodian_macro_type') %></th>
+    <td>
+      <% if custodian.custodian_type.present? %>
+        <%= custodian.custodian_type.custodian_type.capitalize %>
+      <% else %>
+        <%= warning_field %>
+      <% end %>
+    </td>
+  </tr>
+  <% unless custodian.custodian_buildings.size.zero? %>
+    <% custodian.custodian_buildings.each do |custodian_building| %>
+      <tr>
+        <th><%= show_item(custodian_building.custodian_building_type.capitalize, ["", ""]) %></th>
+        <td>
+          <%= show_item(custodian_building.name, ["", "<br />"]) %>
+          <%= show_item(custodian_building.address, ["", "<br />"]) %>
+          <%= show_item(custodian_building.postcode) %>   <%= show_item(custodian_building.city, ["", "<br />"]) %>
+          <%= show_item(custodian_building.state) %> <%= show_item(custodian_building.country) %>
+        </td>
+      </tr>
+    <% end %>
+  <% else %>
+    <tr>
+      <th><%= t('buildings') %></th>
+      <td><%= warning_field %></td>
+    </tr>
+  <% end %>
+</table>

@@ -1,0 +1,44 @@
+<% opts = finalize_relation_options(f, relation_options) %>
+
+<%# :id => "creators-selection" %>
+<% content_tag  :div,
+                :id => "#{opts[:related_to]}-selection",
+                :class => "relation-selection",
+                :style => "max-width:670px; position:relative;",
+                :'data-cardinality' => opts[:cardinality].to_json do %>
+  <%# t("activerecord.models.creator" %>
+  <h3 class="row-header">
+    <%= t("activerecord.models.#{opts[:related_model].name.underscore}", :count => opts[:cardinality].to_i) %>
+    <% if opts[:cardinality] && opts[:cardinality] == 1 %>
+      <span style="font-size:0.85em; font-weight:normal;" class="pull-right"><%= t('.single_selection') %></span>
+    <% end %>
+  </h3>
+
+  <%# template for new selected element %>
+  <%# content_tag (opts[:variant] == 'livesearch' ? :table : :div), :style => 'display:none;' do %>
+  <% content_tag :div, :style => 'display:none;' do %>
+    <table style="width:670px;">
+      <%= render :partial => "shared/relations/#{opts[:variant]}/item", :locals => {:f => f}.merge(opts) %>
+    </table>
+  <% end %>
+
+  <%# already selected elements %>
+  <%= render :partial => "shared/relations/#{opts[:variant]}/selected", :locals => {:f => f}.merge(opts) %>
+
+  <%# select new items... %>
+  <% if opts[:available_related].zero? %>
+    <p>
+      <%= t('.no_related_records_available',
+            :relation_name => t("activerecord.models.#{opts[:related_model].name.underscore}",
+            :count => 1).downcase) %>
+    </p>
+  <% elsif opts[:suggested_list] && opts[:suggested_list].size <= opts[:suggested_threshold] %>
+    <%# from a static list %>
+    <%= render :partial => "shared/relations/#{opts[:variant]}/suggested", :locals => {:f => f}.merge(opts) %>
+  <% else %>
+    <%# autocomplete or live search %>
+    <%= render :partial => "shared/relations/#{opts[:variant]}/input", :locals => {:f => f}.merge(opts) %>
+  <% end %>
+
+<% end %>
+

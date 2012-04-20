@@ -1,0 +1,25 @@
+# standard exclusions
+.bundle
+config/database.yml
+db/*.sqlite3
+log/*
+tmp/**/*
+vendor/**/*
+
+# custom exclusions
+db/dumps/*
+public/assets/*
+public/downloads/*
+public/digital_objects/*
+public/imports/*
+
+!.gitignore
+
+# local system files
+.DS_Store
+*.swp
+*.*~
+*.orig
+nbproject
+.project
+.redcar

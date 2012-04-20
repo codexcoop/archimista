@@ -1,0 +1,33 @@
+<div class="modal hide fade" id="add-heading-dialog">
+  <div class="modal-header">
+    <a class="close close-add-heading-dialog" data-dismiss="modal">×</a>
+    <h3><%= t('new_heading') %></h3>
+  </div>
+  <div class="modal-body">
+    <div id="heading_form_error"></div>
+    <% form_tag({:controller => 'headings', :action => 'modal_create'}, {:method => :post, :id => "new-heading-form"}) do %>
+
+      <%= label_tag 'heading[heading_type]', t('heading_type') %>
+      <%= select_tag 'heading[heading_type]', heading_types %>
+    
+
+      <%= label_tag 'heading[name]', t('heading_name') %>
+      <%= text_field_tag 'heading[name]', '', :class => "span4" %>
+
+      <%= label_tag 'heading[dates]', t('heading_dates') %>
+      <%= text_field_tag 'heading[dates]', '', :class => "span4" %>
+
+      <%= label_tag 'heading[qualifier]', t('heading_qualifier') %>
+      <%= text_field_tag 'heading[qualifier]', '', :class => "span4" %>
+
+      <%= hidden_field_tag 'heading[group_id]', current_user.group_id %>
+      <%= hidden_field_tag 'related_entity_id', params['related_id'] %>
+      <%= hidden_field_tag 'related_entity', params['related_controller'] %>
+    <% end %>
+
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="create-heading-btn" class="btn btn-primary disabled" disabled="disabled"><%= t('create_heading') %></button>
+  </div>
+</div>

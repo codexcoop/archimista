@@ -1,0 +1,6 @@
+<% form_for @import, :html => { :id => 'import-wait', :multipart => true } do |f| %>
+  <p style="margin: 1.5em 0 1em 0;">
+    <%= f.file_field :data %>
+  </p>
+  <p><%= f.submit t('import_file'), :name => "save", :class => "btn btn-primary" %></p>
+<% end %>
