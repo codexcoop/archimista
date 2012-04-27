@@ -22,8 +22,13 @@ Per la versione server:
 
 1. Predisporre il proprio computer con il software indicato nei Requisiti
 2. Creare un file di configurazione per il database: config/database.yml. Per maggiori informazioni leggi: [http://guides.rubyonrails.org/v2.3.11/getting_started.html#configuring-a-database](http://guides.rubyonrails.org/v2.3.11/getting_started.html#configuring-a-database)
-3. Eseguire il task rake db:setup
-4. Avviare il webserver
+3. Eseguire il task rake gems:install
+4. Eseguire il task RAILS_ENV=production rake db:setup
+5. Avviare il webserver
+
+L'utente per il primo login è:
+user admin_archimista
+pass admin_archimista
 
 ## Crediti
 
