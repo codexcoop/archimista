@@ -1,13 +1,12 @@
 <%= render :partial => "shared/generic_error_message", :object => @editor %>
 <div class="span9">
   <% form_for @editor do |f| %>
-    <%= f.label t('editors_first_name') %>
+    <%= f.label t('editors_first_name') + required_marker %>
     <%= f.text_field :first_name, :class => "span3" %>
 
-    <%= f.label t('editors_last_name') %>
+    <%= f.label t('editors_last_name') + required_marker %>
     <%= f.text_field :last_name, :class => "span3" %>
 
-  <p><%= f.submit t('save'), :class => "btn btn-primary" %></p>
+  <p><%= f.submit @editor.new_record? ? t('create_editor') : t('save'), :class => "btn btn-primary" %></p>
   <% end %>
 </div>
-

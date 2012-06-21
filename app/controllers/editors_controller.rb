@@ -62,44 +62,18 @@ class EditorsController < ApplicationController
       if @editor.save
         format.json { render :json => {:status => "success", :msg => "Scheda creata"} }
       else
-        format.json { render :json => {:status => "failure", :msg => "Compilatore già presente"} }
+        format.json { render :json => {:status => "failure", :msg => "Scheda non valida oppure già presente"} }
       end
     end
   end
-=begin
-  def ajax_create
-    @editor = Editor.new(params[:editor])
-    respond_to do |format|
-      if @editor.save
-        format.json { render :json => {:status => "success", :id => "#{@editor.id}", :value => "#{@editor.value}"} }
-      else
-        format.json { render :json => {:status => "failure", :msg => "Compilatore già presente"} }
-      end
-    end
-  end
-
-  def list
-    terms
-    @editors = Editor.accessible_by(current_ability, :read).autocomplete_list(params[:term])
-
-    ActiveRecord::Base.include_root_in_json = false
-    response = @editors.to_json(:methods => [:id, :value], :only => :methods)
-
-    respond_to do |format|
-      format.json { render :json => response }
-    end
-  end
-=end
 
   def list
     term = params[:term] || ""
-    unless params[:exclude].blank?
-      exclude_condition = " AND id NOT IN (#{params[:exclude].join(',')})"
-    end
+    term = term.downcase
 
     @fonds = Editor.accessible_by(current_ability, :read).
       find(:all, :select => "id, first_name, last_name",
-      :conditions => "CONCAT_WS(' ', first_name, last_name) LIKE '%#{term}%'#{exclude_condition}",
+      :conditions => "LOWER(first_name) LIKE '%#{term}%' OR LOWER(last_name) LIKE '%#{term}%'",
       :order => "first_name, last_name", :limit => 10)
 
     ActiveRecord::Base.include_root_in_json = false

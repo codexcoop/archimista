@@ -28,6 +28,7 @@ $(document).ready(function() {
   $.blockUI.defaults.centerY = false;
   $.blockUI.defaults.css.top = '180px';
   $.blockUI.defaults.message = null;
+  $.blockUI.defaults.baseZ = 9000; // z-index for the blocking overlay; default: 1000
 
   // DON'T GO AWAY WITHOUT SAVE
 
@@ -142,11 +143,10 @@ $(document).ready(function() {
   });
 
   $(document).delegate(".datepicker", 'click', function(){
-    $(this).datepicker({
-      dateFormat:  'yy-mm-dd',
+    $(this).removeClass('hasDatepicker').datepicker({
+      dateFormat: 'yy-mm-dd',
       changeMonth: true,
-      changeYear: true,
-      showOn:'focus'
+      changeYear: true
     }).focus();
   });
 

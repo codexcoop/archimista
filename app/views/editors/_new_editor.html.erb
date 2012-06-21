@@ -7,10 +7,10 @@
     <div id="editor_form_error"></div>
 
     <% form_tag({:controller => 'editors', :action => 'modal_create'}, {:method => :post, :id => "new-editor-form"}) do %>
-      <%= label_tag 'editor[first_name]', t('editors_first_name') %>
+      <%= label_tag 'editor[first_name]', t('editors_first_name') + required_marker %>
       <%= text_field_tag 'editor[first_name]', '', :class=> "span5" %>
 
-      <%= label_tag 'editor[last_name]', t('editors_last_name') %>
+      <%= label_tag 'editor[last_name]', t('editors_last_name') + required_marker %>
       <%= text_field_tag 'editor[last_name]', '', :class=> "span5" %>
     <% end %>
   </div>

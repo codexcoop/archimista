@@ -1,12 +1,5 @@
 class Editor < ActiveRecord::Base
-=begin
-  has_many :fond_editors, :dependent => :destroy
-  has_many :creator_editors, :dependent => :destroy
-  has_many :custodian_editors, :dependent => :destroy
-  has_many :unit_editors, :dependent => :destroy
-  has_many :document_form_editors, :dependent => :destroy
-  has_many :institution_editors, :dependent => :destroy
-=end
+
   belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
 
   # Modules
@@ -20,7 +13,7 @@ class Editor < ActiveRecord::Base
   end
 
   def reverse_full_name
-    "#{last_name} #{first_name}"
+    "#{last_name}, #{first_name}"
   end
 
   def value
