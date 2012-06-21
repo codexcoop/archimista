@@ -160,10 +160,10 @@ class FondsController < ApplicationController
         children.
         build(params[:fond].reject{|k,v| [:parent_id, 'parent_id'].include?(k)}).
         tap do |fond|
-        fond.created_by = current_user.id
-        fond.updated_by = current_user.id
-        fond.group_id = current_user.group_id
-      end
+          fond.created_by = current_user.id
+          fond.updated_by = current_user.id
+          fond.group_id = current_user.group_id
+        end
     else
       Fond.new(params[:fond]).tap do |fond|
         fond.created_by = current_user.id

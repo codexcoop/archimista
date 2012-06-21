@@ -2,10 +2,10 @@ class DocumentForm < ActiveRecord::Base
 
   extend Cleaner
 
+  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
+
   has_many :document_form_editors, :dependent => :destroy, :order => :edited_at
   has_many :rel_fond_document_forms, :dependent => :destroy
-
-  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
 
   accepts_nested_attributes_for :document_form_editors,
     :allow_destroy => true,

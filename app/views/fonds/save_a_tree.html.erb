@@ -7,7 +7,7 @@
   </div>
 <% end %>
 
-<div class="span7">
+<div class="span8">
   <p style="margin-bottom: 2em;">Scrivi la struttura del complesso archivistico nel campo di testo, un livello per riga, oppure scegli un modello predefinito liberamente modificabile.</p>
 
   <% form_tag({:action => 'saving_the_tree'}, {:method => 'post', :class => "skip-prompt"}) do %>
@@ -21,7 +21,7 @@
 <% end %>
 </div>
 
-<div class="span5">
+<div class="span4">
     <p><strong>Regole</strong></p>
     <p>La denominazione del livello deve essere preceduta dal carattere <code>#</code>.</p>
     <p>Le occorrenze del carattere # denotano il livello: # significa primo livello, ## secondo livello, ### terzo livello, ecc.</p>

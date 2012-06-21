@@ -12,6 +12,8 @@ class Source < ActiveRecord::Base
 
   # Associations
   belongs_to :source_type, :primary_key => :code, :foreign_key => :source_type_code
+  belongs_to :updater, :class_name => "User", :foreign_key => "updated_by"
+
   has_many :source_urls, :dependent => :destroy
   has_many :digital_objects, :as => :attachable, :dependent => :destroy
 
@@ -21,8 +23,6 @@ class Source < ActiveRecord::Base
   has_many :rel_custodian_sources, :dependent => :destroy
   has_many :rel_fond_sources, :dependent => :destroy
   has_many :rel_unit_sources, :dependent => :destroy
-
-  belongs_to :updater, :class_name => "User", :foreign_key => "updated_by"
 
   # Nested attributes
 

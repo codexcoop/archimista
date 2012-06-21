@@ -8,6 +8,7 @@ class Custodian < ActiveRecord::Base
 
   belongs_to :custodian_type
   belongs_to :updater, :class_name => "User", :foreign_key => "updated_by"
+  has_one :import, :as => :importable, :dependent => :destroy
 
   has_many  :custodian_names, :dependent => :destroy
   has_one   :preferred_name, :class_name => 'CustodianName', :conditions => {:qualifier => 'AU', :preferred => true}
@@ -27,7 +28,7 @@ class Custodian < ActiveRecord::Base
 
   has_many  :rel_custodian_fonds, :dependent => :destroy, :autosave => true
   has_many  :fonds, :through => :rel_custodian_fonds,
-            :include => :preferred_event, :order => "fonds.name"
+    :include => :preferred_event, :order => "fonds.name"
 
   has_many :rel_custodian_sources, :autosave => true, :dependent => :destroy
   has_many :sources, :through => :rel_custodian_sources
@@ -35,47 +36,47 @@ class Custodian < ActiveRecord::Base
   # Nested attributes
 
   accepts_nested_attributes_for :custodian_names,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['name'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['name'].blank? }
 
   accepts_nested_attributes_for :preferred_name,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['preferred'].blank?}
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['preferred'].blank?}
 
   accepts_nested_attributes_for :other_names,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['name'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['name'].blank? }
 
   accepts_nested_attributes_for :custodian_urls,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['url'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['url'].blank? }
 
   accepts_nested_attributes_for :custodian_owners,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['owner'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['owner'].blank? }
 
   accepts_nested_attributes_for :custodian_identifiers,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['identifier'].blank? || a['identifier_source'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['identifier'].blank? || a['identifier_source'].blank? }
 
   accepts_nested_attributes_for :custodian_contacts,
-                                :allow_destroy => true,
-                                :reject_if => proc {|a| a['contact'].blank? || a['contact_type'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc {|a| a['contact'].blank? || a['contact_type'].blank? }
 
   accepts_nested_attributes_for :custodian_buildings,
-                                :allow_destroy => true
+    :allow_destroy => true
 
   accepts_nested_attributes_for :custodian_editors,
-                                :allow_destroy => true,
-                                :reject_if => Proc.new { |a| a['name'].blank? }
+    :allow_destroy => true,
+    :reject_if => Proc.new { |a| a['name'].blank? }
 
   accepts_nested_attributes_for :rel_custodian_fonds,
-                                :allow_destroy => true,
-                                :reject_if => Proc.new { |a| a['fond_id'].blank? }
+    :allow_destroy => true,
+    :reject_if => Proc.new { |a| a['fond_id'].blank? }
 
   accepts_nested_attributes_for :rel_custodian_sources,
-                                :allow_destroy => true,
-                                :reject_if => Proc.new { |a| a['source_id'].blank? }
+    :allow_destroy => true,
+    :reject_if => Proc.new { |a| a['source_id'].blank? }
 
   # Validations
 
@@ -85,17 +86,21 @@ class Custodian < ActiveRecord::Base
 
   squished_fields :contact_person, :owner
   trimmed_fields  :administrative_structure,
-                  :collecting_policies,
-                  :holdings,
-                  :accessibility,
-                  :services
+    :collecting_policies,
+    :holdings,
+    :accessibility,
+    :services
 
   remove_blank_other_names
 
   # Scopes
 
   named_scope :list, :select => "custodians.id, custodian_names.name, custodians.updated_at",
-                     :joins => :preferred_name
+    :joins => :preferred_name
+
+  named_scope :export_list, :select => "custodians.id, custodian_names.name, custodians.updated_at, count(custodians.id) AS num",
+    :joins => [:fonds, :preferred_name],
+    :group => "custodians.id"
 
   named_scope :search, lambda{|q|
     conditions = ["custodian_names.qualifier = 'AU' AND LOWER(custodian_names.name) LIKE :q", {:q => "%#{q.downcase.squish}%"}] if q.present?
@@ -107,7 +112,7 @@ class Custodian < ActiveRecord::Base
       :select => "custodians.id AS id, custodian_names.name AS value, custodian_names.name AS name",
       :joins => :custodian_names,
       :conditions => ["custodian_names.preferred = ? AND custodian_names.qualifier = ? AND LOWER(custodian_names.name) LIKE ?",
-                      true, 'AU', "%#{term.downcase.squish}%"],
+        true, 'AU', "%#{term}%"],
       :order => "custodian_names.name ASC",
       :limit => 10
     }
@@ -128,7 +133,7 @@ class Custodian < ActiveRecord::Base
   # come rilevato per metodo omonimo Creator self.sorted_suggested
   def self.sorted_suggested
     all(:select => 'custodians.id', :include => :preferred_name).
-    sort_by{|c| c.try(:preferred_name).try(:name) || 'zz'}
+      sort_by{|c| c.try(:preferred_name).try(:name) || 'zz'}
   end
 
   def sorted_rel_custodian_sources

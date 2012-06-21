@@ -48,7 +48,7 @@
 
       <div class="tab-pane active" id="tab-description">
         <%= f.label :fond_type, t('fond_type') %>
-        <%= terms_select(f, "fonds.fond_type", {:prompt => true}) %>
+        <%= terms_select(f, "fonds.fond_type", {:prompt => true}, {:class => "span3"}) %>
 
         <%= f.label :name, t('name') %>
         <%= f.text_field :name %>

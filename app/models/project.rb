@@ -4,6 +4,8 @@ class Project < ActiveRecord::Base
   extend Cleaner
 
   # Associations
+  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
+  has_one :import, :as => :importable, :dependent => :destroy
 
   has_many  :project_credits, :dependent => :destroy
   has_many  :project_urls, :dependent => :destroy
@@ -15,8 +17,6 @@ class Project < ActiveRecord::Base
   has_many :rel_project_fonds, :dependent => :destroy, :autosave => true
   has_many :fonds, :through => :rel_project_fonds,
            :include => :preferred_event, :order => "fonds.name"
-
-  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
 
   # Nested attributes
 
@@ -51,6 +51,10 @@ class Project < ActiveRecord::Base
     }
   }
 
+  named_scope :export_list, :select => "projects.id, projects.name, projects.updated_at, count(projects.id) AS num",
+              :joins => [:fonds],
+              :group => "projects.id"
+
   # Callbacks
 
   squished_fields :name
@@ -62,7 +66,8 @@ class Project < ActiveRecord::Base
   validate :end_year_greater_than_start_year
 
   # Virtual attributes
-
+  alias_attribute :display_name, :name
+  
   public
 
   def display_date

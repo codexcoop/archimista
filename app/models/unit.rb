@@ -37,6 +37,8 @@ class Unit < ActiveRecord::Base
   extend UnitSupport
   activate_unit_support
 
+  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
+
   has_many :unit_identifiers, :dependent => :destroy
   has_many :unit_other_reference_numbers, :dependent => :destroy
   has_many :unit_langs, :dependent => :destroy
@@ -57,8 +59,6 @@ class Unit < ActiveRecord::Base
   has_many :iccd_authors, :dependent => :destroy
   has_many :iccd_subjects, :dependent => :destroy
   has_many :iccd_damages, :dependent => :destroy
-
-  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
 
   # Nested attributes
   accepts_nested_attributes_for :iccd_damages,

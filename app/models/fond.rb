@@ -29,8 +29,8 @@ class Fond < ActiveRecord::Base
   list_scope_fields :ancestry
   acts_as_list :scope => list_scope
 
-  belongs_to :import, :primary_key => :identifier, :foreign_key => :db_source, :dependent => :destroy
   belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
+  has_one :import, :as => :importable, :dependent => :destroy
 
   has_many :fond_names, :dependent => :destroy
   has_many :other_names, :class_name => 'FondName', :conditions => {:qualifier => 'O'}
