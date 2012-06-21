@@ -192,6 +192,10 @@ module TreeExt
              SET #{rank_column} = (SELECT tmp_ordered_nodes.rank
                                   FROM tmp_ordered_nodes
                                   WHERE #{given_table_name}.id = tmp_ordered_nodes.node_id
+                                  #{filter_condition}) 
+                                  WHERE EXISTS (SELECT tmp_ordered_nodes.rank
+                                  FROM tmp_ordered_nodes
+                                  WHERE #{given_table_name}.id = tmp_ordered_nodes.node_id
                                   #{filter_condition})".squish
           when 'postgresql'
             "UPDATE #{given_table_name}
