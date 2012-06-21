@@ -1,13 +1,9 @@
-# FIXME: in progress, 2 problemi:
-# - visualizzazione molto sballata di certi testi (vedi Porzio, marcatura "involontaria")
-# - in certi casi parentesi uncinate non vengono visualizzate e "si mangiano" la parola racchiusa. Es.: <Lorem>
-# 
-# Cfr. http://jeff.jones.be/technology/articles/textile-filtering-with-redcloth/
-# Cfr. sorgente RedCloth
-# textilize_with_entities
-#
+# OPTIMIZE: valutare se necessario ulteriore intervento
+# Vedi:
+# - helpers/application_helper.rb: metodi textilize e textilize_with_entities
+# - http://jeff.jones.be/technology/articles/textile-filtering-with-redcloth/
+# - sorgente RedCloth
 
-=begin
 module RedCloth::Formatters::HTML
   include RedCloth::Formatters::Base
 
@@ -27,4 +23,3 @@ module RedCloth::Formatters::HTML
   }
 
 end
-=end

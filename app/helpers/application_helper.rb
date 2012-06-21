@@ -26,11 +26,11 @@ module ApplicationHelper
 
   def status_bar_context
     label = case action_name
-      when 'index' then nil
-      when 'list' then nil
-      when 'new' then 'new_record'
-      when 'edit', 'treeview' then 'edit_record'
-      when 'show' then 'show_record'
+    when 'index' then nil
+    when 'list' then nil
+    when 'new' then 'new_record'
+    when 'edit', 'treeview' then 'edit_record'
+    when 'show' then 'show_record'
     end
 
     context = ["#{t(controller_name)}"]
@@ -59,10 +59,10 @@ module ApplicationHelper
   # NOTE: metodo provvisorio. Probabilmente non servirà più quando ci sarà vero multiple upload
   def link_to_digital_objects_by_count(digital_objects_count, name, object, html_options = {})
     target_link = if digital_objects_count > 0
-                    polymorphic_path([object, "digital_objects"])
-                  else
-                    new_polymorphic_path([object, "digital_object"])
-                  end
+      polymorphic_path([object, "digital_objects"])
+    else
+      new_polymorphic_path([object, "digital_object"])
+    end
     link_to(name, target_link, html_options)
   end
 
@@ -176,8 +176,22 @@ module ApplicationHelper
 
   # TextHelpers
 
+  def textilize(text, *options)
+    options ||= [:hard_breaks]
+
+    if text.blank?
+      ""
+    else
+      #text = text.gsub(/</, '&#60;').gsub(/>/, '&#62;').gsub(/\[/, "&#91;").gsub(/\]/, "&#93;") # other version
+      text = html_escape(text).gsub(/\[/, "&#91;").gsub(/\]/, "&#93;")
+      textilized = RedCloth.new(text, options)
+      textilized.to_html
+    end
+  end
+
   # Unescapes the entities for special characters that have been escaped by RedCloth.
   # For example: fond.description of "Archivio storico Arnoldo Mondadori Editore - AME"
+
   def textilize_with_entities(text)
     textilize(text).gsub("&amp;#", "&#")
   end
