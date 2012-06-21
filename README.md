@@ -1,6 +1,7 @@
 ## Archimista
 
 Archimista è un'applicazione web open source per la descrizione di archivi storici. È disponibile in due versioni: standalone e server.
+Versione corrente: **1.1.0**
 
 ## Requisiti
 
