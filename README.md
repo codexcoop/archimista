@@ -16,7 +16,7 @@ Archimista funziona sui sistemi operativi GNU/Linux, Mac OS X, Windows XP e supe
 
 ## Installazione
 
-Per Windows, versione standalone, è disponibile un pacchetto di installazione, scaricabile dal sito ufficiale: [http://www.archimista.it](http://www.archimista.it) .
+Per Windows, versione standalone, è disponibile un pacchetto di installazione, scaricabile dal sito ufficiale: [http://www.archimista.it](http://www.archimista.it).
 
 Per la versione server:
 
@@ -24,11 +24,13 @@ Per la versione server:
 2. Creare un file di configurazione per il database: config/database.yml. Per maggiori informazioni leggi: [http://guides.rubyonrails.org/v2.3.11/getting_started.html#configuring-a-database](http://guides.rubyonrails.org/v2.3.11/getting_started.html#configuring-a-database)
 3. Eseguire il task rake gems:install
 4. Eseguire il task RAILS_ENV=production rake db:setup
-5. Avviare il webserver
+5. Nel caso di aggiornamento dell'applicazione da versioni precedenti, eseguire il task RAILS_ENV=production rake assets:clean
+6. Avviare il webserver
 
 L'utente per il primo login è:
-user admin_archimista
-pass admin_archimista
+
+* user: admin_archimista
+* pass: admin_archimista
 
 ## Crediti
 
