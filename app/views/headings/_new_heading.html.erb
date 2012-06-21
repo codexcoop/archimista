@@ -9,9 +9,8 @@
 
       <%= label_tag 'heading[heading_type]', t('heading_type') %>
       <%= select_tag 'heading[heading_type]', heading_types %>
-    
 
-      <%= label_tag 'heading[name]', t('heading_name') %>
+      <%= label_tag 'heading[name]', t('heading_name') + required_marker %>
       <%= text_field_tag 'heading[name]', '', :class => "span4" %>
 
       <%= label_tag 'heading[dates]', t('heading_dates') %>
@@ -24,7 +23,6 @@
       <%= hidden_field_tag 'related_entity_id', params['related_id'] %>
       <%= hidden_field_tag 'related_entity', params['related_controller'] %>
     <% end %>
-
   </div>
   <div class="modal-footer">
     <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>

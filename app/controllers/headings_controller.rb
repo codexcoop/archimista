@@ -1,6 +1,8 @@
 class HeadingsController < ApplicationController
   helper_method :sort_column
 
+  load_and_authorize_resource
+
   def index
     terms
     @headings = Heading.accessible_by(current_ability, :read).
@@ -49,7 +51,9 @@ class HeadingsController < ApplicationController
 
   def create
     terms
-    @heading = Heading.new(params[:heading])
+    @heading = Heading.new(params[:heading]).tap do |heading|
+      heading.group_id = current_user.group_id
+    end
 
     if @heading.save
       redirect_to(headings_url, :notice => 'Lemma creato')
@@ -163,13 +167,14 @@ class HeadingsController < ApplicationController
           :heading_type => row[0],
           :name => row[1],
           :dates => row[2],
-          :qualifier => row[3]
+          :qualifier => row[3],
+          :group_id => current_user.group_id
         )
         @record.save
       end
-      redirect_to(headings_url, :notice => 'Lemmi importati')
+      redirect_to(headings_url, :notice => "Lemmi importati")
     else
-      redirect_to(headings_url, :notice => 'Lemmi importati')
+      redirect_to(headings_url, :notice => "Si è verificato un errore durante l'importazione dei lemmi")
     end
   end
 

@@ -2,11 +2,10 @@
 
 <% form_for @heading do |f| %>
   <div class="span9">
-
     <%= f.label t('heading_type') %>
-    <%= terms_select(f, "headings.heading_type", {}, :class=> "span4") %>
+    <%= terms_select(f, "headings.heading_type", {}) %>
 
-    <%= f.label t('heading_name') %>
+    <%= f.label t('heading_name') + required_marker %>
     <%= f.text_field :name, :class=> "span4" %>
 
     <%= f.label t('heading_dates') %>
@@ -15,8 +14,7 @@
     <%= f.label t('heading_qualifier') %>
     <%= f.text_field :qualifier, :class=> "span4"%>
 
-    <%= f.hidden_field :group_id, :value => current_user.group_id %>
-    <p><%= f.submit t('save'), :class => "btn btn-primary" %></p>
+    <p><%= f.submit @heading.new_record? ? t('create_heading') : t('save'), :class => "btn btn-primary" %></p>
   </div>
 <% end %>
 

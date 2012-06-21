@@ -1,5 +1,5 @@
 <% content_for :status_bar do %>
-  <h2><%= t('headings') %><%= path_separator %><%= t('import_heading') %><%= path_separator %><%= "Risultato dell'importazione" %></h2>
+  <h2><%= t('headings') %><%= path_separator %><%= t('import_heading') %><%= path_separator %><%= "Anteprima dell'importazione" %></h2>
   <div id="links">
     <%= link_to_index t('listing_headings'), headings_path %>
   </div>
@@ -7,13 +7,13 @@
 
 <div class="span9">
 <% form_tag '/headings/save_csv' do -%>
-<p>Sei sicuro di voler importare i seguenti lemmi?&nbsp;&nbsp;
-  <%= hidden_field_tag :filename, params[:upload][:csv].path -%>
-  <%= submit_tag t('save'), :class => "btn btn-primary btn-mini" -%>
-  <%= link_to t('cancel'), headings_path, :class => "btn btn-mini" -%>
+  <p>Sei sicuro di voler importare i seguenti lemmi?</p>
+  <p>
+    <%= hidden_field_tag :filename, params[:upload][:csv].path -%>
+    <%= submit_tag t('confirm'), :class => "btn btn-primary" -%> oppure
+    <%= link_to t('cancel'), headings_path -%>
   </p>
 <% end -%>
-
 
 <% if @csv.size > 0 %>
   <table class="table">

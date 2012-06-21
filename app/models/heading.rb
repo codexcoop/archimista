@@ -2,6 +2,16 @@ class Heading < ActiveRecord::Base
 
   extend Cleaner
 
+  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
+
+  # Many-to-many associations (rel)
+
+  has_many :rel_unit_headings, :autosave => true, :dependent => :destroy
+  has_many :units, :through => :rel_unit_headings
+
+  has_many :rel_fond_headings, :autosave => true, :dependent => :destroy
+  has_many :fonds, :through => :rel_fond_headings
+
   # Validations
   validates_presence_of :name
   validates_uniqueness_of :name, :scope => [:heading_type, :dates, :qualifier, :db_source], :case_sensitive => false
@@ -17,16 +27,6 @@ class Heading < ActiveRecord::Base
 
   # Callbacks
   squished_fields :name, :dates, :qualifier
-
-  # Many-to-many associations (rel)
-
-  has_many :rel_unit_headings, :autosave => true, :dependent => :destroy
-  has_many :units, :through => :rel_unit_headings
-
-  has_many :rel_fond_headings, :autosave => true, :dependent => :destroy
-  has_many :fonds, :through => :rel_fond_headings
-
-  belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"
 
   # Named scopes
   named_scope :autocomplete_list, lambda{|*term|
