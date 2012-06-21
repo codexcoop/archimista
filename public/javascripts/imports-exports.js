@@ -9,13 +9,33 @@ $(document).ready(function(){
     return false;
   });
 
+  $("#exports-custodian-autocomplete").archimate_autocomplete_setup();
+
+  $("#exports-custodian-name-autocomplete").autocomplete('option', 'select', function(event, ui){
+    $("#exports-custodian-name-autocomplete").attr("value",ui.item.value);
+    $("#exports-custodian-id-autocomplete").attr("value",ui.item.id);
+    alert(ui.item.id)
+    $("#exports-custodian-choice").submit();
+    return false;
+  });
+
+  $("#exports-project-autocomplete").archimate_autocomplete_setup();
+
+  $("#exports-project-name-autocomplete").autocomplete('option', 'select', function(event, ui){
+    $("#exports-project-name-autocomplete").attr("value",ui.item.value);
+    $("#exports-project-id-autocomplete").attr("value",ui.item.id);
+    alert(ui.item.id)
+    $("#exports-project-choice").submit();
+    return false;
+  });
+
   $("#import-wait").submit(function() {
     $.blockUI({
       message:  'Importazione in corso...'
     });
   });
 
-  $(".export-wait").submit(function(event) {
+  $("#exports-fond-choice").submit(function(event) {
     event.preventDefault();
     $.blockUI({
       message:  'Esportazione in corso...'
@@ -23,7 +43,57 @@ $(document).ready(function(){
     $.ajax({
       url: '/exports.json',
       data: {
-        f: $("#exports-fond-id-autocomplete").val()
+        target_id: $("#exports-fond-id-autocomplete").val(),
+        target_class: 'fond',
+        mode: 'full'
+      },
+      dataType: 'json',
+      success:function(data) {
+        $.unblockUI();
+        tokens = data["export"]["dest_file"].split('/');
+        file = tokens[tokens.length - 1];
+        $(window.location).attr('href', "/exports/download?file="+file);
+      }
+    });
+    return false;
+  });
+
+  $("#exports-custodian-choice").submit(function(event) {
+    event.preventDefault();
+    $.blockUI({
+      message:  'Esportazione in corso...'
+    });
+    $.ajax({
+      url: '/exports.json',
+      data: {
+        target_id: $("#exports-custodian-id-autocomplete").val(),
+        target_class: 'custodian',
+        mode: 'full'
+
+      },
+      dataType: 'json',
+      success:function(data) {
+        $.unblockUI();
+        tokens = data["export"]["dest_file"].split('/');
+        file = tokens[tokens.length - 1];
+        $(window.location).attr('href', "/exports/download?file="+file);
+      }
+    });
+    return false;
+  });
+
+  $("#exports-project-choice").submit(function(event) {
+    event.preventDefault();
+    $.blockUI({
+      message:  'Esportazione in corso...'
+    });
+    $.ajax({
+      url: '/exports.json',
+      data: {
+        target_id: $("#exports-project-id-autocomplete").val(),
+        target_class: 'project',
+        mode: 'full'
+
       },
       dataType: 'json',
       success:function(data) {
@@ -44,7 +114,9 @@ $(document).ready(function(){
     $.ajax({
       url: '/exports.json',
       data: {
-        f: $(this).attr('fond-id')
+        target_id: $(this).attr('target-id'),
+        target_class: $(this).attr('target-class'),
+        mode: $(this).attr('target-mode')
       },
       dataType: 'json',
       success:function(data) {
@@ -90,8 +162,9 @@ $(document).ready(function(){
         }
       }
     })
-
   });
+
+  $('#export-tabs a:first').tab('show');
 
 });
 

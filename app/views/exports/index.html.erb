@@ -1,45 +1,105 @@
+<% container_class "container-fluid" %>
 <% content_for :status_bar do %>
   <h2>Esporta</h2>
 <% end %>
 
-<div class="span12">
+<div class="span8">
+  <p style="margin-bottom: 2em;">Puoi esportare i tuoi complessi archivistici nel formato <code>aef</code> adatto all'importazione in un'altra istanza di Archimista.<br />
+  Seleziona un singolo complesso o un insieme di complessi collegati a un soggetto conservatore o a un progetto.</p>
 
-<% if @fonds.size > 0 %>
-<div class="row">
-  <div class="span7">
-    <p>Puoi esportare i tuoi dati nel formato <code>aef</code> adatto all'importazione in un'altra istanza di Archimista.</p>
-    <p>Per ogni complesso archivistico saranno inclusi nell'esportazione: l'albero completo, le unità archivistiche, i soggetti produttori, i soggetti conservatori e tutti i dati collegati a queste entità principali.<br />
-I file degli oggetti digitali non sono inclusi.</p>
+  <ul class="nav nav-tabs" id="export-tabs">
+    <li><a href="#fonds" data-toggle="tab"><%=t('fonds')%></a></li>
+    <li><a href="#custodians" data-toggle="tab"><%=t('custodians')%></a></li>
+    <li><a href="#projects" data-toggle="tab"><%=t('projects')%></a></li>
+  </ul>
+
+  <div class="tab-content">
+
+    <div class="tab-pane" id="fonds">
+      <% if @fonds.length > 0 %>
+        <% if @fonds.length < 20 %>
+          <p>Scegli il complesso archivistico da esportare:</p>
+          <table class="table">
+            <tbody>
+              <% @fonds.each do |fond| %>
+                <tr>
+                  <td>
+                    <%= link_to fond.name, '#', {:class => "export-aef-wait", "target-id".to_sym => fond.id, "target-class" => 'fond', "target-mode" => "full"} %>
+                    <%= fond.preferred_event.try(:full_display_date) %>
+                    <% if fond.fond_type.present? %>
+                      <span class="light">(<%= fond.fond_type %>)</span>
+                    <% end %>
+                    <%= l fond.updated_at, :format => :long %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <%= render :partial => "form_fonds" %>
+        <% end %>
+      <% else %>
+        <p>Non sono presenti schede complesso archivistico. Export non disponibili.</p>
+      <% end %>
+    </div>
+
+    <div class="tab-pane" id="custodians">
+      <% if @custodians.length > 0 %>
+        <% if @custodians.length < 20 %>
+          <p>Scegli il soggetto conservatore di cui esportare i complessi archivistici:</p>
+          <table class="table">
+            <tbody>
+              <% @custodians.each do |custodian| %>
+                <tr>
+                  <td>
+                    <%= link_to custodian.name, '#', {:class => "export-aef-wait", "target-id".to_sym => custodian.id, "target-class" => 'custodian', "target-mode" => "full"} %>
+                    (<%= custodian.num %> <%= t('fonds').downcase %>)
+                    <%= l custodian.updated_at, :format => :long %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <%= render :partial => "form_custodians" %>
+        <% end %>
+      <% else %>
+        <p>Non sono presenti schede soggetto conservatore collegate a complessi archivistici.<br />
+        Export per soggetto conservatore non disponibili.</p>
+      <% end %>
+    </div>
+
+    <div class="tab-pane" id="projects">
+      <% if @projects.length > 0 %>
+        <% if @projects.length < 20 %>
+          <p>Scegli il progetto di cui esportare i complessi archivistici:</p>
+          <table class="table">
+            <tbody>
+              <% @projects.each do |project| %>
+                <tr>
+                  <td>
+                    <%= link_to project.name, '#', {:class => "export-aef-wait", "target-id".to_sym => project.id, "target-class" => 'project', "target-mode" => "full"} %>
+                    (<%= project.num %> <%= t('fonds').downcase %>)
+                    <%= l project.updated_at, :format => :long %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <%= render :partial => "form_projects" %>
+        <% end %>
+      <% else %>
+        <p>Non sono presenti schede progetto collegate a complessi archivistici.<br />
+        Export per progetto non disponibili.</p>
+      <% end %>
+    </div>
+
   </div>
 </div>
 
-<div class="row">
-  <div class="span12">
-  <% if @fonds.size < 20 %>
-    <p>Scegli il complesso archivistico da esportare:</p>
-    <table class="table">
-    <tbody>
-    <% @fonds.each do |fond| %>
-      <tr>
-        <td>
-          <%= link_to fond.name, '#', {:class => "export-aef-wait", "fond-id".to_sym => fond.id} %>
-          <%= fond.preferred_event.try(:full_display_date) %>
-          <% if fond.fond_type.present? %>
-            <span class="light">(<%= fond.fond_type %>)</span>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-    </tbody>
-    </table>
-  <% else %>
-    <%= render :partial => "form" %>
-  <% end %>
-  </div>
-</div>
-
-<% else %>
-  <p>Non sono presenti schede complesso archivistico. Export non disponibili.</p>
-<% end %>
-
+<div class="span4">
+  <p><strong>Nota bene</strong></p>
+  <p>Per ogni complesso archivistico saranno inclusi nell'esportazione: l'albero completo, le unità archivistiche, le schede complete dei soggetti produttori, dei soggetti conservatori, dei progetti e tutti i dati collegati a queste entità principali.</p>
+  <p>I file degli oggetti digitali non sono inclusi.</p>
 </div>

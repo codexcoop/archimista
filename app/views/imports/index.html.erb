@@ -23,11 +23,8 @@
         <% @imports.each do |import| %>
           <tr>
             <td>
-              <%# if import.fond.is_root? %>
-                <%= link_to import.fond.name, treeview_fond_path(import.fond) %>
-              <%# else %>
-                <%#= import.fond.name %>
-              <%# end %>
+              <%= link_to import.importable.display_name, polymorphic_path([import.importable]) %>
+              (<%= t(import.importable_type.downcase) %>)
             </td>
             <td><%= import.user.full_name %></td>
             <td><%= l import.created_at, :format => :long %></td>
@@ -50,7 +47,6 @@
       </div>
       <div class="modal-body">
         <p>Sei sicuro di voler eliminare definitivamente tutti gli elementi di questa importazione?</p>
-        <!--<p class="muted">Saranno eliminati l'intero complesso archivistico e le eventuali entità collegate: unità archivistiche, soggetti produttori, soggetti conservatori e i dati collegati a queste entità principali.</p>-->
         <p class="muted">Saranno eliminate tutte le schede importate, comprese le modifiche successive.</p>
         <p class="muted">Non puoi annullare questa azione.</p>
       </div>

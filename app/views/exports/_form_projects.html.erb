@@ -1,0 +1,16 @@
+<p>Seleziona una scheda progetto</p>
+<% form_tag("/exports", :method => :get, :id => "exports-project-choice", :class => "skip-prompt export-wait") do %>
+  <div style="margin: 7px 0 0 0;">
+    <div>
+      <span class="ui-icon ui-icon-search" style="display:inline; float:left; margin: 5px 0 0 0;">&nbsp;</span>
+    </div>
+    <div style="margin-left:16px; padding-left:10px;">
+      <%= text_field_tag :q, params[:q], :id => "exports-project-name-autocomplete",
+        :class => "autocomplete",
+        :'data-autocompletion-controller' => 'projects',
+        :'data-autocompletion-action' => 'list',
+        :style => "width:600px;" %>
+      <%= hidden_field_tag :target_id, "", :id => "exports-project-id-autocomplete" %>
+    </div>
+  </div>
+<% end %>

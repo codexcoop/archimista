@@ -15,6 +15,8 @@ class Export < ActiveRecord::Base
   column :data_file, :string
   column :dest_file, :string
   column :target_id, :integer
+  column :target_class, :string
+  column :mode, :string
   column :group_id, :integer
 
   attr_accessor :fond_ids, :unit_ids, :creator_ids, :custodian_ids, :document_form_ids, :project_ids, :institution_ids, :source_ids, :group_id
@@ -36,9 +38,9 @@ class Export < ActiveRecord::Base
   end
 
   def fonds_and_units
-    fonds = Fond.subtree_of(self.target_id).all(:include => [:units], :order => "sequence_number")
     self.unit_ids = Array.new
-    self.fond_ids = fonds.map(&:id).join(',')
+    self.fond_ids = @fond_ids.map(&:id).join(',')
+    fonds = Fond.all(:conditions => "id IN (#{self.fond_ids})", :include => [:units], :order => "sequence_number")
 
     File.open(self.data_file, "a") do |file|
       fonds.each do |fond|
@@ -350,23 +352,65 @@ class Export < ActiveRecord::Base
     metadata.store('checksum', Digest::SHA256.file(self.data_file).hexdigest)
     metadata.store('date', Time.now)
     metadata.store('producer', Config::CONFIG['host'])
+    metadata.store('attached_entity', self.target_class.capitalize)
+    metadata.store('mode', self.mode)
     File.open(self.metadata_file, "w+") do |file|
       file.write(metadata.to_json)
     end
   end
 
   def create_data_file
-    @fond = Fond.find(self.target_id)
-    if @fond
-      ActiveRecord::Base.include_root_in_json = true
+    self.fond_ids = Array.new
+    ActiveRecord::Base.include_root_in_json = true
+
+    if self.mode == 'full'
+      case self.target_class
+      when 'fond'
+        self.fond_ids = Fond.subtree_of(self.target_id).all(:select => :id, :order => "sequence_number")
+      when 'custodian'
+        custodian = Custodian.find(self.target_id, :select => :id)
+        fonds = custodian.fonds.all(:select => :fond_id)
+        fonds.each do |f|
+          tmp = Fond.subtree_of(f.fond_id).all(:select => :id, :order => "sequence_number")
+          self.fond_ids += tmp
+        end
+      when 'project'
+        project = Project.find(self.target_id, :select => :id)
+        fonds = project.fonds.all(:select => :fond_id)
+        fonds.each do |f|
+          tmp = Fond.subtree_of(f.fond_id).all(:select => :id, :order => "sequence_number")
+          self.fond_ids += tmp
+        end
+      end
       fonds_and_units
       major_entities
       headings
       document_forms
       institutions
       sources
-      #editors
       digital_objects
+    else
+      if self.target_class == 'fond'
+        self.fond_ids = Fond.subtree_of(self.target_id).all(:select => :id, :order => "sequence_number")
+        fonds_and_units
+      else
+        File.open(self.data_file, "a") do |file|
+          model = self.target_class.camelize.constantize
+          entity = model.find(self.target_id)
+          entity.legacy_id = entity.id
+          file.write(entity.to_json(:except => [:id, :db_source, :group_id, :created_at, :updated_at]))
+          file.write("\r\n")
+          self.tables[self.target_class.pluralize.to_sym].each do |table|
+            model = table.singularize.camelize.constantize
+            set = model.all(:conditions => "#{target_class}_id = #{self.target_id}")
+            set.each do |e|
+              e.send("legacy_id=", e.send("#{target_class}_id"))
+              file.write(e.to_json(:except => [:id, :db_source, :created_at, :updated_at]))
+              file.write("\r\n")
+            end
+          end
+        end
+      end
     end
   end
 

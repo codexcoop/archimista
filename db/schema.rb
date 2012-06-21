@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120419122402) do
+ActiveRecord::Schema.define(:version => 20120528085635) do
 
   create_table "activities", :force => true do |t|
     t.string   "identifier"
@@ -60,7 +60,7 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "editing_type"
     t.date     "edited_at"
     t.string   "db_source"
-    t.integer  "legacy_id"
+    t.string   "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -220,7 +220,7 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "editing_type"
     t.date     "edited_at"
     t.string   "db_source"
-    t.integer  "legacy_id"
+    t.string   "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -343,7 +343,7 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "editing_type"
     t.date     "edited_at"
     t.string   "db_source"
-    t.integer  "legacy_id"
+    t.string   "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -391,7 +391,7 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "editing_type"
     t.date     "edited_at"
     t.string   "db_source"
-    t.integer  "legacy_id"
+    t.string   "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -686,9 +686,11 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "identifier"
     t.string   "data_file_name"
     t.integer  "group_id"
-    t.boolean  "deletable",      :default => true
+    t.boolean  "deletable",       :default => true
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "importable_type"
+    t.integer  "importable_id"
   end
 
   create_table "institution_editors", :force => true do |t|
@@ -698,7 +700,7 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "editing_type"
     t.date     "edited_at"
     t.string   "db_source"
-    t.integer  "legacy_id"
+    t.string   "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -1079,7 +1081,7 @@ ActiveRecord::Schema.define(:version => 20120419122402) do
     t.string   "editing_type"
     t.date     "edited_at"
     t.string   "db_source"
-    t.integer  "legacy_id"
+    t.string   "legacy_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

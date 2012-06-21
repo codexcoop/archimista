@@ -2,7 +2,7 @@ class ImportsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @imports = Import.accessible_by(current_ability, :read).all(:include => [:fond], :conditions => {:deletable => true}, :order => "created_at DESC")
+    @imports = Import.accessible_by(current_ability, :read).all(:include => [:importable], :conditions => {:deletable => true}, :order => "created_at DESC")
   end
 
   def new
@@ -28,6 +28,7 @@ class ImportsController < ApplicationController
 
         if @import.import_aef_file(current_user)
           @import.delete_temp_files
+          @import.update_attributes :importable_id => @import.importable_id, :importable_type => @import.importable_type
           redirect_to imports_url, :notice => 'File importato correttamente.'
         else
           @import.delete_temp_files

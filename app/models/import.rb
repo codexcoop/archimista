@@ -4,7 +4,7 @@ class Import < ActiveRecord::Base
   TMP_IMPORTS = "#{Rails.root}/tmp/imports"
 
   belongs_to :user
-  has_one :fond, :primary_key => :identifier, :foreign_key => :db_source, :conditions => {:ancestry => nil}
+  belongs_to :importable, :polymorphic => true
 
   has_attached_file :data,
     :path => ":rails_root/public/imports/:id/:basename.:extension"
@@ -47,6 +47,11 @@ class Import < ActiveRecord::Base
           update_one_to_many_relations
           update_many_to_many_relations
           update_digital_objects
+          if self.importable_type == 'Fond'
+            self.importable_id = Fond.find_by_db_source_and_ancestry("#{self.identifier}", nil).id
+          else
+            self.importable_id = self.importable_type.constantize.find_by_db_source("#{self.identifier}").id
+          end
         end
         return true
       rescue
@@ -377,6 +382,7 @@ class Import < ActiveRecord::Base
           data = ActiveSupport::JSON.decode(line.strip)
           raise "Controllo di integrità fallito" unless data['checksum'] == Digest::SHA256.file(data_file).hexdigest
           raise "File incompatibile con questa versione di #{APP_NAME}" unless data['version'].to_i == APP_VERSION.gsub('.', '').to_i
+          self.importable_type = data['attached_entity']
         end
       rescue Exception => e
         raise e.message
