@@ -12,6 +12,7 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
 
   html, body {
     margin: 0;
+    padding: 0;
     width:800px;
   }
   html{
@@ -19,13 +20,15 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     background: #FFF;
   }
   body {
-    font: 12px Georgia, serif;
+    font-family: 'Georgia';
+    font-size: 14pt;
+    text-align: justify;
     text-rendering: optimizeLegibility;
   }
 
   /* headers */
   h1, h2, h3, h4 {
-    line-height: 1.2em;
+    line-height: 1.5em;
   }
   h1 {
     font-size: 20pt;
@@ -37,24 +40,24 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     font-size: 16pt;
   }
   h4 {
-    font-size: 12pt;
+    font-size: 14pt;
   }
   img {
     border:0;
   }
-  #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index {
+  #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index, .rtf-inventory, .rtf-project, .rtf-custodian, #order-choice {
     display: none;
   }
-  .label {
+  .unit-label {
     margin: 1em;
     padding: 1em;
     border: 1px solid #000;
     border-radius: 1em;
   }
-  .label h4 {
+  .unit-label h4 {
     margin: 0;
   }
-  .label p.head {
+  .unit-label p.head {
     border: 0;
   }
   .fond {

@@ -37,3 +37,17 @@ h2 span.spec {
   text-transform: uppercase;
 }
 
+.unit-label {
+  margin: 1em;
+  padding: 1em;
+  border: 1px solid #000;
+  border-radius: 1em;
+}
+
+.unit-label h4 {
+  margin: 0;
+}
+.unit-label p.head {
+  border: 0;
+}
+

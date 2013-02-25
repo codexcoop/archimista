@@ -1,7 +1,7 @@
 /*
   Title: Archimate master styles for screen media
   Author: Codex, Pavia (IT) - http://www.codexcoop.it
-  Created: 2011-2012
+  Created: 2011-2013
 */
 
 /* TODO: [LOW] testare IE e inibire accesso istanza server a browser obsoleti */
@@ -126,6 +126,9 @@ body {
 #record-container {
   width: 1000px;
 }
+#record-container.container-fluid {
+  width: auto;
+}
 #record-main {
   min-height: 460px;
   padding-right: 19px;
@@ -133,14 +136,13 @@ body {
 }
 #record-side {
   width: 260px;
-/* float: right; */
   position: fixed;
   top: 95px;
   left: 740px;
   right: 0;
-  /* background: #f5f5f5;*/
 }
-#record-main label, #record-main .row-labels {
+#record-main label, #record-main .row-labels,
+#ajax-form-wrapper label, #ajax-form-wrapper .row-labels {
   margin-bottom: 5px;
   font-size: 12px;
   color: #666;
@@ -201,16 +203,70 @@ select {
 
 /* Tables
 ----------------------------------------------------- */
-.table th {
+/* table-summary */
+.table-summary td {
+  padding-left: 0;
+  border-top: 0;
+  border-bottom: 1px solid #ddd;
+}
+/* table-sortable */
+.table th, .table-sortable th {
   padding: 4px 8px;
   font-size: 11px;
   color: #666;
   background: #efefef;
 }
-.table th a {
+.table-sortable th a {
+  text-decoration: none;
+  padding-right: 13px;
   color: #666;
+  background: url(/images/th-sortable.png) no-repeat 100% 4px;
 }
-
+.table-sortable th a.asc {
+  background-position: 100% -27px;
+}
+.table-sortable th a.desc {
+  background-position: 100% -56px;
+}
+/* specific tables */
+.fond-units {
+  margin: 4px 0;
+  color: #999;
+}
+.fond-units i {
+  opacity: 0.4;
+}
+.fond-units a {
+  text-decoration: underline;
+  color: #999;
+}
+.fond-units a:hover {
+/*
+  text-decoration: none;
+*/
+  color: #005580;
+}
+#units-index td {
+  border-style: dotted;
+}
+#units-index .unit-actions {
+/*
+  visibility: hidden;
+*/
+  font-size: 11px;
+  color: #999;
+}
+#units-index .unit-actions a {
+  text-decoration: none;
+  color: #999;
+}
+#units-index .unit-actions a:hover {
+  text-decoration: underline;
+}
+/* OPTIMIZE: rivedere */
+.table .center, td.center, div.center {
+  text-align: center;
+}
 /* table-show */
 h3.section {
   margin: 0 0 10px 0;
@@ -246,12 +302,6 @@ h3.section {
 }
 .table-show td {
   padding: 8px 0 8px 8px;
-}
-.table-show p {
-/*
-  margin: 0 0 13px 0;
-  padding: 0;
-*/
 }
 /* ??? */
 .table-show td .light {
@@ -321,8 +371,7 @@ label.inline {
   background: #F9F9F9;
 }
 .inline-msg {
-  display: none;
-  font-size: 11px;
+  padding-left: 5px;
   color: #f00;
 }
 .alert-success {
@@ -333,6 +382,9 @@ label.inline {
   width: 300px;
   margin-top: 1px;
   margin-left: -150px;
+}
+.sortable-placeholder {
+  background: #fcf8e3;
 }
 
 /* Fonds + headings: misc
@@ -396,6 +448,37 @@ label.inline {
 ----------------------------------------------------- */
 .relation-selection {
   margin-bottom: 18px;
+}
+
+/* Digital objects
+----------------------------------------------------- */
+#sortable > li {
+  margin-bottom: 24px;
+}
+#sortable .thumbnail img {
+  display: block;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  cursor: move;
+}
+#sortable .img-container {
+  height: 210px;
+  margin-bottom: 10px;
+}
+#sortable .title {
+  height: 42px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+#sortable .actions {
+  padding: 8px 0 4px 0;
+  border-top: 1px solid #ddd;
+}
+#sortable .check-digital-object {
+  float: right;
+  margin-top: 8px;
+  margin-right: 4px;
 }
 
 /* TMP / DEBUG
