@@ -10,11 +10,11 @@
 <% if @projects.size > 0 %>
 <%= display_page_entries_info @projects %>
 
-<table class="table">
+<table class="table table-sortable">
   <thead>
   <tr>
     <th class="span6"><%= t('name') %></th>
-    <th class="span1"><%= t('duration') %></th>
+    <th class="span2"><%= t('duration') %></th>
     <th class="span2"><%= t('updated_at') %></th>
     <th class="span1">&nbsp;</th>
     <th class="span1">&nbsp;</th>
@@ -23,12 +23,12 @@
 
  <tbody>
  <% @projects.each do |project| %>
-  <tr class="<%#= cycle("odd", "even") %>">
+  <tr class="<%= cycle("odd", "even") %>">
     <td><%= link_to "#{project.name}", edit_project_path(project) %></td>
     <td><%= project.display_date %></td>
     <td><%= l project.updated_at, :format => :long %></td>
     <td class="action"><%= link_to t('show'), project %></td>
-    <td class="action"><%= link_to t('destroy'), project, :confirm => 'Are you sure?', :method => :delete %></td>
+    <td class="action"><%= link_to t('destroy'), project, :confirm => t('are_you_sure'), :method => :delete %></td>
   </tr>
   <% end %>
   </tbody>

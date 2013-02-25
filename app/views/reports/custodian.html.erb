@@ -1,0 +1,195 @@
+<% content_for :status_bar do %>
+  <h2>Report soggetto conservatore<%= path_separator %><%= @custodian.display_name %></h2>
+  <div id="links">
+    <%= link_to_index "Report", reports_path %>
+  </div>
+<% end %>
+
+<div class="span12">
+
+  <p>
+    <%= link_to '<i class="icon-download-alt"></i> Genera RTF', custodian_report_path(@custodian, :format => "rtf"),  {:class => "rtf-custodian btn btn-small"}  %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', custodian_report_path(@custodian, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
+  </p>
+
+  <h1><%= @custodian.display_name %></h1>
+  <% @custodian_fields.each do |attribute| %>
+    <% methods = attribute.split('.') %>
+    <% if @custodian.send(methods[0].to_sym).present? %>
+      <div>
+        <p>
+          <strong><%= Custodian.human_attribute_name(methods[0].to_sym) %></strong>
+          <br />
+          <% if attribute.include?('.') %>
+            <% text = @custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+          <% else %>
+            <% text = @custodian.send(attribute.to_sym).to_s %>
+          <% end %>
+          <%= simple_format(text) %>
+        </p>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% if @custodian.custodian_other_buildings.present? %>
+    <div>
+      <strong><%= Custodian.human_name(:custodian_other_buildings) %></strong>
+      <br />
+      <% @custodian.custodian_other_buildings.each do |building| %>
+        <p>
+          <%= formatted_custodian_building(building) %>
+          &nbsp;
+          <%= "(#{building.custodian_building_type})" if building.custodian_building_type.present? %>
+          <%= "<br />#{building.description}" if building.description.present? %>
+        </p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if @custodian.sources.present? %>
+    <div>
+      <strong><%= Source.human_name({:count => @custodian.sources.size}) %></strong>
+      <br />
+      <p>
+        <%= inline_short_sources(@custodian.sources) %>
+      </p>
+    </div>
+  <% end %>
+
+  <% @projects.each do |project| %>
+    <h2><%= project.name %></h2>
+    <% @project_fields.each do |attribute| %>
+      <% methods = attribute.split('.') %>
+      <% if project.send(methods[0].to_sym).present? %>
+        <div>
+          <p>
+            <strong><%= Project.human_attribute_name(methods[0].to_sym) %></strong>
+            <br />
+            <% if attribute.include?('.') %>
+              <% text = project.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+            <% else %>
+              <% text = project.send(attribute.to_sym).to_s %>
+            <% end %>
+            <%= simple_format(text) %>
+          </p>
+        </div>
+      <% end %>
+    <% end %>
+
+    <% if project.project_managers.present? %>
+      <div>
+        <strong><%= t('project_managers') %></strong>
+        <ul>
+          <% project.project_managers.each do |project_manager| %>
+            <% text = Array.new %>
+            <% text.push(project_manager.credit_name) %>
+            <% text.push("[#{project_manager.qualifier}]") unless project_manager.qualifier.blank? %>
+            <li><%= text.join(", ") %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% if project.project_stakeholders.present? %>
+      <div>
+        <strong><%= t('project_stakeholders') %></strong>
+        <ul>
+          <% project.project_stakeholders.each do |project_stakeholder| %>
+            <% text = Array.new %>
+            <% text.push(project_stakeholder.credit_name) %>
+            <% text.push("[#{project_stakeholder.qualifier}]") unless project_stakeholder.qualifier.blank? %>
+            <li><%= text.join(", ") %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <% @fonds[project.id].each do |fond| %>
+      <% if @creators[fond.id].present? %>
+        <% @creators[fond.id].each do |creator| %>
+          <h3><%= creator.display_name %></h3>
+          <% if creator.other_names.present? %>
+            <div>
+              <strong><%= Creator.human_attribute_name(:other_names) %></strong>
+              <br />
+              <% creator.other_names.each do |name| %>
+                <p><%= name.name %>&nbsp;<%= "(#{name.note})" if name.note.present? %></p>
+              <% end %>
+            </div>
+          <% end %>
+          <% @creator_fields.each do |attribute| %>
+            <% methods = attribute.split('.') %>
+            <% if creator.send(methods[0].to_sym).present? %>
+              <div>
+                <p>
+                  <strong><%= Creator.human_attribute_name(methods[0].to_sym) %></strong>
+                  <br />
+                  <% if attribute.include?('.') %>
+                    <% text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+                  <% else %>
+                    <% text = creator.send(attribute.to_sym).to_s %>
+                  <% end %>
+                  <%= simple_format(text) %>
+                </p>
+              </div>
+            <% end %>
+          <% end %>
+          <% if creator.sources.present? %>
+            <strong><%= Source.human_name({:count => creator.sources.size}) %></strong>
+            <br />
+            <p>
+              <%= inline_short_sources(creator.sources) %>
+            </p>
+          <% end %>
+        <% end %>
+      <% else %>
+        <h3>Nessun produttore presente</h3>
+      <% end %>
+      <hr>
+      <h4><%= fond.name %></h4>
+      <% if fond.other_names.present? %>
+        <div>
+          <strong><%= Fond.human_attribute_name(:other_names) %></strong>
+          <br />
+          <% fond.other_names.each do |name| %>
+            <p><%= name.name %>&nbsp;<%= "(#{name.note})" if name.note.present? %></p>
+          <% end %>
+        </div>
+      <% end %>
+      <% @fond_fields.each do |attribute| %>
+        <% methods = attribute.split('.') %>
+        <% if fond.send(methods[0].to_sym).present? %>
+          <div>
+            <p>
+              <strong><%= Fond.human_attribute_name(methods[0].to_sym) %></strong>
+              <br />
+              <% if attribute.include?('.') %>
+                <% text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+              <% else %>
+                <% text = fond.send(attribute.to_sym).to_s %>
+              <% end %>
+              <%= simple_format(text) %>
+            </p>
+          </div>
+        <% end %>
+      <% end %>
+      <% if fond.sources.present? %>
+        <strong><%= Source.human_name({:count => fond.sources.size}) %></strong>
+        <br />
+        <p>
+          <%= inline_short_sources(fond.sources) %>
+        </p>
+      <% end %>
+    <% end %>
+    <hr /><hr />
+  <% end %>
+  <% if @sources.present? %>
+    <h2><%= Source.human_name({:count => @sources.size}) %></h2>
+    <% @sources.each do |source| %>
+      <p>
+        [<em><%= source.short_title %></em>]&nbsp;<%= formatted_source(source) %>
+      </p>
+    <% end %>
+  <%  end %>
+
+</div>

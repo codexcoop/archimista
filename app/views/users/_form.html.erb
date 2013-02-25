@@ -75,7 +75,7 @@
   </div>
   <div class="form-actions">
     <%= f.submit @user.new_record? ? t('create_user') : t('save'), :class => "btn btn-primary" %>
-    oppure <%= link_to t('cancel'), root_path %>
+    oppure <%= link_to t('cancel'), current_user.is_at_least_admin? ? users_path : root_path %>
   </div>
 <% end %>
 

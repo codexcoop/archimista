@@ -9,7 +9,7 @@
   </div>
   <div class="modal-body">
     <% form_for @unit, :url => update_event_unit_path(@unit),
-                       :html => {:method => :put, :id => "preferred-event-form", :class => "skip-prompt modal-form"} do |f| %>
+      :html => {:method => :put, :id => "preferred-event-form", :class => "skip-prompt modal-form"} do |f| %>
       <%= f.hidden_field :parent_id,  :value => @unit.parent_id %>
       <%= f.hidden_field :fond_id,    :value => @unit.fond_id %>
       <div id="event-error-messages"></div>

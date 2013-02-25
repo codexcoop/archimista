@@ -6,10 +6,10 @@
   <div class="modal-body">
     <p>Seleziona il nuovo livello per le unità selezionate e tutte le sottounità dipendenti</p>
     <%= content_tag :div,
-                  nil,
-                  :id => 'classify-tree',
-                  :'data-fond-id' => fond.id.to_json,
-                  :'data-root-fond-id' => root_fond.id.to_json %>
+      nil,
+      :id => 'classify-tree',
+      :'data-fond-id' => fond.id,
+      :'data-root-fond-id' => root_fond.id %>
   </div>
   <div class="modal-footer">
     <button id="close-mass-classify" class="btn" data-dismiss="modal"><%= t('cancel') %></button>

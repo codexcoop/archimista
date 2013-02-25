@@ -23,8 +23,7 @@ class Fond < ActiveRecord::Base
   tree_template_markers :level => '#', :name => '#', :fond_type => '@'
 
   extend TreeExt::ActsAsSequence
-  acts_as_sequence  :external_node_name => 'title',
-    :external_nodes_class => Unit
+  acts_as_sequence  :external_node_name => 'title', :external_nodes_class => Unit
 
   list_scope_fields :ancestry
   acts_as_list :scope => list_scope
@@ -152,8 +151,7 @@ class Fond < ActiveRecord::Base
 
   # Scopes
 
-  named_scope :list,
-    :select => "id, name, units_count, fond_type, updated_at"
+  named_scope :list, {:select => "id, name, units_count, fond_type, updated_at, db_source", :include => :preferred_event}
 
   named_scope :default_order, {:order => "fonds.name"}
 
@@ -228,6 +226,10 @@ class Fond < ActiveRecord::Base
   attr_accessor :go_to_unit
 
   # Methods
+
+  def has_subunits?
+    Unit.exists?(["root_fond_id = ? AND ancestry_depth > 0", id])
+  end
 
   def path_items(depth=0)
     path.from_depth(depth).all(:select => "id, name, ancestry")

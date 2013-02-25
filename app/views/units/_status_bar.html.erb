@@ -7,7 +7,7 @@
   </div>
 
   <h2>
-  <%= t('listing_units') %>:
+    <%= t('listing_units') %>:
     <% @fond.path_items.each_with_index do |item, index| %>
       <%= path_separator unless index == 0 %>
       <%= link_to_unless (item.id == params[:fond_id].to_i, item.name, fond_units_path(item.id)) %>

@@ -13,8 +13,8 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Complesso archivistico</th>
-          <th>Importato da</th>
+          <th>Base dati</th>
+          <th>Importata da</th>
           <th>Data</th>
           <th></th>
         </tr>
@@ -23,8 +23,8 @@
         <% @imports.each do |import| %>
           <tr>
             <td>
+              <%= t(import.importable_type.downcase) %>:
               <%= link_to import.importable.display_name, polymorphic_path([import.importable]) %>
-              (<%= t(import.importable_type.downcase) %>)
             </td>
             <td><%= import.user.full_name %></td>
             <td><%= l import.created_at, :format => :long %></td>

@@ -53,7 +53,8 @@ class Project < ActiveRecord::Base
 
   named_scope :export_list, :select => "projects.id, projects.name, projects.updated_at, count(projects.id) AS num",
               :joins => [:fonds],
-              :group => "projects.id"
+              :group => "projects.id",
+              :order => "projects.name"
 
   # Callbacks
 

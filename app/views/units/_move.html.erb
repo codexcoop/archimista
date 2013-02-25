@@ -1,0 +1,93 @@
+<script type="text/javascript">
+  $(document).ready(function(){
+    $('#move-unit-modal').on('shown', function () {
+      $("input[name='action']").change(function(e){
+        direction = $(this).val();
+        $("#move-unit-choice").fadeToggle('slow', function() {
+          $("#move-unit-" + direction).fadeToggle('slow');
+        });
+
+        $("#confirm-move").addClass(direction);
+        if (direction === 'up') $("#confirm-move").prop('disabled', false).removeClass('disabled');
+        $("#back").toggle();
+      });
+    })
+
+    $("#back").click(function () {
+      $("input[name='action']").each(function () {
+        $(this).prop('checked', false);
+      });
+
+      if ($("#confirm-move").hasClass("up")) {
+        $("#confirm-move").removeClass("up");
+        $("#move-unit-up").fadeToggle('slow', function() {
+          $("#move-unit-choice").fadeToggle('slow');
+        });
+      }
+
+      if ($("#confirm-move").hasClass("down")) {
+        $("#confirm-move").removeClass("down");
+        $("#move-unit-down").fadeToggle('slow', function() {
+          $("#move-unit-choice").fadeToggle('slow');
+        });
+      }
+      $(this).toggle();
+      $("#confirm-move").prop('disabled', true).addClass('disabled');
+    })
+  });
+</script>
+<div class="modal hide fade" id="move-unit-modal">
+  <div class="modal-header">
+    <a class="close" data-dismiss="modal">×</a>
+    <h3>Modifica livello</h3>
+  </div>
+  <div class="modal-body">
+<%# OPTIMIZE: stampare display_sequence_number per rendere più comprensibile interazione %>
+    <p>Unità selezionata: <strong><%= object.title %></strong></p>
+    <div id="move-unit-choice">
+      <% if object.is_not_movable? %>
+        <p>Nessuna azione disponibile.</p>
+      <% else %>
+        <p>Azioni disponibili:</p>
+        <% if object.is_movable_up? %>
+          <p><%= radio_button_tag 'action', 'up' %> Sposta al livello superiore</p>
+        <% end %>
+        <% if object.is_movable_down? && units.any? %>
+          <p><%= radio_button_tag 'action', 'down' %> Sposta al livello inferiore</p>
+        <% end %>
+      </div>
+      <div id="move-unit-up" style="display:none">
+        <% if object.is_movable_up? %>
+          <div>
+            <% form_tag({:controller => 'units', :action => 'move_up', :id => object.id}, {:id => "move-up-form", :class => "skip-prompt"}) do %>
+            <% end %>
+            <p class="muted">L'unità sarà inserita come ultimo figlio del livello superiore <strong><%= @unit.parent.title %></strong>.</p>
+          </div>
+        <% end %>
+      </div>
+      <div id="move-unit-down" style="display:none">
+        <% if object.is_movable_down? && units.any? %>
+          <p>Scegli il nuovo padre tra quelli disponibili.</p>
+          <% form_tag({:controller => 'units', :action => 'move_down', :id => object.id}, {:id => "move-down-form", :class => "skip-prompt"}) do %>
+            <ul id="units-list" class="unstyled">
+              <% units.each do |unit| %>
+                <li>
+                  <label class="livesearch radio">
+                    <input name="new_parent_id" value="<%= unit.id %>" type="radio" />
+                    <%= unit.title %>
+                  </label>
+                </li>
+              <% end %>
+            </ul>
+          <% end %>
+        <% end %>
+        <p class="muted">L'unità sarà inserita come ultimo figlio del padre selezionato.</p>
+      <% end %>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button id="back" class="btn pull-left" style="display:none"><%= t('back') %></button>
+    <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
+    <button id="confirm-move" class="submit btn btn-primary disabled">Sposta</button>
+  </div>
+</div>

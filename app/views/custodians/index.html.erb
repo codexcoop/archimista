@@ -16,7 +16,7 @@
   <% if @custodians.size > 0 %>
   <%= display_page_entries_info @custodians %>
 
-  <table class="table">
+  <table class="table table-sortable">
     <thead>
     <tr>
       <th class="span8"><%= sortable("name", t('custodian_name')) %></th>

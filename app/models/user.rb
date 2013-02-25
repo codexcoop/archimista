@@ -8,16 +8,7 @@ class User < ActiveRecord::Base
   roles = ROLES
 
   belongs_to :group
-  has_many :imports 
-  has_many :creators 
-  has_many :custodians
-  has_many :document_forms
-  has_many :fonds
-  has_many :headings
-  has_many :editors
-  has_many :institutions
-  has_many :projects
-  has_many :units
+  has_many :imports
 
   validates_presence_of :username, :first_name, :last_name, :role, :group_id
   validates_presence_of :password, :on => :create

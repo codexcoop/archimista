@@ -1,8 +1,8 @@
 <div class="fields row">
   <div class="span3">
-      <%= iccd_terms_select(fd, "iccd_damages.stcs", @iccd_type,  {:include_blank => ""}, :class => "span3")%>
-      <%#= iccd_terms_select(fd, "iccd_damages.stcs", "OA", {}, {:class => "OA"})%>
-      <%#= iccd_terms_select(fd, "iccd_damages.stcs", "BDM", {}, {:class => "BDM"})%>
+    <%= iccd_terms_select(fd, "iccd_damages.stcs", @iccd_type,  {:include_blank => ""}, :class => "span3")%>
+<%#= iccd_terms_select(fd, "iccd_damages.stcs", "OA", {}, {:class => "OA"})%>
+<%#= iccd_terms_select(fd, "iccd_damages.stcs", "BDM", {}, {:class => "BDM"})%>
   </div>
   <div class="span1 destroy"><%= fd.check_box :_destroy %> <%= fd.label :_destroy, t('destroy') %></div>
 </div>

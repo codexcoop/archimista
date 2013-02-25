@@ -1,13 +1,24 @@
 class HeadingsController < ApplicationController
   helper_method :sort_column
 
-  load_and_authorize_resource
+  load_and_authorize_resource :except => [:ajax_list, :modal_new, :modal_link]
 
   def index
     terms
+    conditions = params[:view] ? "heading_type = '#{params[:view]}'" : true
+
     @headings = Heading.accessible_by(current_ability, :read).
-      paginate(:page => params[:page],
-      :order => sort_column + ' ' + sort_direction)
+                paginate(:page => params[:page], 
+                         :conditions => conditions, 
+                         :order => sort_column + ' ' + sort_direction
+                        )
+  
+    @units_counts = RelUnitHeading.count(
+      "id",
+      :joins => :heading,
+      :conditions => {:heading_id => @headings.map(&:id)},
+      :group => :heading_id
+    )
   end
 
   def list
@@ -37,8 +48,14 @@ class HeadingsController < ApplicationController
   def show
     terms
     @heading = Heading.find(params[:id])
+    @units = Unit.all(
+     :include => :rel_unit_headings,
+     :conditions => "rel_unit_headings.heading_id = #{@heading.id}"
+    ).paginate(:page => params[:page], 
+                :order => sort_column + ' ' + sort_direction
+    )
   end
-
+  
   def new
     terms
     @heading = Heading.new
@@ -126,7 +143,7 @@ class HeadingsController < ApplicationController
     @heading = Heading.find(params[:id])
 
     if @heading.update_attributes(params[:heading])
-      redirect_to(headings_url, :notice => 'Lemma aggiornato')
+      redirect_to(headings_url(:view => @heading.heading_type), :notice => 'Lemma aggiornato')
     else
       render :action => "edit"
     end
@@ -182,8 +199,7 @@ class HeadingsController < ApplicationController
   private
 
   def sort_column
-    params[:sort] || "heading_type"
-    # segliere se fare query in più per sicurezza: Fond.column_names.include?(params[:sort]) ? params[:sort] : "name"
+     params[:sort] || "heading_type, name"
   end
 
 end

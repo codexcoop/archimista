@@ -20,24 +20,24 @@ class ImportsController < ApplicationController
         begin
           @import.is_valid_file?
         rescue Exception => e
-          @import.delete_temp_files
+          @import.delete_tmp_files
           @import.delete
           redirect_to new_import_url, :alert => e.message
           return
         end
 
         if @import.import_aef_file(current_user)
-          @import.delete_temp_files
+          @import.delete_tmp_files
           @import.update_attributes :importable_id => @import.importable_id, :importable_type => @import.importable_type
-          redirect_to imports_url, :notice => 'File importato correttamente.'
+          redirect_to imports_url, :notice => "File importato correttamente."
         else
-          @import.delete_temp_files
+          @import.delete_tmp_files
           @import.delete
           redirect_to imports_url, :alert => "Si è verificato un errore durante l'importazione del file <code>aef</code>."
         end
 
       else
-        redirect_to imports_url, :alert => 'Si è verificato un errore durante il salvataggio del file <code>aef</code>.'
+        redirect_to imports_url, :alert => "Si è verificato un errore durante il salvataggio del file <code>aef</code>."
       end
     else
       render :action => "new"

@@ -17,6 +17,7 @@ class Custodian < ActiveRecord::Base
   has_many  :custodian_identifiers, :dependent => :destroy
   has_many  :custodian_contacts, :dependent => :destroy
   has_one   :custodian_headquarter, :class_name => 'CustodianBuilding', :conditions => {:custodian_building_type => 'sede legale'}
+  has_many  :custodian_other_buildings, :class_name => 'CustodianBuilding', :conditions => "custodian_building_type != 'sede legale'"
   has_many  :custodian_buildings, :class_name => 'CustodianBuilding', :dependent => :destroy
   has_many  :custodian_owners, :dependent => :destroy
   has_many  :custodian_urls, :dependent => :destroy
@@ -98,9 +99,10 @@ class Custodian < ActiveRecord::Base
   named_scope :list, :select => "custodians.id, custodian_names.name, custodians.updated_at",
     :joins => :preferred_name
 
-  named_scope :export_list, :select => "custodians.id, custodian_names.name, custodians.updated_at, count(custodians.id) AS num",
+  named_scope :export_list, :select => "custodians.id, custodian_names.name, custodians.updated_at, custodians.db_source, count(custodians.id) AS num",
     :joins => [:fonds, :preferred_name],
-    :group => "custodians.id"
+    :group => "custodians.id, custodian_names.name",
+    :order => "custodian_names.name"
 
   named_scope :search, lambda{|q|
     conditions = ["custodian_names.qualifier = 'AU' AND LOWER(custodian_names.name) LIKE :q", {:q => "%#{q.downcase.squish}%"}] if q.present?
@@ -124,13 +126,27 @@ class Custodian < ActiveRecord::Base
     preferred_name.name
   end
 
+  def headquarter_address
+    if custodian_headquarter.present?
+      [
+        custodian_headquarter.address,
+        custodian_headquarter.postcode,
+        custodian_headquarter.city,
+        custodian_headquarter.country
+      ].
+        delete_if{|fragment| fragment.blank?}.
+        join(" ")
+    end
+  end
+
   # TODO: dry
   def sorted_rel_custodian_fonds
     rel_custodian_fonds.all(:include => :fond).sort_by{|rel| rel.fond.try(:name) || 'zz'}
   end
 
-  # OPTIMIZE: verificare che questo metodo non inneschi da quelche parte query pesanti e inutili,
-  # come rilevato per metodo omonimo Creator self.sorted_suggested
+  # OPTIMIZE: verificare che questo metodo non inneschi da quelche parte query
+  # pesanti e inutili, come rilevato per metodo omonimo Creator
+  # self.sorted_suggested
   def self.sorted_suggested
     all(:select => 'custodians.id', :include => :preferred_name).
       sort_by{|c| c.try(:preferred_name).try(:name) || 'zz'}

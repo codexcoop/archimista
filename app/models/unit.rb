@@ -1,5 +1,7 @@
 class Unit < ActiveRecord::Base
 
+  MAX_LEVEL_OF_NODES = 2
+
   cattr_reader :per_page
   @@per_page = 100
 
@@ -28,8 +30,7 @@ class Unit < ActiveRecord::Base
   update_in_descendants :fond_id, :root_fond_id
 
   extend TreeExt::ActsAsExternalSequence
-  acts_as_external_sequence :node_name => 'title',
-                            :external_parent => 'Fond'
+  acts_as_external_sequence :node_name => 'title', :external_parent => 'Fond'
 
   list_scope_fields :ancestry, :fond_id
   acts_as_list :scope => list_scope
@@ -62,81 +63,81 @@ class Unit < ActiveRecord::Base
 
   # Nested attributes
   accepts_nested_attributes_for :iccd_damages,
-                                :allow_destroy => true
+    :allow_destroy => true
 
   accepts_nested_attributes_for :iccd_subjects,
-                                :allow_destroy => true
+    :allow_destroy => true
 
   accepts_nested_attributes_for :iccd_description,
-                                :allow_destroy => true
+    :allow_destroy => true
 
   accepts_nested_attributes_for :iccd_tech_spec,
-                                :allow_destroy => true
+    :allow_destroy => true
 
   accepts_nested_attributes_for :iccd_authors,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['autn'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['autn'].blank? }
 
   accepts_nested_attributes_for :unit_urls,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['url'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['url'].blank? }
 
   accepts_nested_attributes_for :unit_identifiers,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['identifier'].blank? or a['identifier_source'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['identifier'].blank? or a['identifier_source'].blank? }
 
   accepts_nested_attributes_for :unit_other_reference_numbers,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['other_reference_number'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['other_reference_number'].blank? }
 
   accepts_nested_attributes_for :unit_langs,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['code'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['code'].blank? }
 
   accepts_nested_attributes_for :unit_damages,
-                                :allow_destroy => true,
-                                :reject_if => proc { |a| a['code'].blank? }
+    :allow_destroy => true,
+    :reject_if => proc { |a| a['code'].blank? }
 
   accepts_nested_attributes_for :unit_editors,
-                                :allow_destroy => true,
-                                :reject_if => Proc.new { |a| a['name'].blank? }
+    :allow_destroy => true,
+    :reject_if => Proc.new { |a| a['name'].blank? }
 
   accepts_nested_attributes_for :rel_unit_sources,
-                                :allow_destroy => true,
-                                :reject_if => Proc.new { |a| a['source_id'].blank? }
+    :allow_destroy => true,
+    :reject_if => Proc.new { |a| a['source_id'].blank? }
 
   accepts_nested_attributes_for :rel_unit_headings,
-                                :allow_destroy => true,
-                                :reject_if => Proc.new { |a| a['heading_id'].blank? }
+    :allow_destroy => true,
+    :reject_if => Proc.new { |a| a['heading_id'].blank? }
 
-  # Validation
+  # Validations
 
   validates_presence_of :title
   validates_presence_of :fond_id, :root_fond_id, :ancestry_depth
   validates_inclusion_of :sequence_number, :in => 1..99999, :allow_blank => true
 
   squished_fields :reference_number,
-                  :tmp_reference_string,
-                  :title,
-                  :physical_container_title
+    :tmp_reference_string,
+    :title,
+    :physical_container_title
 
-  trimmed_fields  :content,
-                  :arrangement_note,
-                  :related_materials,
-                  :note,
-                  :physical_description,
-                  :preservation_note,
-                  :restoration,
-                  :access_condition_note,
-                  :use_condition_note
+  trimmed_fields :content,
+    :arrangement_note,
+    :related_materials,
+    :note,
+    :physical_description,
+    :preservation_note,
+    :restoration,
+    :access_condition_note,
+    :use_condition_note
 
   blank_default :title
 
   # Custom validations
 
   validate  :matching_parent_and_fond,
-            :matching_fond_and_root_fond,
-            :allowed_ancestry_depth
+    :matching_fond_and_root_fond,
+    :allowed_ancestry_depth
 
   def matching_parent_and_fond
     errors.add_to_base :not_matching_parent_and_fond if parent && fond_id != parent.fond_id
@@ -147,7 +148,7 @@ class Unit < ActiveRecord::Base
   end
 
   def allowed_ancestry_depth
-    errors.add_to_base :not_allowed_ancestry_depth if ancestry_depth > 1
+    errors.add_to_base :not_allowed_ancestry_depth if ancestry_depth > MAX_LEVEL_OF_NODES
   end
 
   # Scopes
@@ -167,8 +168,17 @@ class Unit < ActiveRecord::Base
   alias_attribute :name, :title
   alias_attribute :display_name, :title
 
-  def level_type
-    ancestry ? "#{I18n.t('level_subfile')}" : "#{I18n.t('level_file')}"
+  # OPTIMIZE: usare :format. Verificare dove usato (dopo modifica su pagine member)
+  def level_type(short=false)
+    short ? suffix = "_short" : suffix = ""
+    case ancestry_depth
+    when 0
+      "#{I18n.t('level_file'+suffix)}"
+    when 1
+      "#{I18n.t('level_subfile'+suffix)}"
+    when 2
+      "#{I18n.t('level_subsubfile'+suffix)}"
+    end
   end
 
   # Methods
@@ -177,8 +187,75 @@ class Unit < ActiveRecord::Base
     fond.path_items
   end
 
-  # OPTIMIZE: verificare che in ActsAsSequence non esista analogo dei due metodi seguenti.
-  # A una prima occhiata non mi sembra.
+  def is_leaf?
+    ancestry_depth == MAX_LEVEL_OF_NODES
+  end
+
+  def has_local_siblings?
+    siblings.all(:conditions => "fond_id = #{self.fond_id}").count > 1
+  end
+
+  def is_movable_up?
+    !is_root?
+  end
+
+  def is_movable_down?
+    !is_leaf? &&
+    has_local_siblings? &&
+    !descendants.at_depth(MAX_LEVEL_OF_NODES).exists?
+  end
+
+  def is_not_movable?
+    !is_movable_up? && !is_movable_down?
+  end
+
+  def is_iccd?
+    tsk.present?
+  end
+
+  def bracketize_title_if_given
+    given_title? ? "[#{title}]" : title
+  end
+
+  # Methods related to sequence_number
+
+  # Returns a hash of all the units of the root_fond,
+  # where the key is the unit_id and the value is the display_sequence_number.
+  # The hash is empty if the root_fond has no subunits.
+  # TODO:
+  # - applicare in edit (?) e reports
+
+  def self.display_sequence_numbers_of(root_fond, index = 0)
+    display_sequence_numbers = {}
+    if root_fond.has_subunits?
+      units = self.all(:select => "id, position, ancestry, ancestry_depth",
+        :conditions => "root_fond_id = #{root_fond.id} AND sequence_number IS NOT NULL",
+        :order => "sequence_number")
+      units.map do |u|
+        value = case u.ancestry_depth
+                when 0
+                  [index += 1].to_s
+                when 1
+                  [index, u.position].join(".")
+                when 2
+                  [index, u.parent.position, u.position].join(".")
+                end
+        display_sequence_numbers[u.id] = value
+      end
+    end
+    display_sequence_numbers
+  end
+
+  # Method to be used in collection actions.
+  def display_sequence_number_from_hash(display_sequence_numbers)
+    display_sequence_numbers.present? ? display_sequence_numbers[id] : sequence_number
+  end
+
+  # Method to be used in member actions.
+  def display_sequence_number
+    self.class.display_sequence_numbers_of(fond.root)[id] || sequence_number
+  end
+
   def prev_in_sequence
     self.class.find(:first, :select => "id",
       :conditions => "root_fond_id = #{root_fond_id} AND sequence_number = #{sequence_number-1}")
@@ -188,6 +265,8 @@ class Unit < ActiveRecord::Base
     self.class.find(:first, :select => "id",
       :conditions => "root_fond_id = #{root_fond_id} AND sequence_number = #{sequence_number+1}")
   end
+
+  # Other methods
 
   def sorted_rel_unit_sources
     rel_unit_sources.all(:include => :source).sort_by{|rel| rel.source.try(:short_title) || 'zz'}
@@ -217,4 +296,3 @@ class Unit < ActiveRecord::Base
   end
 
 end
-

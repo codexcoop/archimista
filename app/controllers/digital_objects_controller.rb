@@ -5,8 +5,9 @@ class DigitalObjectsController < ApplicationController
 
   def all
     @digital_objects = DigitalObject.accessible_by(current_ability, :read).
-                                     paginate(:page => params[:page],
-                                     :order => sort_column + ' ' + sort_direction)
+      paginate(:include => :attachable, :page => params[:page],
+      :order => sort_column + ' ' + sort_direction).
+      delete_if {|o| o.attachable.nil? || (o.attachable.has_attribute?("sequence_number") && o.attachable.sequence_number.nil?) }
   end
 
   # Polymorphic association - nested resource
@@ -14,8 +15,8 @@ class DigitalObjectsController < ApplicationController
   def index
     @attachable = find_attachable
     @digital_objects = @attachable.digital_objects.accessible_by(current_ability, :read).
-                                   paginate(:page => params[:page],
-                                   :order => "position")
+      paginate(:page => params[:page],
+      :order => "position")
   end
 
   def new
@@ -36,11 +37,16 @@ class DigitalObjectsController < ApplicationController
       digital_object.group_id = current_user.group_id
     end
 
-    if @digital_object.save
-      flash[:notice] = "Oggetto digitale creato"
-      redirect_to polymorphic_url([@attachable, "digital_objects"])
-    else
-      render :action => "new"
+    respond_to do |format|
+      if @digital_object.save
+        format.html {
+          render :json => [@digital_object.to_jq_upload].to_json,
+          :content_type => 'text/html',
+          :layout => false
+        }
+      else
+        format.html { render :json => @digital_object.errors }
+      end
     end
   end
 
@@ -58,11 +64,34 @@ class DigitalObjectsController < ApplicationController
     end
   end
 
+  def sort
+    params["list"].each_with_index do |id, position|
+      DigitalObject.update_all("position = #{position + 1}", "id = #{id}")
+    end
+    render :nothing => true
+  end
+
+  def bulk_destroy
+    DigitalObject.destroy_all({:id => params["digital_object_ids"]})
+    render :nothing => true
+  end
+
   def destroy
     @digital_object = DigitalObject.find(params[:id])
+    redirect = if request.referrer.split("/").last == "edit"
+      @attachable = @digital_object.attachable
+      polymorphic_url([@attachable, "digital_objects"])
+    else
+      request.referrer
+    end
     @digital_object.destroy
 
-    redirect_to request.referrer, :notice => "Oggetto digitale eliminato"
+    if request.xhr?
+      render :nothing => true
+    else
+      redirect_to redirect, :notice => "Oggetto digitale eliminato"
+    end
+
   end
 
   private
@@ -77,8 +106,11 @@ class DigitalObjectsController < ApplicationController
   end
 
   def sort_column
-    params[:sort] || "asset_file_name"
-    # segliere se fare query in più per sicurezza: Creator.column_names.include?(params[:sort]) ? params[:sort] : "name"
+    params[:sort] || "updated_at"
+  end
+
+  def sort_direction
+    params[:direction] || "desc"
   end
 
   def require_image_magick

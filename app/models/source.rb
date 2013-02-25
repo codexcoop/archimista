@@ -1,8 +1,7 @@
 class Source < ActiveRecord::Base
 
-  # FIXME: per_page provvisorio per debug plain_misc
   cattr_reader :per_page
-  @@per_page = 200
+  @@per_page = 100
 
   # Modules
   extend Cleaner

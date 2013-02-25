@@ -114,7 +114,7 @@ class CreatorsController < ApplicationController
 
   def sort_column
     params[:sort] || "name"
-    # segliere se fare query in più per sicurezza: Creator.column_names.include?(params[:sort]) ? params[:sort] : "name"
   end
+
 end
 

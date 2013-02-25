@@ -1,7 +1,68 @@
-class RtfBuilder < ActiveRecord::Base
-  # See: http://railscasts.com/episodes/193-tableless-model
-  # See: http://codetunes.com/2008/07/20/tableless-models-in-rails
+# #Override class DocumentStyle for our own purpose TODO: move this to lib, if
+#   possible
 
+module RTF
+  class DocumentStyle < Style
+
+    # Attribute accessor.
+    attr_reader :paper, :left_margin, :right_margin, :top_margin,
+      :bottom_margin, :gutter, :orientation, :enable_facing_pages,
+      :enable_widow_control, :enable_title_page
+
+    # Attribute mutator.
+    attr_writer :paper, :left_margin, :right_margin, :top_margin,
+      :bottom_margin, :gutter, :orientation, :enable_facing_pages,
+      :enable_widow_control, :enable_title_page
+
+    # This is a constructor for the DocumentStyle class. This creates a document
+    #   style with a default paper setting of A4 and portrait orientation (all
+    #   other attributes are nil).
+    def initialize
+      @paper         = Paper::A4
+      @left_margin   = DEFAULT_LEFT_MARGIN
+      @right_margin  = DEFAULT_RIGHT_MARGIN
+      @top_margin    = DEFAULT_TOP_MARGIN
+      @bottom_margin = DEFAULT_BOTTOM_MARGIN
+      @gutter        = nil
+      @orientation   = PORTRAIT
+      @enable_facing_pages = false
+      @enable_widow_control = false
+      @enable_title_page = false
+    end
+
+    # This method generates a string containing the prefix associated with a
+    # style object.
+    #
+    # ==== Parameters
+    # document::  A reference to the document using the style.
+    def prefix(fonts=nil, colours=nil)
+      text = StringIO.new
+
+      if orientation == LANDSCAPE
+        text << "\\paperw#{@paper.height}"    unless @paper.nil?
+        text << "\\paperh#{@paper.width}"     unless @paper.nil?
+      else
+        text << "\\paperw#{@paper.width}"     unless @paper.nil?
+        text << "\\paperh#{@paper.height}"    unless @paper.nil?
+      end
+      text << "\\margl#{@left_margin}"        unless @left_margin.nil?
+      text << "\\margr#{@right_margin}"       unless @right_margin.nil?
+      text << "\\margt#{@top_margin}"         unless @top_margin.nil?
+      text << "\\margb#{@bottom_margin}"      unless @bottom_margin.nil?
+      text << "\\gutter#{@gutter}"            unless @gutter.nil?
+      text << '\sectd\lndscpsxn'              if @orientation == LANDSCAPE
+      text << "\\facingp\\margmirror"         unless @enable_facing_pages == false
+      text << "\\widowctrl"                   unless @enable_widow_control == false
+      text << "\\titlepg"                     unless @enable_title_page == false
+
+      text.string
+    end
+  end
+end
+
+class RtfBuilder < ActiveRecord::Base
+  # See: http://railscasts.com/episodes/193-tableless-model See:
+  # http://codetunes.com/2008/07/20/tableless-models-in-rails
   def self.columns() @columns ||= []; end
 
   def self.column(name, sql_type = nil, default = nil, null = true)
@@ -11,115 +72,327 @@ class RtfBuilder < ActiveRecord::Base
   column :dest_file, :string
   column :target_id, :integer
 
-  def build_rtf_file
-    fonds = Fond.subtree_of(self.target_id).active.all(
-      :include => [:preferred_event, [:units => :preferred_event]],
-      :order => "sequence_number")
+  def fond_printable_attributes
+    [
+      "preferred_event.full_display_date",
+      "fond_type",
+      "length",
+      "extent",
+      "abstract",
+      "description",
+      "history",
+      "arrangement_note",
+      "related_materials",
+      "access_condition",
+      "access_condition_note",
+      "use_condition",
+      "use_condition_note",
+      "type_materials",
+      "preservation",
+      "preservation_note",
+      "description_type",
+      "note",
+      "units_count"
+    ]
+  end
 
-    tmp = "#{Rails.root}/tmp/tmp.rtf"
+  def unit_printable_attributes
+    [
+      "title",
+      "preferred_event.full_display_date_with_place",
+      "tsk",
+      "reference_number",
+      "tmp_reference_number",
+      "tmp_reference_string",
+      "folder_number",
+      "file_number",
+      "sort_letter",
+      "sort_number",
+      "unit_type",
+      "medium",
+      "content",
+      "arrangement_note",
+      "related_materials",
+      "physical_type",
+      "physical_description",
+      "physical_container_type",
+      "physical_container_title",
+      "physical_container_number",
+      "preservation",
+      "preservation_note",
+      "restoration",
+      "access_condition",
+      "access_condition_note",
+      "use_condition",
+      "use_condition_note",
+      "note"
+    ]
+  end
 
+  def custodian_printable_attributes
+    [
+      "display_name",
+      "headquarter_address",
+      "custodian_type.custodian_type",
+      "legal_status",
+      "owner",
+      "contact_person",
+      "history",
+      "administrative_structure",
+      "collecting_policies",
+      "holdings",
+      "accessibility",
+      "services",
+      "custodian_contacts"
+    ]
+  end
+
+  def creator_printable_attributes
+    [
+      "display_name",
+      "preferred_event.full_display_date",
+      "creator_type",
+      "creator_corporate_type.corporate_type",
+      "residence",
+      "abstract",
+      "history",
+      "legal_status",
+      "note"
+    ]
+  end
+
+  def project_printable_attributes
+    [
+      "name",
+      "project_type",
+      "display_date",
+      "description"
+    ]
+  end
+
+  def source_printable_attributes
+    [
+      "short_title",
+      "formatted_source"
+    ]
+  end
+
+  def custodian_printable_attributes
+    [
+      "headquarter_address",
+      "history",
+      "holdings",
+      "accessibility",
+      "services"
+    ]
+  end
+
+  def stylesheet_codes
+    stylesheet_codes = Hash.new
+    start = 19
+    entities = ["fond", "unit", "custodian", "creator", "project", "source"]
+
+    entities.each do |entity|
+      self.send("#{entity}_printable_attributes").each do |attribute|
+        methods = attribute.split('.')
+        stylesheet_codes.store("#{entity}_#{methods[0]}", start)
+        start+= 1
+      end
+    end
+
+    stylesheet_codes
+  end
+
+  def stylesheet
+    stylesheet = String.new
+    stylesheet << "{\\s15\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext15 archimista_header;}\n"
+    stylesheet << "{\\s16\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext16 archimista_section_header;}\n"
+    stylesheet << "{\\s17\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext17 archimista_scons;}\n"
+    stylesheet << "{\\s18\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext18 archimista_sprod;}\n"
+
+    stylesheet_codes.each do |attribute, code|
+      stylesheet << "{\\s#{code}\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext#{code} #{attribute};}\n"
+    end
+    stylesheet
+  end
+
+  def document_styles
     styles = {}
 
-    styles['BOLD'] = CharacterStyle.new
-    styles['BOLD'].bold      = true
-    styles['BOLD'].font_size = 20
+    styles['P'] = ParagraphStyle.new
+    styles['P'].justification = ParagraphStyle::FULL_JUSTIFY
+
+    styles['TITLE'] = ParagraphStyle.new
+    styles['TITLE'].justification = ParagraphStyle::CENTER_JUSTIFY
+
+    styles['TITLE_DEFAULT'] = CharacterStyle.new
+    styles['TITLE_DEFAULT'].font_size = 40
 
     styles['DEFAULT'] = CharacterStyle.new
     styles['DEFAULT'].font_size = 20
 
-    styles['NORMAL'] = ParagraphStyle.new
-    styles['NORMAL'].justification = ParagraphStyle::LEFT_JUSTIFY
+    styles['STRONG'] = CharacterStyle.new
+    styles['STRONG'].bold      = true
+    styles['STRONG'].font_size = 20
 
-    styles['COUNTER'] = ParagraphStyle.new
-    styles['COUNTER'].justification = ParagraphStyle::RIGHT_JUSTIFY
+    styles['EM'] = CharacterStyle.new
+    styles['EM'].italic      = true
+    styles['EM'].font_size = 20
 
-    stylesheet = String.new
-    stylesheet << '{\s15\widctlpar \f0\fs20\lang1040 \sbasedon0\snext15 Intestazione;}'
-    stylesheet << '{\s16\widctlpar \f0\fs20\lang1040 \sbasedon0\snext16 Tipologia fondo;}'
-    stylesheet << '{\s17\widctlpar \f0\fs20\lang1040 \sbasedon0\snext17 Denominazione fondo;}'
-    stylesheet << '{\s18\widctlpar \f0\fs20\lang1040 \sbasedon0\snext18 Cronologia fondo;}'
-    stylesheet << '{\s19\widctlpar \f0\fs20\lang1040 \sbasedon0\snext19 Abstract fondo;}'
-    stylesheet << '{\s20\widctlpar \f0\fs20\lang1040 \sbasedon0\snext20 Profilo storico fondo;}'
-    stylesheet << '{\s21\widctlpar \f0\fs20\lang1040 \sbasedon0\snext21 Descrizione fondo;}'
-    stylesheet << '{\s22\widctlpar \f0\fs20\lang1040 \sbasedon0\snext22 Titolo unità;}'
-    stylesheet << '{\s23\widctlpar \f0\fs20\lang1040 \sbasedon0\snext23 Cronologia unità;}'
-    stylesheet << '{\s24\widctlpar \f0\fs20\lang1040 \sbasedon0\snext24 Contenuto unità;}'
-    stylesheet << '{\s25\widctlpar \f0\fs20\lang1040 \sbasedon0\snext25 Note unità;}'
-    stylesheet << '{\s26\widctlpar \f0\fs20\lang1040 \sbasedon0\snext26 Segnatura unità;}'
-    stylesheet << '{\s27\widctlpar \f0\fs20\lang1040 \sbasedon0\snext27 Numero unità;}'
+    styles['H1'] = CharacterStyle.new
+    styles['H1'].bold      = true
+    styles['H1'].font_size = 30
 
-    document = Document.new(Font.new(Font::ROMAN, 'Times New Roman'))
+    styles['H2'] = CharacterStyle.new
+    styles['H2'].font_size = 28
+    styles['H2'].capitalise = true
+
+    styles['H3'] = CharacterStyle.new
+    styles['H3'].font_size = 26
+    styles['H3'].bold = true
+
+    styles['H4'] = CharacterStyle.new
+    styles['H4'].bold      = true
+    styles['H4'].font_size = 24
+
+    styles
+  end
+
+  def build_fond_rtf_file
+    fonds = Fond.subtree_of(self.target_id).active.all(
+      :include => [
+        :preferred_event, :sources,
+        [:units => :preferred_event],
+        [:custodians => [:preferred_name, :custodian_buildings, :custodian_contacts]],
+        [:creators => [:preferred_event, :preferred_name]]
+      ],
+      :order => "sequence_number")
+
+    tmp = "#{Rails.root}/tmp/tmp.rtf"
+
+    styles = document_styles
+
+    document_style = RTF::DocumentStyle.new()
+    document_style.enable_facing_pages  = true
+    document_style.enable_widow_control = true
+    document_style.enable_title_page    = true
+
+    document = Document.new(Font.new(Font::ROMAN, 'Times New Roman'), document_style)
+
+    document.information.title = fonds.first.name
+    document.information.author = "Archimista"
+
+    document.store(CommandNode.new(document, "\\headerr\\pard\\qr\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
+    document.store(CommandNode.new(document, "\\headerl\\pard\\ql\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
+    document.store(CommandNode.new(document, "\\footerr\\pard\\qr\\plain\\f0\\fs18\\chpgn\\par", nil, false))
+    document.store(CommandNode.new(document, "\\footerl\\pard\\ql\\plain\\f0\\fs18\\chpgn\\par", nil, false))
+
     document.store(CommandNode.new(self, "\\stylesheet#{stylesheet}", nil, false))
-    counter = 1
+
+    title_page document, styles, "#{fonds.first.name}\n#{fonds.first.preferred_event.full_display_date}"
 
     fonds.each do |fond|
-      print_counter(document, styles, counter)
-      counter += 1
 
-      if fond.fond_type.present?
-        print_header(document, styles, 'Tipologia')
-        print_short_content(document, styles, fond.fond_type.capitalize!, '\s16')
+      h1(document, styles, fond.name, "\\s#{stylesheet_codes['fond_name']}")
+
+      if fond.custodians.present?
+        h2(document, styles, Custodian.human_name)
+        fond.custodians.each do |custodian|
+          h3(document, styles, custodian.display_name, "\\s#{stylesheet_codes['custodian_display_name']}")
+          custodian_printable_attributes.each do |attribute|
+            methods = attribute.split('.')
+            if custodian.send(methods[0].to_sym).present?
+              strong(document, styles, Custodian.human_attribute_name(methods[0]))
+              index = "custodian_#{methods[0]}"
+              if attribute.include?('.')
+                text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+              else
+                text = custodian.send(attribute.to_sym).to_s
+              end
+              p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+            end
+          end
+          if custodian.custodian_contacts.present?
+            contacts = Array.new
+            strong(document, styles, Custodian.human_attribute_name("contacts"))
+            custodian.custodian_contacts.each do |contact|
+              contacts.push("#{Custodian.human_attribute_name(contact.contact_type)}: #{contact.contact}")
+            end
+            p(document, styles, contacts.join(', '), "\\s#{stylesheet_codes['custodian_custodian_contacts']}")
+          end
+        end
       end
 
-      print_header(document, styles, 'Denominazione completa')
-      print_short_content(document, styles, fond.name, '\s17')
-
-      if fond.preferred_event.present?
-        print_header(document, styles, 'Estremi cronologici')
-        print_short_content(document, styles, fond.preferred_event.full_display_date, '\s18')
+      if fond.creators.present?
+        h2(document, styles, Creator.human_name({:count => fond.creators.size}))
+        fond.creators.each do |creator|
+          h3(document, styles, creator.display_name, "\\s#{stylesheet_codes['creator_display_name']}")
+          creator_printable_attributes.each do |attribute|
+            methods = attribute.split('.')
+            if creator.send(methods[0].to_sym).present?
+              strong(document, styles, Creator.human_attribute_name(methods[0]))
+              index = "creator_#{methods[0]}"
+              if attribute.include?('.')
+                text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+              else
+                if attribute == 'creator_type'
+                  text = Creator.human_attribute_name(creator.send(attribute.to_sym).to_s)
+                else
+                  text = creator.send(attribute.to_sym).to_s
+                end
+              end
+              p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+            end
+          end
+        end
       end
 
-      if fond.abstract.present?
-        print_header(document, styles, 'Abstract')
-        print_long_content(document, styles, fond.abstract, '\s19')
+      fond_printable_attributes.each do |attribute|
+        methods = attribute.split('.')
+        if fond.send(methods[0].to_sym).present? && fond.send(methods[0].to_sym) != 0
+          strong(document, styles, Fond.human_attribute_name(methods[0]))
+          index = "fond_#{methods[0]}"
+          if attribute.include?('.')
+            text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+          else
+            text = fond.send(attribute.to_sym).to_s
+          end
+          p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+        end
       end
 
-      if fond.history.present?
-        print_header(document, styles, 'Profilo storico biografico')
-        print_long_content(document, styles, fond.history, '\s20')
-      end
-
-      if fond.description.present?
-        print_header(document, styles, 'Descrizione')
-        print_long_content(document, styles, fond.description, '\s21')
+      if fond.sources.present?
+        strong(document, styles, Source.human_name({:count => fond.sources.size}))
+        fond.sources.each do |source|
+          em(document, styles, source.short_title, "\\s#{stylesheet_codes['source_short_title']}")
+          p(document, styles, formatted_source(source), "\\s#{stylesheet_codes['source_formatted_source']}")
+        end
       end
 
       if fond.units.present?
+        h2(document, styles, Unit.human_name({:count => fond.units.size}))
         fond.units.each do |unit|
-          print_counter(document, styles, counter)
-          counter += 1
-          print_header(document, styles, 'Numero unità')
-          print_short_content(document, styles, unit.sequence_number.to_s, '\s27')
-
-          print_header(document, styles, 'Titolo')
-          print_short_content(document, styles, unit.title,'\s22')
-
-          if unit.preferred_event.present?
-            print_header(document, styles, 'Estremi cronologici')
-            print_short_content(document, styles, unit.preferred_event.full_display_date, '\s23')
+          unit_printable_attributes.each do |attribute|
+            methods = attribute.split('.')
+            index = "unit_#{methods[0]}"
+            if unit.send(methods[0].to_sym).present?
+              if (methods[0] == 'title')
+                h3(document, styles, unit.send(:bracketize_title_if_given).to_s, "\\s#{stylesheet_codes[index]}")
+              else
+                strong(document, styles, Unit.human_attribute_name(methods[0]))
+                if attribute.include?('.')
+                  text = unit.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+                else
+                  text = unit.send(attribute.to_sym).to_s
+                end
+                p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+              end
+            end
           end
-
-          if unit.content.present?
-            print_header(document, styles, 'Contenuto')
-            print_long_content(document, styles, unit.content, '\s24')
-          end
-
-          if unit.note.present?
-            print_header(document, styles, 'Note complessive')
-            print_long_content(document, styles, unit.note, '\s25')
-          end
-
-          if unit.reference_number.present?
-            print_header(document, styles, 'Segnatura definitiva')
-            print_short_content(document, styles, unit.reference_number, '\s26')
-          end
-
         end
+        my_page_break(document)
       end
-      my_page_break(document)
     end
-
-
 
     File.open(tmp, 'w') do |file|
       file.write(document.to_rtf)
@@ -131,48 +404,597 @@ class RtfBuilder < ActiveRecord::Base
     File.open(self.dest_file, 'w') do |f|
       f.write(Iconv.iconv("LATIN1", "UTF-8", content))
     end
-    
+
     File.delete(tmp)
   end
 
+  def build_project_rtf_file
+    tmp = "#{Rails.root}/tmp/tmp.rtf"
 
-  private
-  def print_counter document, styles, index
-    document.paragraph(styles['COUNTER']) do |p|
-      p.apply(styles['DEFAULT']) do |t|
-        t << "(#{index.to_s})"
+    project_fields =
+      [
+      "project_type",
+      "display_date",
+      "description"
+    ]
+
+    fond_fields = [
+      "preferred_event.full_display_date",
+      "extent",
+      "description",
+      "abstract",
+      "access_condition",
+      "access_condition_note",
+    ]
+
+    creator_fields = [
+      "preferred_event.full_display_date",
+      "history",
+      "abstract"
+    ]
+
+    custodian_fields = [
+      "history",
+      "holdings",
+      "collecting_policies",
+      "accessibility",
+      "services",
+      "headquarter_address"
+    ]
+    project = Project.find(self.target_id, :include => [:project_managers, :project_stakeholders])
+    all_fonds = project.fonds.roots.active(:include =>
+        [:preferred_event, :other_names,
+        [:custodians => [:preferred_name, :custodian_headquarter, :custodian_other_buildings, :sources]],
+        [:creators => [:preferred_event, :preferred_name, :other_names, :sources]], :sources]
+    )
+    custodians = Array.new
+    fonds = Hash.new {|h,k| h[k] = Array.new}
+    creators = Hash.new {|h,k| h[k] = Array.new}
+    sources = Array.new
+    all_fonds.each do |fond|
+      fond.sources.each do |source|
+        sources.push(source)
+      end
+      fond.custodians.each do |custodian|
+        custodian.sources.each do |source|
+          sources.push(source)
+        end
+        custodians.push(custodian)
+        fonds[custodian.id].push(fond)
+        fond.creators.each do |creator|
+          creators[fond.id].push(creator)
+          creator.sources.each do |source|
+            sources.push(source)
+          end
+        end
       end
     end
+    custodians = custodians.uniq.sort{|a,b| a.display_name <=> b.display_name}
+    sources = sources.uniq.sort{|a,b| a.short_title <=> b.short_title}
+    fonds.each do |key, value|
+      fonds[key] = value.uniq
+    end
+    creators.each do |key, value|
+      creators[key] = value.uniq
+    end
+
+    styles = document_styles
+
+    document_style = RTF::DocumentStyle.new()
+    document_style.enable_facing_pages  = true
+    document_style.enable_widow_control = true
+    document_style.enable_title_page    = true
+
+    document = Document.new(Font.new(Font::ROMAN, 'Times New Roman'), document_style)
+
+    document.information.title = project.name
+    document.information.author = "Archimista"
+
+    document.store(CommandNode.new(document, "\\headerr\\pard\\qr\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
+    document.store(CommandNode.new(document, "\\headerl\\pard\\ql\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
+    document.store(CommandNode.new(document, "\\footerr\\pard\\qr\\plain\\f0\\fs18\\chpgn\\par", nil, false))
+    document.store(CommandNode.new(document, "\\footerl\\pard\\ql\\plain\\f0\\fs18\\chpgn\\par", nil, false))
+
+    document.store(CommandNode.new(self, "\\stylesheet#{stylesheet}", nil, false))
+
+    title_page document, styles, "#{project.name}\n#{project.display_date}"
+
+    h1(document, styles, project.name, "\\s#{stylesheet_codes['project_name']}")
+    project_fields.each do |attribute|
+      methods = attribute.split('.')
+      index = "project_#{methods[0]}"
+      if project.send(methods[0].to_sym).present?
+        strong(document, styles, Project.human_attribute_name(methods[0].to_sym))
+        if attribute.include?('.')
+          text = project.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+        else
+          text = project.send(attribute.to_sym).to_s
+        end
+        p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+      end
+    end
+
+    if project.project_managers.present?
+      strong(document, styles, Project.human_attribute_name(:project_managers))
+      elements = Array.new
+      project.project_managers.each do |project_manager|
+        text = Array.new
+        text.push(project_manager.credit_name)
+        text.push("[#{project_manager.qualifier}]") unless project_manager.qualifier.blank?
+        elements.push(text.join(", "))
+      end
+      list document, elements, styles
+    end
+
+    if project.project_stakeholders.present?
+      strong(document, styles, Project.human_attribute_name(:project_stakeholders))
+      elements = Array.new
+      project.project_stakeholders.each do |project_stakeholder|
+        text = Array.new
+        text.push(project_stakeholder.credit_name)
+        text.push("[#{project_stakeholder.qualifier}]") unless project_stakeholder.qualifier.blank?
+        elements.push(text.join(", "))
+      end
+      list document, elements, styles
+    end
+
+    custodians.each do |custodian|
+      h1(document, styles, custodian.display_name, "\\s#{stylesheet_codes['custodian_display_name']}")
+      custodian_fields.each do |attribute|
+        methods = attribute.split('.')
+        index = "custodian_#{methods[0]}"
+        if custodian.send(methods[0].to_sym).present?
+          strong(document, styles, Custodian.human_attribute_name(methods[0].to_sym))
+          if attribute.include?('.')
+            text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+          else
+            text = custodian.send(attribute.to_sym).to_s
+          end
+          p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+        end
+      end
+
+      if custodian.custodian_other_buildings.present?
+        strong(document, styles, Custodian.human_name(:custodian_other_buildings))
+        custodian.custodian_other_buildings.each do |building|
+          text = formatted_custodian_building(building)
+          text += " (#{building.custodian_building_type})" if building.custodian_building_type.present?
+          p(document, styles, text)
+          if building.description.present?
+            text = "#{building.description}"
+            p(document, styles, text)
+          end
+        end
+      end
+      if custodian.sources.present?
+        strong(document, styles, Source.human_name({:count => custodian.sources.size}))
+        p(document, styles, inline_short_sources(custodian.sources))
+      end
+
+      fonds[custodian.id].each do |fond|
+        if creators[fond.id].present?
+          creators[fond.id].each do |creator|
+            h3(document, styles, creator.display_name, "\\s#{stylesheet_codes['creator_display_name']}")
+            if creator.other_names.present?
+              strong(document, styles, Creator.human_attribute_name(:other_names))
+              creator.other_names.each do |name|
+                text = name.name
+                text += " (#{name.note})" if name.note.present?
+                p(document, styles, text)
+              end
+            end
+            creator_fields.each do |attribute|
+              methods = attribute.split('.')
+              index = "creator_#{methods[0]}"
+              if creator.send(methods[0].to_sym).present?
+                strong(document, styles,Creator.human_attribute_name(methods[0].to_sym))
+
+                if attribute.include?('.')
+                  text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+                else
+                  text = creator.send(attribute.to_sym).to_s
+                end
+                p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+              end
+            end
+            if creator.sources.present?
+              strong(document, styles,Source.human_name({:count => creator.sources.size}))
+              p(document, styles, inline_short_sources(creator.sources))
+
+            end
+          end
+        else
+          h3(document, styles, "Nessun produttore presente", "\\s#{stylesheet_codes['creator_display_name']}")
+        end
+
+        h4(document, styles, fond.name, "\\s#{stylesheet_codes['fond_name']}")
+        if fond.other_names.present?
+          strong(document, styles, Fond.human_attribute_name(:other_names))
+          fond.other_names.each do |name|
+            text= name.name
+            text += "( #{name.note})" if name.note.present?
+            p(document, styles, text)
+          end
+        end
+
+        fond_fields.each do |attribute|
+          methods = attribute.split('.')
+          index = "fond_#{methods[0]}"
+          if fond.send(methods[0].to_sym).present?
+            strong(document, styles, Fond.human_attribute_name(methods[0].to_sym))
+
+            if attribute.include?('.')
+              text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+            else
+              text = fond.send(attribute.to_sym).to_s
+            end
+            p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+          end
+        end
+        if fond.sources.present?
+          strong(document, styles, Source.human_name({:count => fond.sources.size}))
+          p(document, styles, inline_short_sources(fond.sources))
+        end
+      end
+    end
+
+    if sources.present?
+      h2(document, styles, Source.human_name({:count => sources.size}))
+      sources.each do |source|
+        p(document, styles, "[#{source.short_title}] #{formatted_source(source)}", "\\s#{stylesheet_codes['source_formatted_source']}")
+      end
+    end
+
+    File.open(tmp, 'w') do |file|
+      file.write(document.to_rtf)
+    end
+
+    # A Windows non piacciono i file con encoding UTF-8 :-/
+    content = File.read(tmp)
+
+    File.open(self.dest_file, 'w') do |f|
+      f.write(Iconv.iconv("LATIN1", "UTF-8", content))
+    end
+
+    File.delete(tmp)
   end
 
-  def print_header document, styles, string, stylesheet_code='\s15'
-    document.paragraph(styles['NORMAL']) do |p|
+  def build_custodian_rtf_file
+    tmp = "#{Rails.root}/tmp/tmp.rtf"
+
+    project_fields =
+      [
+      "project_type",
+      "display_date",
+      "description"
+    ]
+
+    fond_fields = [
+      "preferred_event.full_display_date",
+      "extent",
+      "description",
+      "abstract",
+      "access_condition",
+      "access_condition_note",
+    ]
+
+    creator_fields = [
+      "preferred_event.full_display_date",
+      "history",
+      "abstract"
+    ]
+
+    custodian_fields = [
+      "history",
+      "holdings",
+      "collecting_policies",
+      "accessibility",
+      "services",
+      "headquarter_address"
+    ]
+    custodian = Custodian.find(self.target_id, :include => [:preferred_name, :custodian_headquarter, :custodian_other_buildings, :sources])
+    all_fonds = custodian.fonds.roots.active(:include =>
+        [:preferred_event, :other_names,
+        [:projects => [:project_managers, :project_stakeholders]],
+        [:creators => [:preferred_event, :preferred_name, :other_names, :sources]], :sources]
+    )
+    projects = Array.new
+    fonds = Hash.new {|h,k| h[k] = Array.new}
+    creators = Hash.new {|h,k| h[k] = Array.new}
+    sources = Array.new
+    all_fonds.each do |fond|
+      fond.sources.each do |source|
+        sources.push(source)
+      end
+      fond.projects.each do |project|
+        projects.push(project)
+        fonds[project.id].push(fond)
+        fond.creators.each do |creator|
+          creators[fond.id].push(creator)
+          creator.sources.each do |source|
+            sources.push(source)
+          end
+        end
+      end
+    end
+    projects = projects.uniq
+    sources = sources.uniq.sort{|a,b| a.short_title <=> b.short_title}
+    fonds.each do |key, value|
+      fonds[key] = value.uniq
+    end
+    creators.each do |key, value|
+      creators[key] = value.uniq
+    end
+
+    styles = document_styles
+
+    document_style = RTF::DocumentStyle.new()
+    document_style.enable_facing_pages  = true
+    document_style.enable_widow_control = true
+    document_style.enable_title_page    = true
+
+    document = Document.new(Font.new(Font::ROMAN, 'Times New Roman'), document_style)
+
+    document.information.title = custodian.display_name
+    document.information.author = "Archimista"
+
+    document.store(CommandNode.new(document, "\\headerr\\pard\\qr\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
+    document.store(CommandNode.new(document, "\\headerl\\pard\\ql\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
+    document.store(CommandNode.new(document, "\\footerr\\pard\\qr\\plain\\f0\\fs18\\chpgn\\par", nil, false))
+    document.store(CommandNode.new(document, "\\footerl\\pard\\ql\\plain\\f0\\fs18\\chpgn\\par", nil, false))
+
+    document.store(CommandNode.new(self, "\\stylesheet#{stylesheet}", nil, false))
+
+    title_page document, styles, "#{custodian.display_name}"
+
+    h1(document, styles, custodian.display_name, "\\s#{stylesheet_codes['custodian_display_name']}")
+    custodian_fields.each do |attribute|
+      methods = attribute.split('.')
+      index = "custodian_#{methods[0]}"
+      if custodian.send(methods[0].to_sym).present?
+        strong(document, styles, Custodian.human_attribute_name(methods[0].to_sym))
+        if attribute.include?('.')
+          text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+        else
+          text = custodian.send(attribute.to_sym).to_s
+        end
+        p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+      end
+    end
+
+    if custodian.custodian_other_buildings.present?
+      strong(document, styles, Custodian.human_name(:custodian_other_buildings))
+      custodian.custodian_other_buildings.each do |building|
+        text = formatted_custodian_building(building)
+        text += " (#{building.custodian_building_type})" if building.custodian_building_type.present?
+        p(document, styles, text)
+        if building.description.present?
+          text = "#{building.description}"
+          p(document, styles, text)
+        end
+      end
+    end
+
+    if custodian.sources.present?
+      strong(document, styles, Source.human_name({:count => custodian.sources.size}))
+      p(document, styles, inline_short_sources(custodian.sources))
+    end
+
+    projects.each do |project|
+      h1(document, styles, project.name, "\\s#{stylesheet_codes['project_name']}")
+      project_fields.each do |attribute|
+        methods = attribute.split('.')
+        index = "project_#{methods[0]}"
+        if project.send(methods[0].to_sym).present?
+          strong(document, styles, Project.human_attribute_name(methods[0].to_sym))
+          if attribute.include?('.')
+            text = project.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+          else
+            text = project.send(attribute.to_sym).to_s
+          end
+          p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+        end
+      end
+
+      if project.project_managers.present?
+        strong(document, styles, Project.human_attribute_name(:project_managers))
+        elements = Array.new
+        project.project_managers.each do |project_manager|
+          text = Array.new
+          text.push(project_manager.credit_name)
+          text.push("[#{project_manager.qualifier}]") unless project_manager.qualifier.blank?
+          elements.push(text.join(", "))
+        end
+        list document, elements, styles
+      end
+
+      if project.project_stakeholders.present?
+        strong(document, styles, Project.human_attribute_name(:project_stakeholders))
+        elements = Array.new
+        project.project_stakeholders.each do |project_stakeholder|
+          text = Array.new
+          text.push(project_stakeholder.credit_name)
+          text.push("[#{project_stakeholder.qualifier}]") unless project_stakeholder.qualifier.blank?
+          elements.push(text.join(", "))
+        end
+        list document, elements, styles
+      end
+
+      fonds[project.id].each do |fond|
+        if creators[fond.id].present?
+          creators[fond.id].each do |creator|
+            h3(document, styles, creator.display_name, "\\s#{stylesheet_codes['creator_display_name']}")
+            if creator.other_names.present?
+              strong(document, styles, Creator.human_attribute_name(:other_names))
+              creator.other_names.each do |name|
+                text = name.name
+                text += "( #{name.note})" if name.note.present?
+                p(document, styles, text)
+              end
+            end
+            creator_fields.each do |attribute|
+              methods = attribute.split('.')
+              index = "creator_#{methods[0]}"
+              if creator.send(methods[0].to_sym).present?
+                strong(document, styles,Creator.human_attribute_name(methods[0].to_sym))
+
+                if attribute.include?('.')
+                  text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+                else
+                  text = creator.send(attribute.to_sym).to_s
+                end
+                p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+              end
+            end
+            if creator.sources.present?
+              strong(document, styles,Source.human_name({:count => creator.sources.size}))
+              p(document, styles, inline_short_sources(creator.sources))
+
+            end
+          end
+        else
+          h3(document, styles, "Nessun produttore presente", "\\s#{stylesheet_codes['creator_display_name']}")
+        end
+
+        h4(document, styles, fond.name, "\\s#{stylesheet_codes['fond_name']}")
+        if fond.other_names.present?
+          strong(document, styles, Fond.human_attribute_name(:other_names))
+          fond.other_names.each do |name|
+            text= name.name
+            text += " (#{name.note})" if name.note.present?
+            p(document, styles, text)
+          end
+        end
+
+        fond_fields.each do |attribute|
+          methods = attribute.split('.')
+          index = "fond_#{methods[0]}"
+          if fond.send(methods[0].to_sym).present?
+            strong(document, styles, Fond.human_attribute_name(methods[0].to_sym))
+
+            if attribute.include?('.')
+              text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+            else
+              text = fond.send(attribute.to_sym).to_s
+            end
+            p(document, styles, text, "\\s#{stylesheet_codes[index]}")
+          end
+        end
+        if fond.sources.present?
+          strong(document, styles, Source.human_name({:count => fond.sources.size}))
+          p(document, styles, inline_short_sources(fond.sources))
+        end
+      end
+    end
+
+    if sources.present?
+      h2(document, styles, Source.human_name({:count => sources.size}))
+      sources.each do |source|
+        p(document, styles, "[#{source.short_title}] #{formatted_source(source)}", "\\s#{stylesheet_codes['source_formatted_source']}")
+      end
+    end
+
+    File.open(tmp, 'w') do |file|
+      file.write(document.to_rtf)
+    end
+
+    # A Windows non piacciono i file con encoding UTF-8 :-/
+    content = File.read(tmp)
+
+    File.open(self.dest_file, 'w') do |f|
+      f.write(Iconv.iconv("LATIN1", "UTF-8", content))
+    end
+
+    File.delete(tmp)
+  end
+
+  private
+
+  def strong document, styles, string, stylesheet_code='\\s15'
+    document.paragraph(styles['P']) do |p|
       p.store(CommandNode.new(self, stylesheet_code, nil, false,false))
-      p.apply(styles['BOLD']) do |t|
+      p.apply(styles['STRONG']) do |t|
         t << string
       end
     end
   end
 
-  def print_short_content document, styles, string, stylesheet_code=nil
-    document.paragraph(styles['NORMAL']) do |p|
+  def em document, styles, string, stylesheet_code=nil
+    document.paragraph(styles['P']) do |p|
       p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
-      p.apply(styles['DEFAULT']) do |t|
+      p.apply(styles['EM']) do |t|
+        t << string
+      end
+    end
+  end
+
+  def title_page document, styles, string, stylesheet_code=nil
+    tokens = string.split("\n")
+    document.paragraph(styles['TITLE']) do |p|
+      p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.apply(styles['TITLE_DEFAULT']) do |t|
+        tokens.each do |token|
+          unless token.empty?
+            t << token.strip
+            t.line_break
+          end
+        end
+      end
+    end
+    my_page_break document
+  end
+
+  def h1 document, styles, string, stylesheet_code=nil
+    document.paragraph(styles['P']) do |p|
+      p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.apply(styles['H1']) do |t|
         t << string
         t.line_break
       end
     end
   end
 
-  def print_long_content document, styles, string, stylesheet_code=nil
-    tokens = string.split("\n")
-    document.paragraph(styles['NORMAL']) do |p|
+  def h2 document, styles, string, stylesheet_code=nil
+    document.paragraph(styles['P']) do |p|
+      p.store(CommandNode.new(document, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.apply(styles['H2']) do |t|
+        t << string
+      end
+    end
+    document.line_break
+  end
+
+  def h3 document, styles, string, stylesheet_code=nil
+    document.paragraph(styles['P']) do |p|
+      p.store(CommandNode.new(document, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.apply(styles['H3']) do |t|
+        t << string
+      end
+    end
+    document.line_break
+  end
+
+  def h4 document, styles, string, stylesheet_code=nil
+    document.paragraph(styles['P']) do |p|
       p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
-      p.apply(styles['DEFAULT']) do |t|
-        tokens.each do |token|
-          unless token.empty?
-            t << token.strip
-            t.line_break
+      p.apply(styles['H4']) do |t|
+        t << string
+      end
+    end
+    document.line_break
+  end
+
+  def p document, styles, string, stylesheet_code=nil
+    unless string.blank?
+      tokens = string.split("\n")
+      document.paragraph(styles['P']) do |p|
+        p.store(CommandNode.new(document, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+        p.apply(styles['DEFAULT']) do |t|
+          tokens.each do |token|
+            unless token.empty?
+              t << token.strip
+              t.line_break
+            end
           end
         end
       end
@@ -183,8 +1005,74 @@ class RtfBuilder < ActiveRecord::Base
   # Word comunque riconosce \pard \insrsid \page \par come interruzione pagina
   # Wordpad nessuna delle due :-|
   def my_page_break document
-    document.store(CommandNode.new(self, '\pard \insrsid \page \par', nil, false))
+    document.store(CommandNode.new(document, '\pard \insrsid \page \par', nil, false))
     nil
+  end
+
+  def turn_on_page_numbering document
+    document.store(CommandNode.new(document, '\header\pard\qr\plain\f0\chpgn\par', nil, false))
+    nil
+  end
+
+  def draw_line document
+    document.store(CommandNode.new(document, '\pard \brdrb \brdrs\brdrw10\brsp20 {\fs4\~}\par \pard', nil, false))
+    document.line_break
+    nil
+  end
+
+  def list(document, elements, styles)
+    document.list do |ul|
+      elements.each do |element|
+        ul.item do |li|
+          li.apply(styles['DEFAULT']){|x| x << element}
+        end
+      end
+    end
+    nil
+  end
+
+  def formatted_source(source)
+    if source.use_legacy?
+      source.legacy_description.gsub(/<C>|<N>|<T>|<CR>/i, '')
+    else
+      [
+        source.author,
+        (source.title.present? ? source.title : nil),
+        source.publisher,
+        source.date_string
+      ].
+        delete_if{|fragment| fragment.blank?}.
+        join(", ")
+    end
+  end
+
+  def formatted_editor(editor)
+    [
+      editor.name,
+      (editor.qualifier.present? ? editor.qualifier : nil),
+      (editor.editing_type.present? ? editor.editing_type : nil)
+    ].
+      delete_if{|fragment| fragment.blank?}.
+      join(", ")
+  end
+
+  def inline_short_sources(sources)
+    text = Array.new
+    sources.each do |source|
+      text.push("[#{source.short_title}]")
+    end
+    text.join(", ")
+  end
+
+  def formatted_custodian_building(building)
+    [
+      building.address,
+      building.postcode,
+      building.city,
+      building.country
+    ].
+      delete_if{|fragment| fragment.blank?}.
+      join(" ")
   end
 
 end

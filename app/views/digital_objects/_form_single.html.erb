@@ -1,0 +1,39 @@
+<%#= render :partial => "shared/generic_error_message", :object => @digital_object %>
+
+<% form_for [@attachable, @digital_object], :html => { :multipart => true } do |f| %>
+  <div id="record-main" class="span9">
+
+    <%= f.label :asset, t('digital_objects_asset') %>
+
+    <div class="pull-left" style="width: 220px; margin: 0 20px 10px 0;">
+      <% if @digital_object.valid? %>
+        <% if @digital_object.is_image? %>
+          <% if FileTest.exist?(@digital_object.asset.path(:medium)) %>
+            <%= link_to image_tag(@digital_object.asset(:medium)), @digital_object.asset(:large), :class => "fancybox" %>
+          <% else %>
+            <%= image_tag "missing-thumb.jpg" %>
+          <% end %>
+        <% else %>
+          <% if @digital_object.is_video? %>
+            <%= image_tag "mp4-medium.png" %>
+          <% else %>
+            <%= image_tag "pdf-medium.png" %>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="alert alert-error">File non valido</div>
+      <% end %>
+    </div>
+
+    <div class="clearfix"><%= f.file_field :asset %></div>
+
+    <%= f.label :title, t('digital_objects_title') %>
+    <%= f.text_field :title, :class => "span9" %>
+
+    <%= f.label :description, t('digital_objects_description') %>
+    <%= f.text_area :description, :class => "span9 short-content" %>
+
+    <%= render :partial => "shared/side", :object => @digital_object %>
+
+  </div>
+<% end %>

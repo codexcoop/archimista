@@ -5,7 +5,7 @@
     <% end %>
     Anteprima scheda</h2>
   <div id="links">
-    <%= link_to_index "Lista unità del complesso", fond_units_path(@unit.root_fond_id) %>
+    <%= link_to_index "Lista unità del livello", fond_units_path(@unit.fond_id) %>
   </div>
 <% end %>
 
@@ -18,7 +18,7 @@
     </tr>
     <tr>
       <th><%= t('sequence_number') %></th>
-      <td><%=@unit.sequence_number %></td>
+      <td><%= @unit.display_sequence_number %></td>
     </tr>
     <tr>
       <th><%= t('unit_type') %></th>
@@ -26,7 +26,7 @@
     </tr>
     <tr>
       <th><%= t('title') %></th>
-      <td><%= @unit.given_title? ? "[#{@unit.title}]" : @unit.title %></td>
+      <td><%= @unit.bracketize_title_if_given %></td>
     </tr>
     <tr>
       <th><%= t('date_event') %></th>

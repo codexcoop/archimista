@@ -1,11 +1,10 @@
 <div id="record-side" class="span3">
   <div class="well">
-
     <div id="side-primary-actions" class="clearfix">
       <% if action_name == "show" %>
         <%= link_to t('edit'), edit_object_path(object), :class => "btn pull-left" %>
       <% elsif action_name == "show_iccd" %>
-        <%= link_to t('edit'), edit_iccd_unit_path(@unit) + "?t=#{@unit.tsk}", :class => "btn pull-left" %>
+        <%= link_to t('edit'), edit_iccd_unit_path(@unit, :t => "#{@unit.tsk}"), :class => "btn pull-left" %>
       <% elsif action_name == "edit_iccd" %>
         <%= submit_tag " " + t('save_and_continue') + " ", :name => "save_and_continue_iccd", :class => "btn btn-primary pull-left" %>
       <% else %>
@@ -24,7 +23,7 @@
         <div id="side-nav" class="clearfix">
           <%= prev_or_next_link("left", @unit.prev_in_sequence, action_name) %>
           <span class="nav-counter">
-            <%= @unit.sequence_number %> di <%= @root_fond.active_descendant_units_count %>
+            <%= number_with_delimiter(@unit.sequence_number) %> di <%= number_with_delimiter(@root_fond.active_descendant_units_count) %>
           </span>
           <%= prev_or_next_link("right", @unit.next_in_sequence, action_name) %>
         </div>
@@ -34,53 +33,60 @@
       <div>
         <p><strong><%= @unit.level_type %></strong></p>
         <% unless @unit.is_root? %>
-          <p>Fa parte di:</br />
-            <%= link_to @unit.parent.title, edit_unit_path(@unit.parent_id) %></p>
-        <% end %>
+          <p>Fa parte di:<br />
+            <% @unit.ancestors.each do |ancestor| %>
+              <%= link_to ancestor.title, edit_unit_path(ancestor) %> &gt;
+            <% end %>
+          <% end %>
+        </p>
       </div>
       <hr />
     <% end %>
 
-    <% if (action_name != "show") && (action_name != "show_iccd") %>
+    <% if (controller_name != "digital_objects") && (action_name != "show") && (action_name != "show_iccd") %>
       <div id="side-secondary-actions" class="clearfix">
         <% if %w[new_iccd edit_iccd show_iccd].include?(action_name) %>
           <%= submit_tag t('preview'), :name => "show_iccd", :class => "btn btn-small pull-left" %>
         <% else %>
           <%= submit_tag t('preview'), :class => "btn btn-small pull-left" %>
         <% end %>
-
+  <%# FIXME - DRY %>
         <% if controller_name == "units" %>
-          <% if %w[new_iccd edit_iccd show_iccd].include?(action_name) == true %>
-            <%= submit_tag "+ " + t('new'), :name => "save_and_add_new_iccd", :class => "btn btn-small pull-right" %>
+          <% if @unit.new_record? %>
+            <%= submit_tag "+ " + t('new'), :class => "btn btn-small pull-right disabled" %>
           <% else %>
-            <%= submit_tag "+ " + t('new'), :name => "save_and_add_new", :class => "btn btn-small pull-right" %>
+            <% if %w[new_iccd edit_iccd show_iccd].include?(action_name) == true %>
+              <%= submit_tag "+ " + t('new'), :name => "save_and_add_new_iccd", :class => "btn btn-small pull-right" %>
+            <% else %>
+              <%= submit_tag "+ " + t('new'), :name => "save_and_add_new", :class => "btn btn-small pull-right" %>
+            <% end %>
           <% end %>
         <% end %>
       </div>
-      <%# FIXME - dirty %>
+  <%# FIXME - dirty %>
       <% unless (controller_name == "sources") %>
         <hr />
       <% end %>
     <% end %>
 
-   <% if controller_name =="sources" && %w[edit update].include?(action_name) %>
-     <% if @source.db_source.present? %>
-        <p><strong>Descrizione <%= @source.db_source %></strong><br />
-        ID: <%= @source.legacy_id %></p>
-        <p><%= h @source.legacy_description %></p>
-     <% end %>
-     <% if @source.legacy_authors.present? %>
-        <p><strong>Autori / curatori</strong></p>
+    <% if controller_name =="sources" && %w[edit update].include?(action_name) %>
+      <% if @source.db_source.present? %>
+        <p><strong>Descrizione importata</strong></p>
+        <p><em>ID</em>: <%= @source.legacy_id %><br />
+          <em>Descrizione</em>: <%= h @source.legacy_description %></p>
+      <% end %>
+      <% if @source.legacy_authors.present? %>
+        <p><em>Autori / curatori</em>:</p>
         <ul>
           <% @source.legacy_authors.split("#").each do |la| %>
             <li><%= la %></li>
           <% end %>
         </ul>
-     <% end %>
-     <% if @source.db_source.present? || @source.legacy_authors.present? %>
-      <hr />
-     <% end %>
-   <% end %>
+      <% end %>
+      <% if @source.db_source.present? || @source.legacy_authors.present? %>
+        <hr />
+      <% end %>
+    <% end %>
 
     <% if controller_name =="units" && %w[new_iccd edit_iccd].include?(action_name) %>
       <% if @unit.new_record? %>
@@ -117,7 +123,7 @@
 
   </div> <%# /well %>
 
-  <%# digital_objects %>
+<%# digital_objects %>
   <% if %w[fonds units creators custodians sources].include?(controller_name) %>
     <% if IM_ENABLED %>
       <div class="well">
@@ -135,7 +141,7 @@
     <% end %>
   <% end %>
 
-  <%# headings %>
+<%# headings %>
   <% if %w[fonds units].include?(controller_name) %>
     <div class="well" id="heading">
       <% if %w[new create].include?(action_name) %>
@@ -143,15 +149,15 @@
       <% else %>
         <h3><%= t('headings') %></h3>
         <div>
-        <p>
-          <%= link_to t('new_heading'), "#",
+          <p>
+            <%= link_to t('new_heading'), "#",
               {:id => "add-heading-modal", :class => "btn btn-mini new",
               :'data-id' => object.id, :'data-controller' => controller_name} %>
-          <%= link_to t('link_heading'), "#",
+            <%= link_to t('link_heading'), "#",
               {:id => "link-heading-modal", :class => "btn btn-mini",
               :'data-id' => object.id, :'data-controller' => controller_name} %>
-        </p>
-        <div style="overflow-y: auto; max-height:60px; background: #fff;" id="heading-list" data-id="<%= object.id %>" data-controller="<%= controller_name %>"></div>
+          </p>
+          <div style="overflow-y: auto; max-height:60px; background: #fff;" id="heading-list" data-id="<%= object.id %>" data-controller="<%= controller_name %>"></div>
         </div>
       <% end %>
     </div>

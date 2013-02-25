@@ -4,8 +4,8 @@
 <% end %>
 
 <div class="span8">
-  <p style="margin-bottom: 2em;">Puoi esportare i tuoi complessi archivistici nel formato <code>aef</code> adatto all'importazione in un'altra istanza di Archimista.<br />
-  Seleziona un singolo complesso o un insieme di complessi collegati a un soggetto conservatore o a un progetto.</p>
+  <p style="margin-bottom: 2em;">Puoi esportare i tuoi complessi archivistici nel formato <code>aef</code> adatto all'importazione in un'altra istanza di Archimista.<br>
+    Seleziona un singolo complesso archivistico o un insieme di complessi collegati a un soggetto conservatore o a un progetto.</p>
 
   <ul class="nav nav-tabs" id="export-tabs">
     <li><a href="#fonds" data-toggle="tab"><%=t('fonds')%></a></li>
@@ -17,7 +17,7 @@
 
     <div class="tab-pane" id="fonds">
       <% if @fonds.length > 0 %>
-        <% if @fonds.length < 20 %>
+        <% if @fonds.length < 100 %>
           <p>Scegli il complesso archivistico da esportare:</p>
           <table class="table">
             <tbody>
@@ -29,8 +29,11 @@
                     <% if fond.fond_type.present? %>
                       <span class="light">(<%= fond.fond_type %>)</span>
                     <% end %>
-                    <%= l fond.updated_at, :format => :long %>
+                    <% if fond.db_source.present? %>
+                      <span class="light">(<%= fond.db_source %>)</span>
+                    <% end %>
                   </td>
+                  <td><%= l fond.updated_at, :format => :long %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -45,17 +48,20 @@
 
     <div class="tab-pane" id="custodians">
       <% if @custodians.length > 0 %>
-        <% if @custodians.length < 20 %>
+        <% if @custodians.length < 100 %>
           <p>Scegli il soggetto conservatore di cui esportare i complessi archivistici:</p>
           <table class="table">
             <tbody>
               <% @custodians.each do |custodian| %>
                 <tr>
                   <td>
-                    <%= link_to custodian.name, '#', {:class => "export-aef-wait", "target-id".to_sym => custodian.id, "target-class" => 'custodian', "target-mode" => "full"} %>
-                    (<%= custodian.num %> <%= t('fonds').downcase %>)
-                    <%= l custodian.updated_at, :format => :long %>
+                    <%= link_to custodian.name, '#', {:class => "export-aef-wait", "target-id".to_sym => custodian.id, "target-class" => 'custodian', "target-mode" => "full"} %><br>
+                    <span class="muted"><%= custodian.num %> <%= t('fonds').downcase %></span>
+                    <% if custodian.db_source.present? %>
+                      <span class="light">(<%= custodian.db_source %>)</span>
+                    <% end %>
                   </td>
+                  <td><%= l custodian.updated_at, :format => :long %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -65,23 +71,23 @@
         <% end %>
       <% else %>
         <p>Non sono presenti schede soggetto conservatore collegate a complessi archivistici.<br />
-        Export per soggetto conservatore non disponibili.</p>
+          Export per soggetto conservatore non disponibili.</p>
       <% end %>
     </div>
 
     <div class="tab-pane" id="projects">
       <% if @projects.length > 0 %>
-        <% if @projects.length < 20 %>
+        <% if @projects.length < 100 %>
           <p>Scegli il progetto di cui esportare i complessi archivistici:</p>
           <table class="table">
             <tbody>
               <% @projects.each do |project| %>
                 <tr>
                   <td>
-                    <%= link_to project.name, '#', {:class => "export-aef-wait", "target-id".to_sym => project.id, "target-class" => 'project', "target-mode" => "full"} %>
-                    (<%= project.num %> <%= t('fonds').downcase %>)
-                    <%= l project.updated_at, :format => :long %>
+                    <%= link_to project.name, '#', {:class => "export-aef-wait", "target-id".to_sym => project.id, "target-class" => 'project', "target-mode" => "full"} %><br>
+                    <span class="muted"><%= project.num %> <%= t('fonds').downcase %></span>
                   </td>
+                  <td><%= l project.updated_at, :format => :long %></td>
                 </tr>
               <% end %>
             </tbody>
@@ -91,7 +97,7 @@
         <% end %>
       <% else %>
         <p>Non sono presenti schede progetto collegate a complessi archivistici.<br />
-        Export per progetto non disponibili.</p>
+          Export per progetto non disponibili.</p>
       <% end %>
     </div>
 

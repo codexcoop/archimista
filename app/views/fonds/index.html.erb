@@ -20,11 +20,10 @@
   <% if @fonds.size > 0 %>
     <%= display_page_entries_info @fonds %>
 
-    <table class="table">
+    <table class="table table-sortable">
       <thead>
         <tr>
           <th class="span7"><%= sortable("name", t('name')) %></th>
-          <th>&nbsp;</th>
           <th><%= sortable("updated_at", t('updated_at')) %></th>
           <th>&nbsp;</th>
           <th>&nbsp;</th>
@@ -39,12 +38,16 @@
               <% if fond.fond_type.present? %>
                 <span class="light">(<%= fond.fond_type %>)</span>
               <% end %>
+              <%# FIXME: rivedere e impostare classe css astratta %>
+              <p class="fond-units">
+                <i class='icon-list-alt'></i>
+                <%= link_to "#{number_with_delimiter(@units_counts[fond.id] || "0")} unità", fond_units_path(fond) %>
+              </p>
             </td>
-            <td><%= link_to "#{number_with_delimiter(@units_counts[fond.id] || "0")} unità", fond_units_path(fond) %></td>
             <td><%= l fond.updated_at, :format => :long %></td>
             <td><%= link_to t('show'), fond %></td>
-            <td><%= link_to_if @fonds.size > 1, t('merge_with'), '#', {:class => 'merge', "data-id".to_sym => fond.id} %></td>
-            <td><%= link_to t('destroy'), fond, :confirm => t('are_you_sure'), :method => :delete %></td>
+            <td><%= link_to_if(@fonds.size > 1, t('merge_with'), '#', {:class => 'merge', :"data-id" => fond.id}) %></td>
+            <td><%= link_to_unless(@units_counts[fond.id], t('destroy'), fond, :confirm => t('are_you_sure'), :method => :delete) do |name| "<span class='muted' title='Per poter eliminare il complesso devi prima eliminare le unità collegate.'>#{name}</span>" end %></td>
           </tr>
         <% end %>
       </tbody>

@@ -1,20 +1,20 @@
 <div id="tab-identification" class="S tab-pane active">
-  <%# FIXME: codice attuale impedisce che venga triggerato correttamente askCofirm if form unsaved %>
+<%# FIXME: codice attuale impedisce che venga triggerato correttamente askCofirm if form unsaved %>
   <div class="row">
     <div id="unit-path-wrapper" class="span9">
       <div class="well">
-      <%= render :partial => 'full_path_controls', :object => @unit %>
-      <h3 id="unit-path-title"><%= t('unit_full_path') %></h3>
-      <p id="unit-path-content">
-        <%= render :partial => 'full_path', :locals => {:unit => @unit, :full_path => @full_path} %>
+        <%= render :partial => 'full_path_controls', :object => @unit %>
+        <h3 id="unit-path-title"><%= t('unit_full_path') %></h3>
+        <p id="unit-path-content">
+          <%= render :partial => 'full_path', :locals => {:unit => @unit, :full_path => @full_path} %>
 
-      <% if @unit.is_root? %>
-        <div id="unit-path-tree-wrapper">
-          <div id="unit-path-tree">
-            <%# filled by jsTree %>
+          <% if @unit.is_root? %>
+          <div id="unit-path-tree-wrapper">
+            <div id="unit-path-tree">
+  <%# filled by jsTree %>
+            </div>
           </div>
-        </div>
-      <% end %>
+        <% end %>
       </div>
     </div>
   </div>
@@ -45,7 +45,7 @@
       <% f.fields_for :iccd_subjects do |iccds_form| %>
         <%= render :partial => "units/iccd/subject", :locals => { :fx => iccds_form } %>
       <% end %>
-    <p><%= add_child_link t('new_iccd_subject'), "iccd_subjects" %></p> 
+      <p><%= add_child_link t('new_iccd_subject'), "iccd_subjects" %></p>
     </div>
   </div>
 
@@ -54,69 +54,69 @@
 
   <%= render :partial => "events/form", :locals => {:entity_form => f, :events => @events} %>
 
-     <div id="iccd_authors" class="row">
-       <div class="span9">
-        <h3 class="row-header">AU (autori)</h3>
-        <div class="row">
-          <div class="span3">AUFN (autore)</div>
-          <div class="span3">AUFM (attribuzione)</div>
-          <div class="span2">AUFK (qualifica)</div>
+  <div id="iccd_authors" class="row">
+    <div class="span9">
+      <h3 class="row-header">AU (autori)</h3>
+      <div class="row">
+        <div class="span3">AUFN (autore)</div>
+        <div class="span3">AUFM (attribuzione)</div>
+        <div class="span2">AUFK (qualifica)</div>
+      </div>
+      <% f.fields_for :iccd_authors do |iccda_form| %>
+        <%= render :partial => "units/iccd/author", :locals => { :ff => iccda_form } %>
+      <% end %>
+      <p><%= add_child_link t('new_iccd_author'), "iccd_authors" %></p>
+    </div>
+  </div>
+
+  <div id="iccd_tu" class="row">
+    <div class="span9">
+      <h3 class="row-header">TU (condizione giuridica)</h3>
+      <div class="row">
+        <div class="span3">
+          <label>CDGG (indicazione generica)</label>
+          <% if @custodian.present? && @custodian.legal_status? %>
+            <%= select_tag "fake", options_for_select([t(@custodian.legal_status)]), {:disabled => true, :class => "span3"} %>
+          <% else %>
+            <%= select_tag "fake", options_for_select(""), {:include_blank => true, :disabled => true, :class => "span3" } %>
+          <% end %>
         </div>
-        <% f.fields_for :iccd_authors do |iccda_form| %>
-          <%= render :partial => "units/iccd/author", :locals => { :ff => iccda_form } %>
-        <% end %>
-        <p><%= add_child_link t('new_iccd_author'), "iccd_authors" %></p>
-       </div>
-     </div>
+        <div class="span6">
+          <label>CDGS (indicazione specifica)</label>
+          <% if @custodian.present? && @custodian.custodian_type.present? %>
+            <%= select_tag "fake", options_for_select([@custodian.custodian_type.custodian_type]), {:disabled => true, :class => "span6"} %>
+          <% else %>
+            <%= select_tag "fake", options_for_select(""), {:include_blank => true, :disabled => true, :class => "span6" } %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
 
-     <div id="iccd_tu" class="row">
-       <div class="span9">
-         <h3 class="row-header">TU (condizione giuridica)</h3>
-         <div class="row">
-           <div class="span3">
-             <label>CDGG (indicazione generica)</label>
-              <% if @custodian.present? && @custodian.legal_status? %>
-                <%= select_tag "fake", options_for_select([t(@custodian.legal_status)]), {:disabled => true, :class => "span3"} %>
-              <% else %>
-                  <%= select_tag "fake", options_for_select(""), {:include_blank => true, :disabled => true, :class => "span3" } %>
-              <% end %>
-           </div>
-           <div class="span6">
-             <label>CDGS (indicazione specifica)</label>
-             <% if @custodian.present? && @custodian.custodian_type.present? %>
-              <%= select_tag "fake", options_for_select([@custodian.custodian_type.custodian_type]), {:disabled => true, :class => "span6"} %>
-             <% else %>
-              <%= select_tag "fake", options_for_select(""), {:include_blank => true, :disabled => true, :class => "span6" } %>
-             <% end %>
-           </div>
-         </div>
-       </div>
-     </div>
+  <label>UBFP (fondo)</label>
+  <%= text_field_tag "", @fond.name, :disabled => true, :class => "span9" %>
 
-     <label>UBFP (fondo)</label>
-     <%= text_field_tag "", @fond.name, :disabled => true, :class => "span9" %>
-
-     <h3 class="row-header">UBFC (collocazione)</h3>
-     <div class="row">
-       <div class="span3"><%= f.label :tmp_reference_number, t('tmp_reference_number') %></div>
-       <div class="span6"><%= f.label :tmp_reference_string, t('tmp_reference_string') %></div>
-     </div>
-     <div class="row">
-       <div class="span3"><%= f.text_field :tmp_reference_number, :class => "span3" %></div>
-       <div class="span6"><%= f.text_field :tmp_reference_string, :class => "span6" %></div>
-     </div>
-     <div class="row">
-       <div class="span3"><%= f.label :folder_number, t('folder_number') %></div>
-       <div class="span3"><%= f.label :file_number, t('file_number') %></div>
-       <div class="span1">&nbsp;</div>
-       <div class="span2"><%= f.label :reference_number, t('reference_number') %></div>
-     </div>
-     <div class="row">
-         <div class="span3"><%= f.text_field :folder_number, :class => "span3" %></div>
-         <div class="span3"><%= f.text_field :file_number, :class => "span3" %></div>
-         <div class="span1"><%= link_to t('create_reference_number'), '#', :id => 'create_reference_number', :class => 'btn btn-small' %></div>
-         <div class="span2"><%= f.text_field :reference_number, :class => "span2"  %></div>
-     </div>
+  <h3 class="row-header">UBFC (collocazione)</h3>
+  <div class="row">
+    <div class="span3"><%= f.label :tmp_reference_number, t('tmp_reference_number') %></div>
+    <div class="span6"><%= f.label :tmp_reference_string, t('tmp_reference_string') %></div>
+  </div>
+  <div class="row">
+    <div class="span3"><%= f.text_field :tmp_reference_number, :class => "span3" %></div>
+    <div class="span6"><%= f.text_field :tmp_reference_string, :class => "span6" %></div>
+  </div>
+  <div class="row">
+    <div class="span3"><%= f.label :folder_number, t('folder_number') %></div>
+    <div class="span3"><%= f.label :file_number, t('file_number') %></div>
+    <div class="span1">&nbsp;</div>
+    <div class="span2"><%= f.label :reference_number, t('reference_number') %></div>
+  </div>
+  <div class="row">
+    <div class="span3"><%= f.text_field :folder_number, :class => "span3" %></div>
+    <div class="span3"><%= f.text_field :file_number, :class => "span3" %></div>
+    <div class="span1"><%= link_to t('create_reference_number'), '#', :id => 'create_reference_number', :class => 'btn btn-small' %></div>
+    <div class="span2"><%= f.text_field :reference_number, :class => "span2"  %></div>
+  </div>
 </div>
 
 <div id="tab-description" class="S tab-pane">
@@ -130,15 +130,15 @@
   <% f.fields_for :iccd_description do |id_form| %>
     <label>PVCC / PVCP (Comune Provincia)</label>
     <%= id_form.text_field  :pvc,
-                      :class => "autocomplete span9",
-                      :'data-autocompletion-controller' => "places",
-                      :'data-autocompletion-action' => "list" %>
+      :class => "autocomplete span9",
+      :'data-autocompletion-controller' => "places",
+      :'data-autocompletion-action' => "list" %>
 
-    <label>LCDN (Denomiazione collocazione)</label>
+    <label>LCDN (Denominazione collocazione)</label>
     <%= id_form.text_field  :ldcn,
-                      :class => "autocomplete span9",
-                      :'data-autocompletion-controller' => "custodians",
-                      :'data-autocompletion-action' => "list" %>
+      :class => "autocomplete span9",
+      :'data-autocompletion-controller' => "custodians",
+      :'data-autocompletion-action' => "list" %>
 
     <label>LCDU (Denominazione spazio viabilistico)</label>
     <%= id_form.text_field :ldcu, :class => "span9" %>
@@ -152,8 +152,8 @@
   <% f.fields_for :iccd_tech_spec do |it_form| %>
     <div class="row">
       <div class="span2">
-      <label>MISU (unità di misura)</label>
-      <%= iccd_terms_select(it_form, "iccd_tech_specs.misu", "S", {:include_blank => ""}, {:id => "tsk", :class => "span2"})%>
+        <label>MISU (unità di misura)</label>
+        <%= iccd_terms_select(it_form, "iccd_tech_specs.misu", "S", {:include_blank => ""}, {:id => "tsk", :class => "span2"})%>
       </div>
       <div class="span2">
         <label>MISA (altezza)</label>
@@ -193,15 +193,15 @@
       <h3 class="row-header"><%= t('unit_editors') %></h3>
     </div>
     <div class="span9">
-     <div class="row">
-      <%= f.label :editor, t('unit_editor'), :class => "span3" %>
-      <%= f.label :editing_type, t('editing_type'), :class => "span3" %>
-      <%= f.label :edited_at, t('edited_at'), :class => "span2"  %>
-     </div>
-     <% f.fields_for :unit_editors do |dfe_form| %>
-       <%= render :partial => "shared/editor", :locals => { :f => dfe_form } %>
-     <% end %>
-     <p><%= add_child_link t('add_editor'), "unit_editors" %></p>
+      <div class="row">
+        <%= f.label :editor, t('unit_editor'), :class => "span3" %>
+        <%= f.label :editing_type, t('editing_type'), :class => "span3" %>
+        <%= f.label :edited_at, t('edited_at'), :class => "span2"  %>
+      </div>
+      <% f.fields_for :unit_editors do |dfe_form| %>
+        <%= render :partial => "shared/editor", :locals => { :f => dfe_form } %>
+      <% end %>
+      <p><%= add_child_link t('add_editor'), "unit_editors" %></p>
     </div>
   </div>
 </div>

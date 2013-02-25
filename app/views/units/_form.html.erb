@@ -29,27 +29,33 @@
           <div class="row">
             <div id="unit-path-wrapper" class="span9">
               <div class="well">
-              <%= render :partial => 'full_path_controls', :object => @unit %>
-              <h3 id="unit-path-title"><%= t('unit_full_path') %></h3>
-              <div id="unit-path-content">
-                <%= render :partial => 'full_path', :locals => {:unit => @unit, :full_path => @full_path} %>
-              </div>
-              <% if @unit.is_root? %>
-                <div id="unit-path-tree-wrapper">
-                  <div id="unit-path-tree">
-    <%# filled by jsTree %>
-                  </div>
+                <%= render :partial => 'full_path_controls', :object => @unit %>
+                <h3 id="unit-path-title"><%= t('unit_full_path') %></h3>
+                <div id="unit-path-content">
+                  <%= render :partial => 'full_path', :locals => {:unit => @unit, :full_path => @full_path} %>
                 </div>
-              <% end %>
+                <% if @unit.is_root? %>
+                  <div id="unit-path-tree-wrapper">
+                    <div id="unit-path-tree">
+    <%# filled by jsTree %>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
             </div>
           </div>
-         </div>
 
           <%= f.label :unit_type, t('unit_type') %>
           <%= terms_select(f, "units.unit_type", {:include_blank => true}, :class => "span4" )%>
 
-          <%= f.label :title, t('title') %>
-          <%= f.text_field :title, :class => "span7" %>&nbsp;&nbsp;<%= t('unit_given_title') %> <%= f.check_box :given_title %>
+          <div class="row">
+            <div class="span8"><%= f.label :title, t('title') %></div>
+            <div class="span1"><%= f.label :given_title, t('unit_given_title') %></div>
+          </div>
+          <div class="row">
+            <div class="span8"><%= f.text_field :title, :class => "span8" %></div>
+            <div class="span1 center"><%= f.check_box :given_title %></div>
+          </div>
 
           <%= render :partial => "events/form", :locals => {:entity_form => f, :events => @events} %>
 
@@ -142,13 +148,11 @@
           <div id="unit_other_reference_numbers" class="row">
             <% @unit_other_reference_numbers = build_or_retrieve(f.object.unit_other_reference_numbers) %>
             <div class="span9">
-              <h3 class="row-header">
-                <%= t('unit_other_reference_numbers') %>
-              </h3>
-              <div class="row">
-                <div class="span3"><%= f.label :other_reference_number, t('unit_other_reference_numbers') %></div>
-                <div class="span3"><%= f.label :qualifier, t('qualifier') %></div>
-                <div class="span2"><%= f.label :note, t('note') %></div>
+              <h3 class="row-header"><%= t('unit_other_reference_numbers') %></h3>
+              <div class="row row-labels">
+                <div class="span3"><%= t('unit_other_reference_numbers') %></div>
+                <div class="span3"><%= t('qualifier') %></div>
+                <div class="span2"><%= t('note') %></div>
               </div>
               <% f.fields_for :unit_other_reference_numbers do |iorn_form| %>
                 <%= render :partial => "unit_other_reference_number", :locals => { :f => iorn_form } %>
@@ -162,9 +166,7 @@
           <div id="unit_unit_langs" class="row">
             <% @unit_langs = build_or_retrieve(f.object.unit_langs) %>
             <div class="span9">
-              <h3 class="row-header">
-                <%= t('unit_langs') %>
-              </h3>
+              <h3 class="row-header"><%= t('unit_langs') %></h3>
               <% f.fields_for :unit_langs do |fl_form| %>
                 <%= render :partial => "unit_lang", :locals => { :f => fl_form } %>
               <% end %>
@@ -193,8 +195,8 @@
           <div id="unit_urls" class="row">
             <% @unit_urls = build_or_retrieve(f.object.unit_urls) %>
             <div class="span9">
-              <h3  class="row-header"><%= t('unit_urls') %></h3>
-              <div class="row">
+              <h3 class="row-header"><%= t('unit_urls') %></h3>
+              <div class="row row-labels">
                 <div class="span5"><%= t('url') %></div>
                 <div class="span3"><%= t('note') %></div>
               </div>
@@ -208,8 +210,8 @@
           <div id="unit_identifiers" class="row">
             <% @unit_identifiers = build_or_retrieve(f.object.unit_identifiers) %>
             <div class="span9">
-              <h3  class="row-header"><%= t('unit_identifiers') %></h3>
-              <div class="row">
+              <h3 class="row-header"><%= t('unit_identifiers') %></h3>
+              <div class="row row-labels">
                 <div class="span3"><%= t('identifier') %></div>
                 <div class="span2"><%= t('identifier_source') %></div>
                 <div class="span3"><%= t('note') %></div>
@@ -253,10 +255,8 @@
 
 <% end %>
 
-<%#= render :partial => "headings/new_heading" %>
 <div id="add-editor-container"></div>
 
 <div id="add-heading-container"></div>
 <div id="link-heading-container"></div>
-<%#= render :partial => "editors/new_editor" %>
 

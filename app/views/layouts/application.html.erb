@@ -4,11 +4,11 @@
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
   <% if controller_name == "reports" %>
     <meta name="pdfkit-title" content="<%= @root_fond_name %>" />
-    <% if action_name != "labels" && action_name != "inventory" %>
+    <% unless ["labels", "inventory", "project", "custodian"].include? action_name %>
     <meta name="pdfkit-orientation" content="Landscape" />
     <meta name="pdfkit-dpi" content="150" />
     <% else %>
-    <meta name="pdfkit-dpi" content="600" />
+    <meta name="pdfkit-dpi" content="300" />
     <% end %>
   <% end %>
   <title><%= controller_name %> - <%= action_name %></title>
@@ -26,6 +26,9 @@
   <% end %>
   <% if controller_name == "quality_checks" %>
     <%= stylesheet_link_tag "quality_checks" %>
+  <% end %>
+  <% if controller_name == "digital_objects" %>
+    <%= stylesheet_link_tag "jquery.fileupload-ui" %>
   <% end %>
   <%= yield :stylesheets %>
   <%# JAVASCRIPTS -%>
@@ -65,6 +68,22 @@
   <% if ["imports", "exports"].include?(controller_name) %>
     <%= javascript_include_tag "imports-exports" %>
   <% end %>
+  <% if controller_name == "digital_objects" && action_name == "index" %>
+    <%= javascript_include_tag "digital-objects-index" %>
+  <% end %>
+  <% if controller_name == "digital_objects" && action_name == "new" %>
+    <%= javascript_include_tag "jqFileUpload/vendor/jquery.ui.widget",
+                               "jqFileUpload/tmpl.min",
+                               "jqFileUpload/load-image-patched.min",
+                               "jqFileUpload/canvas-to-blob.min",
+                               "jqFileUpload/jquery.iframe-transport",
+                               "jqFileUpload/jquery.fileupload",
+                               "jqFileUpload/jquery.fileupload-fp",
+                               "jqFileUpload/jquery.fileupload-ui",
+                               "jqFileUpload/locale",
+                               "jqFileUpload/master",
+                               :cache => "/assets/file-upload" %>
+  <% end %>
   <%= yield :javascripts %>
 </head>
 
@@ -84,7 +103,9 @@
         <div class="row">
           <div class="span9">
             <div class="alert alert-<%= status %>">
-              <a class="close" data-dismiss="alert">×</a>
+              <% if status == "error" %>
+                <a class="close" data-dismiss="alert">×</a>
+              <% end %>
               <%= message %>
             </div>
           </div>

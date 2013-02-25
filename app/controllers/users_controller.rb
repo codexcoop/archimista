@@ -4,6 +4,8 @@ class UsersController < ApplicationController
   def index
     @users = User.accessible_by(current_ability, :manage).
                   all(:order => "group_id, username", :include => :group)
+    @active_users = @users.select { |u| u.active? }
+    @inactive_users = @users.select { |u| u.active? == false }
   end
 
   def show
@@ -47,7 +49,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.toggle!(:active)
 
-    redirect_to(users_url)
+    redirect_to(users_url, :notice => t('devise.messages.save_ok'))
   end
 
 end

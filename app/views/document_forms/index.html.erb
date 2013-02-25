@@ -10,14 +10,16 @@
 <% if @document_forms.size > 0 %>
 <%= display_page_entries_info @document_forms %>
 
-<table class="table">
+<table class="table table-sortable">
+  <thead>
   <tr>
     <th class="span7"><%= t('document_forms_name') %></th>
     <th class="span2"><%= t('updated_at') %></th>
     <th class="span1">&nbsp;</th>
     <th class="span1">&nbsp;</th>
   </tr>
-
+  </thead>
+  <tbody>
   <% @document_forms.each do |document_form| %>
     <tr class="<%= cycle("odd", "even") %>">
       <td><%= link_to document_form.name, edit_document_form_path(document_form) %></td>
@@ -26,6 +28,7 @@
       <td><%= link_to t('destroy'), document_form, :confirm => t('are_you_sure'), :method => :delete %></td>
     </tr>
   <% end %>
+  </tbody>
 </table>
 
 <% else %>

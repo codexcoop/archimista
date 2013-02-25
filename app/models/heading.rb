@@ -1,5 +1,8 @@
 class Heading < ActiveRecord::Base
 
+  cattr_reader :per_page
+  @@per_page = 100
+
   extend Cleaner
 
   belongs_to :updater,  :class_name => "User", :foreign_key => "updated_by"

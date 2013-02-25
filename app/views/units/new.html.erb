@@ -1,16 +1,15 @@
 <% content_for :status_bar do %>
   <h2><%= t('listing_units') %>:
-  <% if @fond %>
-    <% @fond.path_items.each do |item| %>
-      <%= link_to item.name, fond_units_path(item.id) %><%= path_separator %>
+    <% if @fond %>
+      <% @fond.path_items.each do |item| %>
+        <%= link_to item.name, fond_units_path(item.id) %><%= path_separator %>
+      <% end %>
     <% end %>
-  <% end %>
-  Nuova scheda
+    Nuova scheda
   </h2>
   <div id="links">
-    <%# FIXME: il link_to_index qui e in edit (anche iccd) dovrebbe essere al complesso di cui l'unità è parte %>
     <% if @fond %>
-      <%= link_to_index "Lista unità del complesso", fond_units_path(@fond.root.id) %>
+      <%= link_to_index "Lista unità del livello", fond_units_path(@fond.id) %>
     <% end %>
   </div>
 <% end %>

@@ -1,0 +1,14 @@
+<tr>
+  <td><%= user.group.name %></td>
+  <td><%= link_to_unless(user.is_superadmin?, user.username, edit_user_path(user)) %></td>
+  <td><%= mail_to user.email, '<i class="icon-envelope" style="opacity: 0.7;" title="' + user.email + '"></i>' %>
+  <%= user.full_name %> <%#= "(#{user.qualifier})" if user.qualifier.present? %></td>
+  <td><%= user.role %></td>
+  <td>
+    <% if user.active? %>
+      <%= link_to_unless(current_user == user || user.is_superadmin?, t('deactivate'), toggle_active_user_path(user), :method => :put, :class => "btn btn-mini") do |text| '' end %>
+    <% else %>
+      <%= link_to_unless(current_user == user, t('activate'), toggle_active_user_path(user), :method => :put, :class => "btn btn-mini") do |text| '' end %>
+    <% end %>
+  </td>
+</tr>

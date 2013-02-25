@@ -55,7 +55,7 @@
       <td>
         <% if @creator.events.present? %>
           <% @creator.events.each do |ci| %>
-            <%= ci.full_display_date %> <%= ci.note %>
+            <%= ci.full_display_date_with_place %> <%= ci.note %>
           <% end %>
         <% else %>
           <%= blank_field %>

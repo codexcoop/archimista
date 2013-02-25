@@ -12,6 +12,14 @@ class Import < ActiveRecord::Base
   before_create :sanitize_file_name
   validates_attachment_presence :data
 
+  def ar_connection
+    ActiveRecord::Base.connection
+  end
+
+  def adapter
+    ar_connection.adapter_name.downcase
+  end
+
   def data_file
     TMP_IMPORTS + "/#{self.id}_data.json"
   end
@@ -20,9 +28,17 @@ class Import < ActiveRecord::Base
     TMP_IMPORTS + "/#{self.id}_metadata.json"
   end
 
-  def delete_temp_files
+  def delete_tmp_files
     File.delete(data_file)      if File.exists?(data_file)
     File.delete(metadata_file)  if File.exists?(metadata_file)
+  end
+
+  def db_has_subunits?
+    Unit.exists?(["db_source = ? AND ancestry_depth > 0", self.identifier])
+  end
+
+  def db_has_digital_objects?
+    DigitalObject.exists?(["db_source = ?", self.identifier])
   end
 
   def import_aef_file(user)
@@ -35,6 +51,9 @@ class Import < ActiveRecord::Base
             data = ActiveSupport::JSON.decode(line.strip)
             key = data.keys.first
             model = key.camelize.constantize
+            data[key].each do |k,v|
+              data[key].delete(k) unless model.column_names.include?(k)
+            end
             object = model.new(data[key])
             object.db_source = self.identifier
             object.group_id = user.group_id if object.has_attribute? 'group_id'
@@ -42,17 +61,8 @@ class Import < ActiveRecord::Base
             object.updated_by = user.id if object.has_attribute? 'updated_by'
             object.send(:create_without_callbacks)
           end
-          update_ancestry_for_fonds
-          update_units_ancestry_and_fonds_relations
-          update_one_to_many_relations
-          update_many_to_many_relations
-          update_digital_objects
-          if self.importable_type == 'Fond'
-            self.importable_id = Fond.find_by_db_source_and_ancestry("#{self.identifier}", nil).id
-          else
-            self.importable_id = self.importable_type.constantize.find_by_db_source("#{self.identifier}").id
-          end
         end
+        update_statements
         return true
       rescue
         return false
@@ -62,24 +72,34 @@ class Import < ActiveRecord::Base
     end
   end
 
-  def adapter
-    ar_connection.adapter_name.downcase
+  def update_statements
+    begin
+      ActiveRecord::Base.transaction do
+        update_fonds_ancestry
+        update_units_fond_id
+        update_subunits_ancestry if db_has_subunits?
+        update_one_to_many_relations
+        update_many_to_many_relations
+        update_digital_objects if db_has_digital_objects?
+        if self.importable_type == 'Fond'
+          self.importable_id = Fond.find_by_db_source_and_ancestry("#{self.identifier}", nil).id
+        else
+          self.importable_id = self.importable_type.constantize.find_by_db_source("#{self.identifier}").id
+        end
+      end
+    end
   end
 
-  def ar_connection
-    ActiveRecord::Base.connection
-  end
-
-  def update_ancestry_for_fonds(parent_id = nil, ancestry = nil)
+  def update_fonds_ancestry(parent_id = nil, ancestry = nil)
     Fond.find_each(:conditions => {:legacy_parent_id => parent_id, :db_source => self.identifier}) do |node|
       node.without_ancestry_callbacks do
         node.update_attribute :ancestry, ancestry
       end
-      update_ancestry_for_fonds node.legacy_id, if ancestry.nil? then "#{node.id}" else "#{ancestry}/#{node.id}" end
+      update_fonds_ancestry node.legacy_id, if ancestry.nil? then "#{node.id}" else "#{ancestry}/#{node.id}" end
     end
   end
 
-  def update_units_ancestry_and_fonds_relations
+  def update_units_fond_id
     case adapter
     when 'sqlite'
       ar_connection.execute("UPDATE units
@@ -87,7 +107,7 @@ class Import < ActiveRecord::Base
                            WHERE units.legacy_parent_fond_id = fonds.legacy_id
                            AND units.db_source = '#{self.identifier}'
                            AND fonds.db_source = '#{self.identifier}')
-                           WHERE EXISTS(
+                           WHERE EXISTS (
                             SELECT * FROM fonds
                             WHERE units.legacy_parent_fond_id = fonds.legacy_id
                             AND units.db_source = '#{self.identifier}'
@@ -97,7 +117,7 @@ class Import < ActiveRecord::Base
                            WHERE units.legacy_root_fond_id = fonds.legacy_id
                            AND units.db_source = '#{self.identifier}'
                            AND fonds.db_source = '#{self.identifier}')
-                           WHERE EXISTS(
+                           WHERE EXISTS (
                             SELECT * FROM fonds
                             WHERE units.legacy_root_fond_id = fonds.legacy_id
                             AND units.db_source = '#{self.identifier}'
@@ -129,45 +149,42 @@ class Import < ActiveRecord::Base
                            AND units.db_source = '#{self.identifier}'
                            AND f.db_source = '#{self.identifier}'")
     end
+  end
 
+  def update_subunits_ancestry
     case adapter
     when 'sqlite'
-      ar_connection.execute("CREATE TABLE tmp_units_first_level AS
-                          SELECT id, legacy_id, db_source FROM units
-                          WHERE ancestry_depth = 0
-                          AND db_source = '#{self.identifier}';")
-      ar_connection.execute("UPDATE units
-                          SET ancestry = (SELECT id
-                          FROM tmp_units_first_level
-                          WHERE units.db_source = '#{self.identifier}'
-                          AND units.legacy_parent_unit_id = tmp_units_first_level.legacy_id
-                          AND units.ancestry_depth = 1)
-                          WHERE EXISTS(
-                            SELECT * FROM tmp_units_first_level
-                            WHERE units.db_source = '#{self.identifier}'
-                            AND units.legacy_parent_unit_id = tmp_units_first_level.legacy_id
-                            AND units.ancestry_depth = 1);")
-      ar_connection.execute("DROP TABLE IF EXISTS tmp_units_first_level;")
+      (1..2).each do |n|
+        ancestry = n == 1 ? "id" : "ancestry || '/' || id"
+        ar_connection.execute("UPDATE units
+                              SET ancestry = (SELECT #{ancestry}
+                              FROM units parents
+                              WHERE units.db_source = '#{self.identifier}'
+                              AND units.legacy_parent_unit_id = parents.legacy_id
+                              AND units.ancestry_depth = #{n})
+                              WHERE EXISTS (
+                                SELECT * FROM units parents
+                                WHERE units.db_source = '#{self.identifier}'
+                                AND units.legacy_parent_unit_id = parents.legacy_id
+                                AND units.ancestry_depth = #{n});")
+      end
     when 'mysql', 'mysql2'
-      #mysql doesn't support rolling back statements that change the schema (adding tables, columns
-      #etc...), executing any such statement implicitly commits the current transaction
-      # TODO verificare altri RDBMS
-      ar_connection.execute("CREATE TEMPORARY TABLE tmp_units_first_level AS (SELECT id, legacy_id, db_source FROM units WHERE ancestry_depth = 0 AND db_source = '#{self.identifier}');")
-      ar_connection.execute("UPDATE units u1, tmp_units_first_level u2
-                           SET u1.ancestry = u2.id
-                           WHERE u1.db_source = '#{self.identifier}'
-                           AND u1.legacy_parent_unit_id = u2.legacy_id
-                           AND u1.ancestry_depth = 1;")
-      #ar_connection.execute("DROP TABLE IF EXISTS tmp_units_first_level;")
+      (1..2).each do |n|
+        ar_connection.execute("UPDATE units u, units parents
+                              SET u.ancestry = CONCAT_WS('/', parents.ancestry, CAST(parents.id AS char))
+                              WHERE u.db_source = '#{self.identifier}'
+                              AND u.legacy_parent_unit_id = parents.legacy_id
+                              AND u.ancestry_depth = #{n};")
+      end
     when 'postgresql'
-      ar_connection.execute("CREATE TABLE tmp_units_first_level AS (SELECT id, legacy_id, source FROM units WHERE ancestry_depth = 0 AND db_source = '#{self.identifier}');")
-      ar_connection.execute("UPDATE units
-                           SET ancestry = u.id
-                           FROM tmp_units_first_level u
-                           WHERE units.ancestry_depth = 1
-                           AND units.legacy_parent_unit_id = u.legacy_id
-                           AND units.db_source = '#{self.identifier}';")
-      ar_connection.execute("DROP TABLE tmp_units_first_level;")
+      (1..2).each do |n|
+        ar_connection.execute("UPDATE units
+                             SET ancestry = CONCAT_WS('/', parents.ancestry, CAST(parents.id AS varchar))
+                             FROM units parents
+                             WHERE units.db_source = '#{self.identifier}'
+                             AND units.legacy_parent_unit_id = parents.legacy_id
+                             AND units.ancestry_depth = #{n};")
+      end
     end
   end
 
@@ -193,7 +210,7 @@ class Import < ActiveRecord::Base
                                  WHERE #{table}.legacy_id = #{target}.legacy_id
                                  AND #{table}.db_source = #{target}.db_source
                                  AND #{target}.db_source = '#{self.identifier}')
-                                 WHERE EXISTS(
+                                 WHERE EXISTS (
                                   SELECT * FROM #{target}
                                   WHERE #{table}.legacy_id = #{target}.legacy_id
                                   AND #{table}.db_source = #{target}.db_source
@@ -233,7 +250,7 @@ class Import < ActiveRecord::Base
       first_entity_field = "#{entities[0]}".singularize + "_id"
       first_legacy_entity_field = "legacy_" + "#{entities[0]}".singularize + "_id"
 
-      if(entities[0] == entities[1])
+      if entities[0] == entities[1]
         second_entity_field = "related_" + "#{entities[1]}".singularize + "_id"
         second_legacy_entity_field = "legacy_related_" + "#{entities[1]}".singularize + "_id"
       else
@@ -249,7 +266,7 @@ class Import < ActiveRecord::Base
                  WHERE #{table}.#{first_legacy_entity_field} = #{entities[0]}.legacy_id
                  AND #{table}.db_source = '#{self.identifier}'
                  AND #{entities[0]}.db_source = '#{self.identifier}')
-                 WHERE EXISTS(
+                 WHERE EXISTS (
                     SELECT * FROM #{entities[0]}
                     WHERE #{table}.#{first_legacy_entity_field} = #{entities[0]}.legacy_id
                     AND #{table}.db_source = '#{self.identifier}'
@@ -280,7 +297,7 @@ class Import < ActiveRecord::Base
                  WHERE #{table}.#{second_legacy_entity_field} = #{entities[1]}.legacy_id
                  AND #{table}.db_source = '#{self.identifier}'
                  AND #{entities[1]}.db_source = '#{self.identifier}')
-                 WHERE EXISTS(
+                 WHERE EXISTS (
                     SELECT * FROM #{entities[1]}
                     WHERE #{table}.#{second_legacy_entity_field} = #{entities[1]}.legacy_id
                     AND #{table}.db_source = '#{self.identifier}'
@@ -314,6 +331,7 @@ class Import < ActiveRecord::Base
       'Custodian' => 'custodians',
       'Source' => 'sources'
     }
+
     attachable_entities.each do |value, table|
       set = DigitalObject.all(:conditions => {:attachable_type => value, :db_source => self.identifier})
       unless set.blank?
@@ -323,22 +341,30 @@ class Import < ActiveRecord::Base
           query = "UPDATE digital_objects SET attachable_id = (SELECT id
                    FROM #{table}
                    WHERE digital_objects.legacy_id = #{table}.legacy_id
-                   AND digital_objects.id IN(#{ids}))
-                   WHERE EXISTS(
+                   AND digital_objects.db_source = #{table}.db_source
+                   AND #{table}.db_source = '#{self.identifier}'
+                   AND digital_objects.id IN (#{ids}))
+                   WHERE EXISTS (
                     SELECT * FROM #{table}
                     WHERE digital_objects.legacy_id = #{table}.legacy_id
-                    AND digital_objects.id IN(#{ids}));"
+                    AND digital_objects.db_source = #{table}.db_source
+                    AND #{table}.db_source = '#{self.identifier}'
+                    AND digital_objects.id IN (#{ids}));"
           ar_connection.execute(query)
         when 'mysql', 'mysql2'
           query = "UPDATE digital_objects do, #{table} e SET do.attachable_id = e.id
                    WHERE do.legacy_id = e.legacy_id
-                   AND do.id IN(#{ids})"
+                   AND do.db_source = e.db_source
+                   AND e.db_source = '#{self.identifier}'
+                   AND do.id IN (#{ids})"
           ar_connection.execute(query)
         when 'postgresql'
-          query = "UPDATE digital_objects do SET do.attachable_id = e.id
+          query = "UPDATE digital_objects SET attachable_id = e.id
                    FROM #{table} e
-                   WHERE do.legacy_id = e.legacy_id
-                   AND do.id IN(#{ids})"
+                   WHERE digital_objects.legacy_id = e.legacy_id
+                   AND digital_objects.db_source = e.db_source
+                   AND e.db_source = '#{self.identifier}'
+                   AND digital_objects.id IN (#{ids})"
           ar_connection.execute(query)
         end
       end
@@ -393,16 +419,14 @@ class Import < ActiveRecord::Base
   end
 
   def wipe_all_related_records
-    tables = ar_connection.tables
+    tables = ar_connection.tables - ["schema_migrations"]
     begin
       ActiveRecord::Base.transaction do
         tables.each do |table|
-          if (not table.include? 'nodes') && table != 'schema_migrations'
-            model = table.singularize.camelize.constantize
-            object = model.new
-            if object.has_attribute? 'db_source'
-              model.delete_all("db_source = '#{self.identifier}'")
-            end
+          model = table.classify.constantize
+          object = model.new
+          if object.has_attribute? 'db_source'
+            model.delete_all("db_source = '#{self.identifier}'")
           end
         end
       end

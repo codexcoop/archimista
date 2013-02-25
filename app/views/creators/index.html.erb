@@ -2,7 +2,6 @@
   <h2><%= status_bar_context %></h2>
 <% end %>
 
-<%# FIXME: troppo stile in linea qui e in sources/index %>
 <div class="span12">
   <div id="index-controls" class="clearfix">
     <% if @creators.total_entries > Creator.per_page || params[:q].present? %>
@@ -12,8 +11,7 @@
       <% end %>
     <% end %>
     <div class="btn-group pull-left">
-      <%= link_to t('new') + '<span class="caret"></span>', "#",
-                        { :class => "btn btn-small dropdown-toggle new", :'data-toggle' => "dropdown" } %>
+      <%= link_to t('new') + '<span class="caret"></span>', "#", { :class => "btn btn-small dropdown-toggle new", :'data-toggle' => "dropdown" } %>
       <ul class="dropdown-menu">
         <li><%= link_to t('C'), new_creator_path(:type => "C") %></li>
         <li><%= link_to t('P'), new_creator_path(:type => "P") %></li>
@@ -24,7 +22,7 @@
 
   <% if @creators.size > 0 %>
   <%= display_page_entries_info @creators %>
-  <table class="table">
+  <table class="table table-sortable">
     <thead>
       <tr>
         <th><%= sortable("name", t('creator_name')) %></th>

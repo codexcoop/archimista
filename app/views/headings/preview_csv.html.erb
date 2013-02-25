@@ -5,7 +5,7 @@
   </div>
 <% end %>
 
-<div class="span9">
+<div class="span12">
 <% form_tag '/headings/save_csv' do -%>
   <p>Sei sicuro di voler importare i seguenti lemmi?</p>
   <p>
@@ -16,7 +16,7 @@
 <% end -%>
 
 <% if @csv.size > 0 %>
-  <table class="table">
+  <table class="table table-striped">
     <thead>
       <th><%= t('heading_type') %></th>
       <th><%= t('heading_name') %></th>
@@ -24,14 +24,12 @@
       <th><%= t('heading_qualifier') %></th>
     </thead>
   <% @csv.each do |row| %>
-    <tbody>
       <tr>
         <td><%= show_value(row[0], "t") %></td>
         <td><%= row[1] %></td>
         <td><%= row[2] %></td>
         <td><%= row[3] %></td>
       </tr>
-    </tbody>
   <% end %>
   </table>
 

@@ -1,18 +1,69 @@
-<%# FIXME: dismettere vista e routes relativa. Altrimenti fare marcatura e stile %>
 <% content_for :status_bar do %>
-  <h2><%= t('headings') %><%= path_separator %>anteprima scheda</h2>
+  <h2><%= t('headings') %><%= path_separator %>Occorrenze</h2>
   <div id="links">
     <%= link_to_index t('listing_headings'), headings_path %>
   </div>
 <% end %>
 
-<p><strong><%= t('heading_type')%>:</strong> <%= show_value(@heading.heading_type, "t") %></p>
+<div class="span12">
+	
+<h3>[<%= show_value(@heading.heading_type) %>] <%= show_value(@heading.name) %> <%= show_value(@heading.qualifier) %> <%= show_value(@heading.dates) %></h3>
 
-<p><strong><%= t('heading_name') %>:</strong> <%= show_value(@heading.name) %></p>
+<p>Unità collegate</p>
+	
+<% if @units.size > 0 %>
+  <table id="units-index" class="table table-sortable table-bordered">
+    <col style="width: 30px" />
+    <col style="width: 40px" />
+    <col style="width: auto" />
+    <col style="width: 260px" />
+    <col style="width: 150px" />
+    <thead>
+    <tr>
+      <th><%= check_box_tag 'select_all', nil, false, :id => 'select-all-records' %></th>
+      <th><%= sortable("sequence_number", t('sequence_number_short')) %></th>
+      <th><%= sortable("title", t('title')) %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @units.each do |unit| %>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td><%= check_box_tag 'record_ids[]', unit.id, false, :class => 'selected-record-id' %></td>
+        <td class="center muted">
+          <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>
+        </td>
+        <td>
+          <%= "&mdash;" * unit.ancestry_depth %>
+          <% if unit.is_iccd? %>
+            <%= link_to unit.title, edit_iccd_unit_path(unit, :t => unit.tsk) %>
+            <span class="light">[<%= unit.tsk %>]</span>
+          <% else %>
+            <%= link_to unit.bracketize_title_if_given, edit_unit_path(unit) %>
+          <% end %>
+          <%# riga di contesto solo se in ricerca o in fond root %>
+          <% if @fond.blank? || @fond.is_root? %>
+            <div>
+              <% depth = @fond.blank? ? 0 : 1 %>
+              <span class="light">
+                <%= unit.fond.path_items(depth).map(&:name).join(path_separator) %>
+              </span>
+            </div>
+          <% end %>
+         </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 
-<p><strong><%= t('heading_dates') %></strong> <%= show_value(@heading.dates) %></p>
+<%= will_paginate @units %>
 
-<p><strong><%= t('heading_qualifier') %>:</strong> <%= show_value(@heading.qualifier) %></p>
+
+<% else %>
+    <p>Non sono presenti unità archivistiche per questo <%= item %>.</p>
+<% end %>
+
 
 <%= link_to t('edit'), edit_heading_path(@heading) %> |
 <%= link_to t('back'), headings_path %>
+
+</div>

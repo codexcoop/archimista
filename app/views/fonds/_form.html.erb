@@ -74,7 +74,7 @@
         <%= f.text_field :length, :id => 'fond_length', :class => "input-mini" %>
 
         <%= f.label :extent, t('archival_extent') %>
-        <%= f.text_area :extent, :class=> "short-content" %>
+        <%= f.text_area :extent, :class=> "x-short-content" %>
 
         <% if @fond.is_root? %>
           <%= f.label :abstract, t('abstract') %>
@@ -97,7 +97,7 @@
         <div id="fond_langs" class="row-fluid">
           <% @fond_langs = build_or_retrieve(f.object.fond_langs) %>
           <div class="span12">
-            <h3 class="row-header"><%= f.label :fond_langs, t('fond_langs') %></h3>
+            <h3 class="row-header"><%= t('fond_langs') %></h3>
           </div>
           <% f.fields_for :fond_langs do |fl_form| %>
             <%= render :partial => "fond_lang", :locals => { :f => fl_form } %>
@@ -108,7 +108,7 @@
         <div id="fond_owners" class="row-fluid">
           <% @fond_owners = build_or_retrieve(f.object.fond_owners) %>
           <div class="span12">
-            <h3 class="row-header"><%= f.label :owners, t('owners') %></h3>
+            <h3 class="row-header"><%= t('owners') %></h3>
           </div>
           <% f.fields_for :fond_owners do |fo_form| %>
             <%= render :partial => "fond_owner", :locals => { :f => fo_form } %>
@@ -125,8 +125,8 @@
         <div id="fond_urls" class="row-fluid">
           <% @fond_urls = build_or_retrieve(f.object.fond_urls) %>
           <div class="span12">
-            <h3  class="row-header"><%= t('fond_urls') %></h3>
-            <div class="row">
+            <h3 class="row-header"><%= t('fond_urls') %></h3>
+            <div class="row row-labels">
               <div class="span4"><%= t('url') %></div>
               <div class="span4"><%= t('note') %></div>
             </div>
@@ -140,8 +140,8 @@
         <div id="fond_identifiers" class="row-fluid">
           <% @fond_identifiers = build_or_retrieve(f.object.fond_identifiers) %>
           <div class="span12">
-            <h3  class="row-header"><%= t('fond_identifiers') %></h3>
-            <div class="row">
+            <h3 class="row-header"><%= t('fond_identifiers') %></h3>
+            <div class="row row-labels">
               <div class="span3"><%= t('identifier') %></div>
               <div class="span3"><%= t('identifier_source') %></div>
               <div class="span2"><%= t('note') %></div>

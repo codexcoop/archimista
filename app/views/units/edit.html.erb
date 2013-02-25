@@ -6,12 +6,7 @@
     Modifica scheda
   </h2>
   <div id="links">
-    <%# FIXME: il link_to_index qui e in show (anche iccd) dovrebbe essere al complesso di cui l'unità è parte %>
-    <% if @unit.fond.is_root? %>
-      <%= link_to_index "Lista unità del complesso", fond_units_path(@unit.root_fond_id) %>
-    <% else %>
-      <%= link_to_index "Lista unità della serie", fond_units_path(@unit.fond_id) %>
-    <% end %>
+    <%= link_to_index "Lista unità del livello", fond_units_path(@unit.fond_id) %>
   </div>
 <% end %>
 

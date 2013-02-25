@@ -1,16 +1,12 @@
 <% content_for :status_bar do %>
-  <h2><%= t('listing_units') %><%= path_separator %>
+  <h2><%= t('listing_units') %>:
     <% @unit.fond.path_items.each do |item| %>
       <%= link_to item.name, fond_units_path(item.id) %><%= path_separator %>
     <% end %>
     Modifica scheda
   </h2>
   <div id="links">
-    <% if @unit.fond.is_root? %>
-      <%= link_to_index "Lista unità del complesso", fond_units_path(@unit.root_fond_id) %>
-    <% else %>
-      <%= link_to_index "Lista unità della serie", fond_units_path(@unit.fond_id) %>
-    <% end %>
+    <%= link_to_index "Lista unità del livello", fond_units_path(@unit.fond_id) %>
   </div>
 <% end %>
 

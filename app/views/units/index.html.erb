@@ -7,12 +7,13 @@
 <% content_for :javascripts do %>
   <%= javascript_include_tag "jsTree/jquery.jstree.min" %>
   <%= javascript_include_tag "units",
-                             "units-add_rows",
-                             "units-jump_to",
-                             "units-classify",
-                             "units-reorder",
-                             "units-remove_rows",
-                             :cache => "/assets/units" %>
+    "units-add_rows",
+    "units-jump_to",
+    "units-classify",
+    "units-move.js",
+    "units-reorder",
+    "units-remove_rows",
+    :cache => "/assets/units" %>
 <% end %>
 
 <%# Status bar %>
@@ -24,42 +25,30 @@
   </div>
 
   <div id="buttons">
-    <%#= link_to t('new') + '&hellip;', "#",
-                       { :class => "btn btn-small dropdown-toggle new", :'data-toggle' => "dropdown" } %>
-    <%= link_to t('new'), new_fond_unit_path(@fond),  :class => "btn btn-small new" %>
-    |
+    <%= link_to t('new'), new_fond_unit_path(@fond),  :class => "btn btn-small new" %> |
 
-     <%#= link_to t('add_rows') + "&hellip;", "#",
-                       { :class => "btn btn-small new", :"data-target" => "#mass-add-modal", :"data-toggle" => "modal" } %>
-
-     <button id="add-rows" data-target="#mass-add-modal" data-toggle="modal" class="btn btn-small new">
-       <%= "+ #{t('add_rows')}" %>
-     </button>
+    <button id="add-rows" data-target="#mass-add-modal" data-toggle="modal" class="btn btn-small new">
+      <%= "+ #{t('add_rows')}" %>
+    </button>
 
     <button id="mass-classify" data-target="#mass-classify-modal" data-toggle="modal" class="btn btn-small disabled">
-     <i class="icon-folder-open"></i>&nbsp;&nbsp;<%= t('classify') %>
+      <i class="icon-folder-open"></i>&nbsp;&nbsp;<%= t('classify') %>
     </button>
 
     <button id="mass-remove" data-target="#mass-remove-modal" data-toggle="modal" class="btn btn-small disabled">
       <i class="icon-trash"></i>&nbsp;&nbsp;<%= t('destroy') %>
     </button> |
 
-    <button id="mass-reorder" data-target="#mass-reorder-modal" data-toggle="modal" class="btn btn-small">
+    <button id="mass-reorder" data-target="#mass-reorder-modal" data-toggle="modal" class="btn btn-small<%= " disabled" if @units.size == 0 %>">
       <i class="icon-resize-vertical"></i>&nbsp;<%= t('reorder') %>
     </button>
   </div>
 </div>
 
-<%# AddRows %>
+<%# Modals %>
 <%= render :partial => 'units/add_rows', :locals => {:fond => @fond, :vocabularies => @vocabularies } %>
-
-<%# Classify %>
 <%= render :partial => 'units/classify', :locals => {:fond => @fond, :root_fond => @root_fond} %>
-
-<%# RemoveRows %>
 <%= render :partial => 'units/remove_rows' %>
-
-<%# Reorder units and update sequence_number %>
 <%= render :partial => 'units/reorder' %>
 
 <div id="more-units-controls" class="clearfix">
@@ -67,75 +56,79 @@
 
   <% if @units.total_entries > 20 || params[:q].present? %>
     <% form_tag("/fonds/#{@fond.id}/units", :method => :get, :class => "skip-prompt form-search pull-right") do %>
-        <%= text_field_tag :q, params[:q], :size => "60", :class => "search-query", :placeholder => "Titolo" %>
-        <%= submit_tag "cerca", :name => "", :class => "btn btn-small" %>
+      <%= text_field_tag :q, params[:q], :size => "60", :class => "search-query", :placeholder => "Titolo" %>
+      <%= submit_tag "cerca", :name => "", :class => "btn btn-small" %>
     <% end %>
   <% end %>
 </div>
 
 <% if @units.size > 0 %>
+  <table id="units-index" class="table table-sortable table-bordered">
+    <col style="width: 30px" />
+    <col style="width: 40px" />
+    <col style="width: auto" />
+    <col style="width: 260px" />
+    <col style="width: 150px" />
+    <thead>
+    <tr>
+      <th><%= check_box_tag 'select_all', nil, false, :id => 'select-all-records' %></th>
+      <th><%= sortable("sequence_number", t('sequence_number_short')) %></th>
+      <th><%= sortable("title", t('title')) %></th>
+      <th><%= sortable("order_date", "Estremi cronologici") %></th>
+      <th><%= sortable("reference_number", t('reference_number')) %></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @units.each do |unit| %>
+      <tr class="<%= cycle("odd", "even") %>">
+        <td><%= check_box_tag 'record_ids[]', unit.id, false, :class => 'selected-record-id' %></td>
+        <td class="center muted">
+          <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>
+        </td>
+        <td>
+          <%= "&mdash;" * unit.ancestry_depth %>
+          <% if unit.is_iccd? %>
+            <%= link_to unit.title, edit_iccd_unit_path(unit, :t => unit.tsk) %>
+            <span class="light">[<%= unit.tsk %>]</span>
+          <% else %>
+            <%= link_to unit.bracketize_title_if_given, edit_unit_path(unit) %>
+          <% end %>
+          <%# riga di contesto solo se in ricerca o in fond root %>
+          <% if @fond.blank? || @fond.is_root? %>
+            <div>
+              <% depth = @fond.blank? ? 0 : 1 %>
+              <span class="light">
+                <%= unit.fond.path_items(depth).map(&:name).join(path_separator) %>
+              </span>
+            </div>
+          <% end %>
+          <div class="unit-actions">
+            <%= link_to t('show'), unit %> |
+            <%= link_to t('destroy'), unit, :confirm => t('are_you_sure'), :method => :delete %> |
+            <%= link_to "Modifica livello", "#", {:class => "move", :"data-id" => unit.id } %>
+            <%= "| " + (link_to "Aggiungi sottounità", new_unit_child_path(unit)) unless unit.is_leaf? %>
+          </div>
+        </td>
+        <%# OPTIMIZE: spostare fuori dalla vista %>
+        <% preferred_display_date = [unit.preferred_start_date_display, unit.preferred_end_date_display].uniq.join(" - ") %>
+        <td><%= preferred_display_date %></td>
+        <td class="center"><%= unit.reference_number %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
 
-<%# OPTIMIZE: da valutare, "Segnatura definitiva" subito dopo "Corda" come in gridview %>
-<table class="list units" style="width: 100%">
-  <!-- <col style="width: 20px" /> -->
-  <col style="width: 40px" />
-  <col style="width: 40px" />
-  <col style="width: auto" />
-  <col style="width: 260px" />
-  <col style="width: 150px" />
-  <tr>
-    <th><%= check_box_tag 'select_all', nil, false, :id => 'select-all-records' %></th>
-    <!-- <th><%= sortable("id", "ID") %></th> -->
-    <th><%= sortable("sequence_number", t('sequence_number_short')) %></th>
-    <th><%= sortable("title", t('title')) %></th>
-    <th><%= sortable("order_date", "Estremi cronologici") %></th>
-    <th><%= sortable("reference_number", t('reference_number')) %></th>
-   </tr>
-
-<% @units.each do |unit| %>
-  <tr class="<%= cycle("odd", "even") %>">
-    <td><%= check_box_tag 'record_ids[]', unit.id, checked = false, :class => 'selected-record-id', :id => nil %></td>
-    <!-- <td class="center light"><%= unit.id %></td> -->
-    <td class="center"><%= unit.sequence_number %></td>
-    <td>
-      <%= unit.is_root? ? "" : "&mdash; " %>
-
-      <% if unit.tsk.present? %>
-        <%= link_to unit.title, edit_iccd_unit_path(unit) + "?t=#{unit.tsk}" %> [<span class="light"><%= unit.tsk %></span>]
-      <% else %>
-        <%= link_to unit.title, edit_unit_path(unit) %>
-      <% end %>
-      <% if @fond.blank? || @fond.is_root? %> <%# riga di contesto solo se in ricerca o in fond root %>
-        <div>
-          <% depth = @fond.blank? ? 0 : 1 %>
-          <span class="light">
-            <%= unit.fond.path_items(depth).map(&:name).join(path_separator) %>
-          </span>
-        </div>
-      <% end %>
-      <div class="unit-actions">
-        <%= link_to t('show'), unit %> |
-        <%= link_to t('destroy'), unit, :confirm => t('are_you_sure'), :method => :delete %>
-        <%= "| " + (link_to "Aggiungi sottounità", new_unit_child_path(unit)) if unit.is_root? %>
-      </div>
-    </td>
-    <%# OPTIMIZE: spostare fuori dalla vista %>
-    <% preferred_display_date = [unit.preferred_start_date_display, unit.preferred_end_date_display].uniq.join(" - ") %>
-    <td><%= preferred_display_date %></td>
-    <td class="center"><%= unit.reference_number %></td>
-  </tr>
-<% end %>
-</table>
-
-<%= will_paginate @units, :previous_label => t("previous"), :next_label => t("next") %>
+  <%= will_paginate @units, :previous_label => t("previous"), :next_label => t("next") %>
 
 <% else %>
   <% item = @fond.is_root? ? "complesso" : "livello" %>
   <% if params[:q].present? %>
-    <% item = @fond.is_root? ? "complesso" : "livello" %>
     <p>La ricerca di <strong><%= params[:q] %></strong> non ha prodotto risultati. Vedi <%= link_to "tutte le unità del #{item}", fond_units_path(params[:fond_id]) %></p>
   <% else %>
     <p>Non sono presenti unità archivistiche per questo <%= item %>.</p>
   <% end %>
 <% end %>
+
+<%# OPTIMIZE: forse meglio edit-level-container, anche in considerazione di prossima probabile funzionalità "Sposta..." (prima di | dopo di) %>
+<div id="move-container"></div>
 

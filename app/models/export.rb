@@ -48,18 +48,14 @@ class Export < ActiveRecord::Base
         if fond.is_root?
           fond.legacy_parent_id = nil
         else
-          fond.legacy_parent_id = fond.parent_id.to_s
+        fond.legacy_parent_id = fond.parent_id.to_s
         end
         file.write(fond.to_json(:except => [:id, :ancestry, :group_id, :db_source, :created_by, :updated_by, :created_at, :updated_at]).gsub("\\r",""))
         file.write("\r\n")
 
         fond.units.each do |unit|
           unit.legacy_id = unit.id
-          if unit.is_root?
-            unit.legacy_parent_unit_id = nil
-          else
-            unit.legacy_parent_unit_id = unit.parent_id.to_s
-          end
+          unit.legacy_parent_unit_id = unit.is_root? ? nil : unit.parent_id.to_s
           unit.legacy_root_fond_id = unit.root_fond_id
           unit.legacy_parent_fond_id = unit.fond_id
           file.write(unit.to_json(:except => [:id, :ancestry, :db_source, :created_by, :updated_by, :created_at, :updated_at]).gsub("\\r",""))
@@ -203,14 +199,14 @@ class Export < ActiveRecord::Base
           set.each do |rel|
             rel.send("legacy_#{entity}_id=", rel.send("#{entity}_id"))
             rel.legacy_heading_id = rel.heading_id
-            file.write(rel.to_json(:except => [:id, :db_source,:source_id, "#{entity}_id".to_sym, :created_at, :updated_at]))
+            file.write(rel.to_json(:except => [:id, :db_source, :source_id, "#{entity}_id".to_sym, :created_at, :updated_at]))
             file.write("\r\n")
             container.push(rel.heading_id)
           end
         end
       end
 
-      headings = container.uniq
+      headings = container.uniq.compact
       unless headings.blank?
         set = Heading.all(:conditions => "id IN (#{headings.join(',')})")
         set.each do |heading|
@@ -270,7 +266,7 @@ class Export < ActiveRecord::Base
           set.each do |rel|
             rel.send("legacy_#{entity}_id=", rel.send("#{entity}_id"))
             rel.legacy_source_id = rel.source_id
-            file.write(rel.to_json(:except => [:id, :db_source,:source_id, "#{entity}_id".to_sym, :created_at, :updated_at]))
+            file.write(rel.to_json(:except => [:id, :db_source, :source_id, "#{entity}_id".to_sym, :created_at, :updated_at]))
             file.write("\r\n")
             container.push(rel.source_id)
           end
@@ -362,7 +358,7 @@ class Export < ActiveRecord::Base
   def create_data_file
     self.fond_ids = Array.new
     ActiveRecord::Base.include_root_in_json = true
-
+    #TODO valutare la sostituzione di 'all' con 'active' per i fondi (non esportiamo elementi cestinati)
     if self.mode == 'full'
       case self.target_class
       when 'fond'

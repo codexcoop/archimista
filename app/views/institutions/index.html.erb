@@ -4,23 +4,22 @@
 
 <div class="span12">
   <div id="index-controls">
-      <%= link_to t('new'), new_institution_path, {:class => "btn btn-small new"} %>
+    <%= link_to t('new'), new_institution_path, {:class => "btn btn-small new"} %>
   </div>
 
 <% if @institutions.size > 0 %>
 <%= display_page_entries_info @institutions %>
 
-<table class="table">
+<table class="table table-sortable">
   <thead>
   <tr>
     <th class="span7"><%= t('institutions_name') %></th>
     <th class="span2"><%= t('updated_at') %></th>
     <th class="span1">&nbsp;</th>
     <th class="span1">&nbsp;</th>
-  </tr>  
+  </tr>
   </thead>
-  <tbody> 
-  
+  <tbody>
   <% @institutions.each do |institution| %>
     <tr class="<%= cycle("odd", "even") %>">
       <td><%= link_to institution.name, edit_institution_path(institution) %></td>
@@ -28,7 +27,7 @@
       <td><%= link_to t('show'), institution %></td>
       <td><%= link_to t('destroy'), institution, :confirm => t('are_you_sure'), :method => :delete %></td>
     </tr>
-  <% end %> 
+  <% end %>
   </tbody>
 </table>
 

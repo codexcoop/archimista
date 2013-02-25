@@ -7,18 +7,20 @@ class UnitsController < ApplicationController
     @fond.go_to_unit        = Unit.find(flash[:go_to_unit_id]) if flash[:go_to_unit_id].present?
     @units_count            = @fond.active_descendant_units_count
     @vocabularies           = Unit.vocabularies_with_terms
-    @root_fond              = @fond.root if @fond
+    @root_fond              = @fond.root
     selected_attributes
   end
 
   def grid
-    fond                  = Fond.find(params[:fond_id], :select => "id, name, ancestry")
+    @fond                 = Fond.find(params[:fond_id], :select => "id, name, ancestry")
+    @root_fond            = @fond.root
     @units                = Unit.units_for_grid(fond, params, selected_attributes)
+    @display_sequence_numbers = Unit.display_sequence_numbers_of(@root_fond)
 
     hash_for_json_response = {
       :page         => @units.current_page,
       :records      => @units.total_entries,
-      :rows         => Unit.jqgrid_rows(@units, selected_attributes),
+      :rows         => Unit.jqgrid_rows(@units, selected_attributes, @display_sequence_numbers),
       :total        => @units.total_pages,
       :is_last_page => @units.current_page == @units.total_pages
     }
@@ -35,7 +37,6 @@ class UnitsController < ApplicationController
 
     if first_created
       flash[:go_to_unit_id] = first_created.id
-      # flash[:number_of_new_records] = params[:number_of_rows]
       flash[:notice] = "Aggiunte #{params[:number_of_rows]} unità"
     else
       flash[:bulk_failed] = true
@@ -91,8 +92,13 @@ class UnitsController < ApplicationController
   def classify
     if Unit.classify(params[:record_ids], params[:new_fond_id])
       new_fond_name = Fond.find(params[:new_fond_id], :select => "name").name
-      # FIXME: non basta contare la lunghezza dell'array...
-      count = params[:record_ids].delete_if{|r| r == 0}.count
+
+      count = 0
+      root_unit_ids = Unit.find(params[:record_ids]).select {|r| r.ancestry_depth == 0}
+      root_unit_ids.each do |u|
+        count += u.subtree_ids.count
+      end
+
       # OPTIMIZE: singolare/plurale nel notice
       flash[:notice] = "#{count} unità classificate sotto il livello: <strong>#{new_fond_name}</strong>"
     else
@@ -102,6 +108,52 @@ class UnitsController < ApplicationController
     respond_to do |format|
       format.json { render :json => {:new_location => request.referrer} }
     end
+  end
+
+  def move
+    @unit = Unit.find(params[:id])
+    @siblings = @unit.siblings.all(:conditions => "fond_id = #{@unit.fond_id}", :order => :position).delete_if{|e| e.id == @unit.id}
+    render :partial => 'units/move', :locals => {:units => @siblings}, :object => @unit, :layout => false
+  end
+
+  def move_up
+    @unit = Unit.find(params[:id])
+    @parent = @unit.parent
+    @unit.ancestry = @parent.ancestry
+    @unit.ancestry_depth = @parent.ancestry_depth
+    @unit.position = Unit.prepare_position_by('position DESC').first(:conditions => {:ancestry => @parent.ancestry}).position + 1
+    @unit.save
+
+    Unit.descendants_of(@parent).all(:order => :position).each_with_index do |unit, index|
+      unit.position = index + 1
+      unit.save
+    end
+
+    Fond.find(@unit.root_fond_id).rebuild_external_sequence_by('position')
+    flash[:notice] = "Unità spostata correttamente"
+    redirect_to :back
+  end
+
+  def move_down
+    @unit = Unit.find(params[:id])
+    @old_parent = @unit.parent
+    @new_parent = Unit.find(params[:new_parent_id])
+    @unit.ancestry = @new_parent.ancestry.blank? ? @new_parent.id.to_s : @new_parent.ancestry+'/'+@new_parent.id.to_s
+    @unit.ancestry_depth = @unit.ancestry_depth + 1
+    @unit.position = Unit.prepare_position_by('position DESC').first(:conditions => {:ancestry => @new_parent.ancestry}).position + 1
+    @unit.save
+
+    if @old_parent.present? && @old_parent.has_children?
+      Unit.descendants_of(@old_parent).all(:order => :position).each_with_index do |unit, index|
+        unit.position = index + 1
+        unit.save
+      end
+    end
+
+    Fond.find(@unit.root_fond_id).rebuild_external_sequence_by('position')
+
+    flash[:notice] = "Unità spostata correttamente"
+    redirect_to :back
   end
 
   def preferred_event
@@ -123,12 +175,11 @@ class UnitsController < ApplicationController
           merge({:full_display_date => preferred_event.full_display_date, :status => "success"})
         format.json { render :json => hash_for_json_response }
       else
-        format.json { render :json => {:status => "failure", :msg => @unit.errors.to_json }} 
-        #
+        format.json { render :json => {:status => "failure", :msg => @unit.errors.to_json }}
       end
     end
   end
-  
+
   def textfield_form
     @unit = Unit.find(params[:id])
     @field = params[:field]
@@ -137,29 +188,30 @@ class UnitsController < ApplicationController
   end
 
   def index
-    # OPTIMIZE! DRY: fa le stesse cose di alcuni metodi di lib/unit_jqgrid_support.rb, mettere in comune
     fond
-    parent
 
     if @fond
-      # OPTIMIZE: @vocabularies - Non sono sicuro sia la cosa migliore
       @vocabularies = Unit.vocabularies_with_terms
       @root_fond = @fond.root
+      @display_sequence_numbers = Unit.display_sequence_numbers_of(@root_fond)
+
       @units =  if @fond.is_root?
-                  @fond.descendant_units
-                else
-                  @fond.units
-                end.
-                search(params[:q]).
-                paginate( :page => params[:page],
-                :select => "units.id, units.fond_id, units.ancestry, units.title, units.tsk,
-                            units.sequence_number, units.reference_number, units.tmp_reference_number,
-                            unit_events.start_date_display AS preferred_start_date_display,
-                            unit_events.end_date_display AS preferred_end_date_display,
-                            unit_events.order_date AS preferred_order_date".squish,
-                :joins => "LEFT OUTER JOIN unit_events ON units.id = unit_events.unit_id",
-                :conditions => ["units.sequence_number IS NOT NULL AND (unit_events.preferred = ? OR unit_events.preferred IS NULL)", true],
-                :order => sort_column + ' ' + sort_direction )
+        @fond.descendant_units
+      else
+        @fond.units
+      end.
+        search(params[:q]).
+        paginate( :page => params[:page],
+        :select => "units.id, units.fond_id, units.position, units.sequence_number,
+                    units.ancestry, units.ancestry_depth, units.tsk,
+                    units.reference_number, units.tmp_reference_number, units.title,
+                    unit_events.start_date_display AS preferred_start_date_display,
+                    unit_events.end_date_display AS preferred_end_date_display,
+                    unit_events.order_date AS preferred_order_date".squish,
+        :joins => "LEFT OUTER JOIN unit_events ON units.id = unit_events.unit_id",
+        # :include => [:fond], # OPTIMIZE: esaminare attentamente. Forse migliora performance.
+        :conditions => ["units.sequence_number IS NOT NULL AND (unit_events.preferred = ? OR unit_events.preferred IS NULL)", true],
+        :order => sort_column + ' ' + sort_direction )
     else
       redirect_to fonds_url
     end
@@ -167,7 +219,7 @@ class UnitsController < ApplicationController
 
   def show_iccd
     @unit = Unit.find(params[:id])
-    
+
     #OPTIMIZE: rivedere variabili di istanza e queries - forse events non serve
     @full_path = @unit.full_path
     @root_fond = @full_path.first
@@ -176,7 +228,7 @@ class UnitsController < ApplicationController
 
   def show
     @unit = Unit.find(params[:id])
-    
+
     #OPTIMIZE: rivedere variabili di istanza e queries - forse events non serve
     @full_path = @unit.full_path
     @root_fond = @full_path.first
@@ -198,7 +250,7 @@ class UnitsController < ApplicationController
     full_path     = unit.full_path
 
     render :partial => "units/full_path", :locals => {:unit => unit, :full_path => full_path}
-  end 
+  end
 
   def list_oa_mtc
     term = params[:term] || ""
@@ -227,53 +279,54 @@ class UnitsController < ApplicationController
       format.json { render :json =>  response }
     end
   end
-  
+
   def list_bdm_ogtd
-     term = params[:term] || ""
-     @iccd_terms_bdm_ogtd = IccdTermsBdmOgtd.all(:select => "ogtd as value",
-       :conditions => ["LOWER(ogtd) LIKE ?", "#{term}%"],
-       :order => 'ogtd',
-       :limit => 10
-     )
-     ActiveRecord::Base.include_root_in_json = false
-     response = @iccd_terms_bdm_ogtd.to_json(:methods => [:value], :only => :methods)
+    term = params[:term] || ""
+    @iccd_terms_bdm_ogtd = IccdTermsBdmOgtd.all(:select => "ogtd as value",
+      :conditions => ["LOWER(ogtd) LIKE ?", "#{term}%"],
+      :order => 'ogtd',
+      :limit => 10
+    )
+    ActiveRecord::Base.include_root_in_json = false
+    response = @iccd_terms_bdm_ogtd.to_json(:methods => [:value], :only => :methods)
 
-     respond_to do |format|
-       format.json { render :json =>  response }
-     end
-   end
-   
-   def list_bdm_mtct
-      term = params[:term] || ""
-      @iccd_terms_bdm_mtct = IccdTermsBdmMtct.all(:select => "mtct as value",
-        :conditions => ["LOWER(mtct) LIKE ?", "#{term}%"],
-        :order => 'mtct',
-        :limit => 10
-      )
-      ActiveRecord::Base.include_root_in_json = false
-      response = @iccd_terms_bdm_mtct.to_json(:methods => [:value], :only => :methods)
-
-      respond_to do |format|
-        format.json { render :json =>  response }
-      end
+    respond_to do |format|
+      format.json { render :json =>  response }
     end
-    
-    def list_bdm_mtcm
-       term = params[:term] || ""
-       @iccd_terms_bdm_mtcm = IccdTermsBdmMtcm.all(:select => "mtcm as value",
-         :conditions => ["LOWER(mtcm) LIKE ?", "#{term}%"],
-         :order => 'mtcm',
-         :limit => 10
-       )
-       ActiveRecord::Base.include_root_in_json = false
-       response = @iccd_terms_bdm_mtcm.to_json(:methods => [:value], :only => :methods)
+  end
 
-       respond_to do |format|
-         format.json { render :json =>  response }
-       end
-     end
-  
+  def list_bdm_mtct
+    term = params[:term] || ""
+    @iccd_terms_bdm_mtct = IccdTermsBdmMtct.all(:select => "mtct as value",
+      :conditions => ["LOWER(mtct) LIKE ?", "#{term}%"],
+      :order => 'mtct',
+      :limit => 10
+    )
+    ActiveRecord::Base.include_root_in_json = false
+    response = @iccd_terms_bdm_mtct.to_json(:methods => [:value], :only => :methods)
 
+    respond_to do |format|
+      format.json { render :json =>  response }
+    end
+  end
+
+  def list_bdm_mtcm
+    term = params[:term] || ""
+    @iccd_terms_bdm_mtcm = IccdTermsBdmMtcm.all(:select => "mtcm as value",
+      :conditions => ["LOWER(mtcm) LIKE ?", "#{term}%"],
+      :order => 'mtcm',
+      :limit => 10
+    )
+    ActiveRecord::Base.include_root_in_json = false
+    response = @iccd_terms_bdm_mtcm.to_json(:methods => [:value], :only => :methods)
+
+    respond_to do |format|
+      format.json { render :json =>  response }
+    end
+  end
+
+  # OPTIMIZE: prevenire accesso via indirizzo a unit_id SSU.
+  # Comunque il modello solleva giustamente errore e impedisce di creare U di livello 3
   def new
     terms
     iccd_terms
@@ -285,8 +338,6 @@ class UnitsController < ApplicationController
       Unit.new(:fond_id => @fond.id)
     elsif @parent
       Unit.new(:parent_id => @parent.id, :fond_id => @parent.fond_id)
-    else
-      Unit.new # FIXME: si può eliminare. Non si creano unità senza fond o parent_unit
     end
     @full_path = @unit.full_path
     @events = @unit.events_for_view
@@ -314,8 +365,6 @@ class UnitsController < ApplicationController
     elsif @parent
       @fond = Fond.find(@parent.fond_id)
       Unit.new(:parent_id => @parent.id, :fond_id => @parent.fond_id, :tsk => flash[:tsk])
-    else
-      Unit.new # FIXME: si può eliminare. Non si creano unità senza fond o parent_unit
     end
     @full_path = @unit.full_path
     @events = @unit.events_for_view
@@ -406,6 +455,8 @@ class UnitsController < ApplicationController
 
   def update
     @unit             = Unit.find(params[:id])
+    @unit.updated_by  = current_user.id
+
     @full_path        = @unit.full_path
     @events           = @unit.events.sort_by(&:order_date)
     setup_relation_collections
@@ -419,8 +470,8 @@ class UnitsController < ApplicationController
     # TODO: [Luca] vedere se creare action specfiche visto che questa è diventata un paciugo
     respond_to do |format|
       if valid_and_saved
-        root_fond = @unit.fond.root
-        Unit.bulk_update_fonds_units_count(root_fond.subtree_ids)
+        @root_fond = @unit.fond.root
+        Unit.bulk_update_fonds_units_count(@root_fond.subtree_ids)
 
         if request.xhr?
           format.json { render :json => {:status => "success"} }
@@ -428,7 +479,12 @@ class UnitsController < ApplicationController
           if params[:save_and_continue]
             format.html { redirect_to(edit_unit_url(@unit), :notice => 'Scheda aggiornata') }
           elsif params[:save_and_add_new]
-            format.html { redirect_to(new_fond_unit_url(@unit.fond_id)) }
+            target_link = if @unit.is_root?
+              new_fond_unit_url(@unit.fond_id)
+            else
+              new_unit_child_url(@unit.parent.id)
+            end
+            format.html { redirect_to(target_link) }
           elsif params[:save_and_continue_iccd]
             flash[:notice] = 'Scheda creata'
             format.html { redirect_to(edit_iccd_unit_path(@unit) + "?t=#{@unit.tsk}") }
@@ -492,7 +548,6 @@ class UnitsController < ApplicationController
 
   def sort_column
     params[:sort] || "sequence_number"
-    # segliere se fare query in più per sicurezza: Fond.column_names.include?(params[:sort]) ? params[:sort] : "name"
   end
 
   def selected_attributes

@@ -56,7 +56,6 @@ module ApplicationHelper
     link_to(name, "javascript:void(0)", :class => "add_child", :"data-association" => association)
   end
 
-  # NOTE: metodo provvisorio. Probabilmente non servirà più quando ci sarà vero multiple upload
   def link_to_digital_objects_by_count(digital_objects_count, name, object, html_options = {})
     target_link = if digital_objects_count > 0
       polymorphic_path([object, "digital_objects"])
@@ -71,7 +70,7 @@ module ApplicationHelper
     title ||= column.titleize
     css_class = (column == sort_column) ? "current #{sort_direction}" : nil
     direction = (column == sort_column && sort_direction == "asc") ? "desc" : "asc"
-    link_to title, {:q => params[:q] || nil, :sort => column, :direction => direction}, {:class => css_class}
+    link_to title, params.merge({:sort => column, :direction => direction}), {:class => css_class}
   end
 
   # Inline CSS
@@ -96,8 +95,6 @@ module ApplicationHelper
 
   # Options for select heading_types
   def heading_types
-    #options_for_select(@terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a| [a.term_value, a.id]})
-    #mimic terms_select for headings_types
     options_for_select(@terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a| [a.term_value, a.term_value]})
   end
 
@@ -182,15 +179,15 @@ module ApplicationHelper
     if text.blank?
       ""
     else
-      #text = text.gsub(/</, '&#60;').gsub(/>/, '&#62;').gsub(/\[/, "&#91;").gsub(/\]/, "&#93;") # other version
       text = html_escape(text).gsub(/\[/, "&#91;").gsub(/\]/, "&#93;")
       textilized = RedCloth.new(text, options)
       textilized.to_html
     end
   end
 
-  # Unescapes the entities for special characters that have been escaped by RedCloth.
-  # For example: fond.description of "Archivio storico Arnoldo Mondadori Editore - AME"
+  # Unescapes the entities for special characters that have been escaped by
+  #   RedCloth. For example: fond.description of "Archivio storico Arnoldo
+  #   Mondadori Editore - AME"
 
   def textilize_with_entities(text)
     textilize(text).gsub("&amp;#", "&#")
@@ -211,43 +208,66 @@ module ApplicationHelper
     end
   end
 
-  # TODO: [1.x] rifare relations
-  # Required options:
+  def formatted_custodian_building(building)
+    [
+      building.address,
+      building.postcode,
+      building.city,
+      building.country
+    ].
+      delete_if{|fragment| fragment.blank?}.
+      join(" ")
+  end
+
+  def inline_short_sources(sources)
+    text = Array.new
+    sources.each do |source|
+      text.push("[<em>#{source.short_title}</em>]")
+    end
+    text.join(", ")
+  end
+
+  # TODO: [1.x] rifare relations Required options:
   # - <tt>:f</tt> => main entity form builder
   # - <tt>:related_to</tt> => a symbol of the name of the target association,
   #   example :creators if Fond has many creators through :rel_creator_fonds
-  # - <tt>:related_through</tt> => a collection of the current association records,
-  #   example @rel_creator_fonds (array of active record objects),
-  #   if Fond has many creators through :rel_creator_fonds;
-  #   if this local is not specified, an instance variable will be used, based
-  #   on the name of the through association
-  # - <tt>:selected_label</tt> => a lambda used to populate the visible value of every single related object;
-  #   the association record is yielded to the block;
-  #   this is required because in general retrieving the shown value is not trivial,
-  #   and is specific to every type of association
-  #   example: lambda { |through_record| through_record.creator.preferred_name.try(:name) }
-  # - <tt>:available_related</tt> => the number of records available to be added to the relation
+  # - <tt>:related_through</tt> => a collection of the current association
+  #   records, example @rel_creator_fonds (array of active record objects), if
+  #   Fond has many creators through :rel_creator_fonds; if this local is not
+  #   specified, an instance variable will be used, based on the name of the
+  #   through association
+  # - <tt>:selected_label</tt> => a lambda used to populate the visible value of
+  #   every single related object; the association record is yielded to the
+  #   block; this is required because in general retrieving the shown value is
+  #   not trivial, and is specific to every type of association example: lambda
+  #   { |through_record| through_record.creator.preferred_name.try(:name) }
+  # - <tt>:available_related</tt> => the number of records available to be added
+  #   to the relation
   #
   # Other requirements:
-  # - the target model (Creator, for example), must have a method (or, preferably, a scope)
-  #   that accepts a search string, which is given in params[:term]
+  # - the target model (Creator, for example), must have a method (or,
+  #   preferably, a scope) that accepts a search string, which is given in
+  #   params[:term]
   #
   # Other options with defaults:
-  # - <tt>:foreign_key</tt>, if provided, it will override the default (that is association_foreign_key)
-  # - <tt>:excluded_ids</tt>, an id or an array of ids; if provided the records with these
-  #   ids will be filtered out, and not be shown in the autocomplete or in the suggested list,
-  #   even if present in the results;
+  # - <tt>:foreign_key</tt>, if provided, it will override the default (that is
+  #   association_foreign_key)
+  # - <tt>:excluded_ids</tt>, an id or an array of ids; if provided the records
+  #   with these ids will be filtered out, and not be shown in the autocomplete
+  #   or in the suggested list, even if present in the results;
   # - <tt>:cardinality</tt>, default 'unlimited', can be set at 1
-  # - <tt>:suggested_list</tt>, if provided, will be used to create a list of preset suggestions
+  # - <tt>:suggested_list</tt>, if provided, will be used to create a list of
+  #   preset suggestions
   # - <tt>:suggested_label</tt>, same principle of selected_label
-  # - <tt>:suggested_threshold</tt>, required if :suggested_list have been specified, if
-  #   the suggested_list size is greater than this, autocomplete will be used
-  # - <tt>:autocompletion_controller</tt>, default is the same of the "related_to" option
-  #   (example: "creators")
-  # - <tt>:autocompletion_action</tt>, default is "list";
-  #   the action must return a json response, with an array of objects, and each
-  #   object must have the property "id" and "value";
-  #   id is the id of the target association (creator, for example)
+  # - <tt>:suggested_threshold</tt>, required if :suggested_list have been
+  #   specified, if the suggested_list size is greater than this, autocomplete
+  #   will be used
+  # - <tt>:autocompletion_controller</tt>, default is the same of the
+  #   "related_to" option (example: "creators")
+  # - <tt>:autocompletion_action</tt>, default is "list"; the action must return
+  #   a json response, with an array of objects, and each object must have the
+  #   property "id" and "value"; id is the id of the target association
+  #   (creator, for example)
   def finalize_relation_options(f, relation_options)
     opts = relation_options
     # Parameters setup, based on given locals
@@ -268,8 +288,8 @@ module ApplicationHelper
     # => :creator
     opts[:source_association_name]    = opts[:association].source_reflection.name
     # => @rel_creator_fonds
-    # default available, but should always be specified to use local
-    # variables instead of inherited instance variables
+    # default available, but should always be specified to use local variables
+    # instead of inherited instance variables
     opts[:related_through]            ||= instance_variable_get("@#{opts[:source_association_name]}".to_sym)
     # => "creators"
     opts[:autocompletion_controller]  ||= opts[:related_to].to_s

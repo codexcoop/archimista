@@ -7,7 +7,7 @@ class Ability
 
     when "superadmin"
       can :manage, :all
-      cannot [:update, :destroy], User, :role => 'superadmin'
+      cannot [:destroy], User, :role => 'superadmin'
       cannot [:update, :destroy], Group, :name => 'default'
 
     when "admin"

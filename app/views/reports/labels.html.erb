@@ -1,12 +1,25 @@
-<% @units.each do |unit| %>
-  <div class="label pbi_avoid">
-    <h4><%= @fond.name %></h4>
-    <p>
-      <em><%= unit.title %></em><br /><%= unit.preferred_event.try(:full_display_date) || "[s.d.]" %>
-    </p>
-    <p class="head">
-      <span class="left"><strong><%= t('reference_number')  %></strong>:&nbsp;<%= unit.reference_number %></span>
-      <span class="right"><strong><%= t('sequence_number') %></strong>:&nbsp;<%= unit.sequence_number %></span>
-    </p>
+<% content_for :status_bar do %>
+  <h2>Report complesso archivistico<%= path_separator %><%= link_to @root_fond.name, dashboard_report_path %><%= path_separator %>Etichette unità</h2>
+  <div id="links">
+    <%= link_to_index "Report", reports_path %>
   </div>
 <% end %>
+
+<div class="span12">
+  <p>
+    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', labels_report_path(@root_fond, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
+  </p>
+  <% @units.each do |unit| %>
+    <div class="unit-label pbi_avoid">
+      <h4><%= @root_fond.name %></h4>
+      <h5><%= unit.fond.name %></h5>
+      <p>
+        <em><%= unit.title %></em><br /><%= unit.preferred_event.try(:full_display_date) || "[s.d.]" %>
+      </p>
+      <p class="head">
+        <span class="left"><strong><%= t('reference_number')  %></strong>:&nbsp;<%= unit.reference_number %></span>
+        <!--span class="right"><strong><%= t('sequence_number') %></strong>:&nbsp;<%= unit.sequence_number %></span-->
+      </p>
+    </div>
+  <% end %>
+</div>

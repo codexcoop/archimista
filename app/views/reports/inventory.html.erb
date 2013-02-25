@@ -1,71 +1,146 @@
-<div id="cover" class="pb_after">
-  <h1>
-    <%= @root_fond_name %>
-    <span class="date"><%=  @root_fond_preferred_date %></span>
-  </h1>
-</div>
+<% content_for :status_bar do %>
+  <h2>Report complesso archivistico<%= path_separator %><%= link_to @root_fond_name, dashboard_report_path %><%= path_separator %>Inventario</h2>
+  <div id="links">
+    <%= link_to_index "Report", reports_path %>
+  </div>
+<% end %>
+<div class="span12">
+  <p>
+    <%= link_to '<i class="icon-download-alt"></i> Genera RTF', inventory_report_path(@fond, :format => "rtf"),  {:class => "rtf-inventory btn btn-small"}  %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', inventory_report_path(@fond, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
+  </p>
 
-<% @fonds.each do |f| %>
-  <div class="fond pbi_avoid">
-    <h2>
-      <%= f.name %>
-      <% if f.preferred_event.present? %>
-        <span class="date"><%= f.preferred_event.full_display_date %></span>
-      <% end %>
-    </h2>
-    <p class="type"><%= f.fond_type %></p>
+  <div id="cover" class="pb_after">
+    <h1>
+      <%= @root_fond_name %>
+      <span class="date"><%=  @root_fond_preferred_date %></span>
+    </h1>
+  </div>
 
-    <% if f.abstract.present? %>
-      <div>
-        <h4><%= t('abstract') %></h4>
-        <%= textilize_with_entities(f.abstract) %>
-      </div>
-    <% end %>
+  <% @fonds.each do |fond| %>
+    <div class="fond pbi_avoid">
+      <h2>
+        <%= fond.name %>
+        <% if fond.preferred_event.present? %>
+          <span class="date"><%= fond.preferred_event.full_display_date %></span>
+        <% end %>
+      </h2>
 
-    <% if f.history.present? %>
-      <div>
-        <h4><%= t('history') %></h4>
-        <%= textilize_with_entities(f.history) %>
-      </div>
-    <% end %>
-
-    <% if f.description.present? %>
-      <div>
-        <h4><%= t('description') %></h4>
-        <%= textilize_with_entities(f.description) %>
-      </div>
-    <% end %>
-
-    <% if f.creators.present? %>
-      <h4><%= t('creators') %></h4>
-      <% f.creators.each do |creator| %>
-        <div>
-          <%= creator.preferred_name.name if creator.preferred_name.name.present? %>
-          <span class="date"><%= creator.preferred_event.full_display_date if creator.preferred_event.present? %></span>
-        </div>
-      <%  end %>
-    <% end %>
-
-    <% if f.units.present? %>
-      <% f.units.each do |u| %>
-        <div class="unit pbi_avoid">
-          <p class="head">
-            <span class="left"><strong><%= u.sequence_number %></strong></span>
-            <span class="right"><%= u.reference_number %></span>
-          </p>
-          <p>
-            <strong><%= u.title %></strong>
-            <% if u.preferred_event.present? %><br />
-              <em><%= u.preferred_event.full_display_date_with_place %></em>
+      <% if fond.custodians.present? %>
+        <h3><%= Custodian.human_name %></h3>
+        <% fond.custodians.each do |custodian| %>
+          <h4><%= custodian.display_name %></h4>
+          <% @custodian_printable_attributes.each do |attribute| %>
+            <% methods = attribute.split('.') %>
+            <% if custodian.send(methods[0].to_sym).present? %>
+              <h5><%= t(methods[0]) %></h5>
+              <% if attribute.include?('.') %>
+                <% text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+              <% else %>
+                <% text = custodian.send(attribute.to_sym).to_s %>
+              <% end %>
+              <%= textilize_with_entities(text) %>
             <% end %>
-          </p>
-          <% if u.content.present? %>
+          <% end %>
+          <% if custodian.custodian_contacts.present? %>
+            <% contacts = Array.new %>
             <div>
-              <%= textilize_with_entities(u.content) %>
+              <h5><%= t("contacts") %></h5>
+              <% custodian.custodian_contacts.each do |contact| %>
+                <% contacts.push("#{Custodian.human_attribute_name(contact.contact_type)}: #{contact.contact}") %>
+              <% end %>
+              <%= contacts.join(', ') %>
             </div>
+          <% end %>
+        <% end %>
+        <hr />
+      <% end %>
+
+      <% if fond.creators.present? %>
+        <h3><%= Creator.human_name({:count => fond.creators.size}) %></h3>
+        <% fond.creators.each do |creator| %>
+          <h4><%= creator.display_name %></h4>
+          <% @creator_printable_attributes.each do |attribute| %>
+            <% methods = attribute.split('.') %>
+            <% if creator.send(methods[0].to_sym).present? %>
+              <h5><%= t(methods[0]) %></h5>
+              <% if attribute.include?('.') %>
+                <% text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+              <% else %>
+                <% if attribute == 'creator_type' %>
+                  <% text = Creator.human_attribute_name(creator.send(attribute.to_sym).to_s) %>
+                <% else %>
+                  <% text = creator.send(attribute.to_sym).to_s %>
+                <% end %>
+              <% end %>
+              <%= textilize_with_entities(text) %>
+            <% end %>
+          <% end %>
+        <% end %>
+        <hr />
+      <% end %>
+
+      <%  @fond_printable_attributes.each do |attribute| %>
+        <%  methods = attribute.split('.') %>
+        <%  if fond.send(methods[0].to_sym).present? && fond.send(methods[0].to_sym) != 0 %>
+          <div>
+            <%# FIXME: hack provvisorio %>
+            <% string = methods[0].to_s == "description" ? "Contenuto" : t(methods[0]) %>
+            <h5><%= string %></h5>
+            <%  if attribute.include?('.') %>
+              <%  text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+            <% else %>
+              <%  text = fond.send(attribute.to_sym).to_s %>
+            <% end %>
+            <%=  textilize_with_entities(text) %>
+          </div>
+        <% end %>
+      <% end %>
+
+      <% if fond.sources.present? %>
+        <div>
+          <h5><%= Source.human_name({:count => fond.sources.size}) %></h5>
+          <% fond.sources.each do |source| %>
+            <p>
+              <em><%= source.short_title %></em>
+              <%= formatted_source(source) %>
+            </p>
           <% end %>
         </div>
       <% end %>
-    <% end %>
-  </div>
-<%  end %>
+
+      <% if fond.units.present? %>
+        <h4><%= Unit.human_name({:count => fond.units.size}) %></h4>
+        <% fond.units.each do |u| %>
+          <div class="unit pbi_avoid">
+            <p class="head">
+              <span class="left"><strong><%= u.sequence_number %></strong></span>
+              <span class="right"><%= u.reference_number %></span>
+            </p>
+            <p>
+              <strong><%= u.bracketize_title_if_given %></strong>
+              <% if u.preferred_event.present? %><br />
+                <em><%= u.preferred_event.full_display_date_with_place %></em>
+              <% end %>
+            </p>
+            <% @unit_printable_attributes.each do |attribute| %>
+              <% methods = attribute.split('.') %>
+              <% if u.send(methods[0].to_sym).present? %>
+                <div>
+                  <h5><%= t(methods[0])%></h5>
+                  <% if attribute.include?('.') %>
+                    <% text = u.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+                  <% else %>
+                    <% text = u.send(attribute.to_sym).to_s %>
+                  <% end %>
+                  <%=  textilize_with_entities(text) %>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    <hr />
+  <% end %>
+</div>

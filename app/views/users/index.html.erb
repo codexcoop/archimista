@@ -11,35 +11,23 @@
 <div id="index-controls">
   <%= link_to t('new'), new_user_path, { :class => "btn btn-small new" } %>
 </div>
+<p>
+  <%= link_to_unless(params[:view].nil?, "Attivi <span class='muted'>(#{@active_users.length})</span>", users_path) %> |
+  <%= link_to_unless(params[:view] == "inactive" || @inactive_users.length == 0, "Non attivi <span class='muted'>(#{@inactive_users.length})</span>", users_path(:view => "inactive")) %>
+</p>
 
-<table class="table">
+<table class="table table-striped">
   <thead>
   <tr>
-    <th><%= t('devise.attributes.username') %></th>
-    <th><%= t('devise.attributes.full_name') %></th>
-    <th>Email</th>
-    <th><%= t('devise.attributes.role') %></th>
-    <th><%= t('devise.attributes.group_id') %></th>
-    <th>&nbsp;</th>
+    <th class="span3"><%= t('devise.attributes.group_id') %></th>
+    <th class="span2"><%= t('devise.attributes.username') %></th>
+    <th class="span3"><%= t('devise.attributes.full_name') %></th>
+    <th class="span2"><%= t('devise.attributes.role') %></th>
+    <th class="span1">&nbsp;</th>
   </tr>
   </thead>
   <tbody>
-  <% @users.each do |user| %>
-    <tr>
-      <td><%= link_to_unless(user.is_superadmin?, user.username, edit_user_path(user)) %></td>
-      <td><%= user.full_name %> <%= "(#{user.qualifier})" if user.qualifier.present? %></td>
-      <td><%= mail_to user.email %></td>
-      <td><%= user.role %></td>
-      <td><%= user.group.name %></td>
-      <td>
-        <% if user.active? %>
-          <%= link_to_unless(current_user == user || user.is_superadmin?, t('deactivate'), toggle_active_user_path(user), :method => :put, :class => "btn btn-mini") do |text| '' end %>
-        <% else %>
-          <%= link_to_unless(current_user == user, t('activate'), toggle_active_user_path(user), :method => :put, :class => "btn btn-mini") do |text| '' end %>
-        <% end %>
-      </td>
-    </tr>
-  <% end %>
+    <%= render :partial => "user", :collection => params[:view] == "inactive" ? @inactive_users : @active_users %>
   </tbody>
 </table>
 </div>

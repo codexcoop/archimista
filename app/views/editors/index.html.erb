@@ -11,7 +11,7 @@
 
 <% if @editors.size > 0 %>
 
-  <table class="table">
+  <table class="table table-sortable">
     <thead>
     <tr>
       <th><%= t('editors_editor') %></th>
@@ -22,7 +22,7 @@
     <% @editors.each do |editor| %>
       <tr class="<%= cycle("odd", "even") %>">
         <td><%= link_to editor.reverse_full_name, edit_editor_path(editor) %></td>
-        <td><%= link_to t('destroy'), editor, :confirm => 'Are you sure?', :method => :delete %></td>
+        <td><%= link_to t('destroy'), editor, :confirm => t('are_you_sure'), :method => :delete %></td>
       </tr>
     <% end %>
     </tbody>
