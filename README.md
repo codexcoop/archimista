@@ -8,11 +8,11 @@ Versione corrente: **1.1.0**
 Archimista funziona sui sistemi operativi GNU/Linux, Mac OS X, Windows XP e superiori.
 
 * Ruby 1.8.7
-* Rails 2.3.14
+* Rails 2.3.17
 * Varie gemme Ruby dichiarate nel file config/environment.rb
 * Gemma rubyzip
 * ImageMagick (opzionale, per la gestione di oggetti digitali)
-* Database: MySQL o PostgreSQL o SQLite
+* Database: MySQL (>= 5.1) o PostgreSQL (>= 9.1) o SQLite
 * Webserver configurato per applicazioni Rails
 
 ## Installazione
