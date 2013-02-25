@@ -45,6 +45,7 @@ Archimista è un progetto promosso da:
 * Regione Lombardia, Direzione Generale Istruzione, Formazione e Cultura
 * Regione Piemonte, Direzione Cultura, Turismo e Sport
 * Università degli Studi di Pavia
+* Politecnico di Milano
 
 ## Autori
 
