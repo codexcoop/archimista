@@ -30,7 +30,7 @@
 $(document).ready(function(){
   // Fix per presunto bug di Bootstrap / button.
   // Problema: al click su icona contenuta in button.disabled si innesca ugualmente l'azione del button.
-   $("#mass-remove i, #mass-classify i").click(function(event) {
+   $("#mass-remove i, #mass-classify i, #mass-reorder i").click(function(event) {
      if ($(this).parent().hasClass("disabled")) {
        event.stopPropagation;
        return false;

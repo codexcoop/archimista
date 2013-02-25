@@ -74,7 +74,7 @@ $(document).ready(function() {
   // FONDS
 
   function validatesPresenceOf(name) {
-    if(name.replace(/\s/g,"") === ""){
+    if (name.replace(/\s/g, "") === "") {
       $(".inline-msg").show();
       return false;
     } else {
@@ -150,18 +150,6 @@ $(document).ready(function() {
     }).focus();
   });
 
-  // DIGITAL OBJECTS
-
-  $("a.fancybox").fancybox({
-    'centerOnScroll': true
-  });
-
-  $("#digital-objects-warning").popover({
-    title: "Oggetti digitali non disponibili",
-    content: "Per accedere a questa funzionalità è necessario installare il programma ImageMagick.",
-    placement: 'bottom'
-  });
-
   // UNITS
   $('#unit_tsk').change(function() {
     window.location = window.location.href.split('?')[0] + "?t=" + this.value;
@@ -174,8 +162,8 @@ $(document).ready(function() {
     }
     $("#unit_reference_number").attr("value","b. " + $('#unit_folder_number').val() + ", fasc. " +$('#unit_file_number').val());
     return false;
-  }); 
-  
+  });
+
   // SOURCES
   $('#source_source_type_code').change(function() {
     window.location = window.location.href.split('?')[0] + "?type=" + this.value;
@@ -219,8 +207,6 @@ $(document).ready(function() {
 
     new_fields_$.find('input:text, select, input:file').attr('value', '');
     new_fields_$.find('input:checkbox').attr('checked', false).attr('aria-pressed', false);
-    // FIXME - eliminami se confermato scorporo digital_objects oppure appendi immagine in oggetti digitali
-    new_fields_$.find('.preview').empty();
 
     new_fields_$.find('select').each(function(){
       var options = $(this).find('option');
@@ -236,6 +222,30 @@ $(document).ready(function() {
   });
 
   $('.textile').markItUp(mySettings,{});
+
+  // DIGITAL OBJECTS
+
+  $("a.fancybox").fancybox({
+    'padding': 5,
+    'centerOnScroll': true
+  });
+
+  function fancyTitle(title, currentArray, currentIndex, currentOpts) {
+    return '<span id="fancybox-title-over">' + (currentIndex + 1) + ' / ' + currentArray.length + '</span>';
+  }
+
+  $("a.fancybox-gallery").fancybox({
+    'padding': 5,
+    'titlePosition': 'over',
+    'titleFormat': fancyTitle,
+    'centerOnScroll': true
+  });
+
+  $("#digital-objects-warning").popover({
+    title: "Oggetti digitali non disponibili",
+    content: "Per accedere a questa funzionalità è necessario installare il programma ImageMagick.",
+    placement: 'bottom'
+  });
 
 });
 

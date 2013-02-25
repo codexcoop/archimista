@@ -37,11 +37,6 @@ $(document).ready(function(){
   .select_columns_dialog()
   .edit_text_command()
   .autoresize();
-  // .preferred_event_dialog()
-  // .text_field_dialog()
-  // .dialog_alert()
-  // .no_rows_selected_dialog()
-  // .add_rows_dialog()
 
   $.archigrid.events
   .standalone_edit_on_keypress()

@@ -30,10 +30,11 @@ $(document).ready(function(){
 
     'sequence_number' : {
       name:'unit[sequence_number]',
-      width:60,
+      width:80,
       align:"right",
       fixed:true,
       // required for keyboard navigation, now dynamically added by $.archigrid.config.col_model()
+      search:false, // provvisorio. La ricerca riceve sequence_number come input, ma mostra display_sequence_number...
       classes:"",
       resizable:false
     },
@@ -43,18 +44,19 @@ $(document).ready(function(){
       resizable:true,
       width:220,
       label:'Classificazione',
-      classes:"",
+      classes:""
     },
 
     // 'ancestry_depth' : {
-    //   name:'unit[ancestry_depth]',
-    //   width:80,
-    //   fixed:true,
-    //   search:false,
-    //   stype:'select',
-    //   formatter: $.archigrid.formatters.level_string,
-    //   searchoptions:{value:$.archigrid.config.vocabularies['units.ancestry_depth']},
-    //   classes:""
+    //  name:'unit[ancestry_depth]',
+    //  width:40,
+    //  align:"center",
+    //  fixed:true,
+    //  search:false,
+    //  formatter: $.archigrid.formatters.level_string
+    // stype:'select',
+    // searchoptions:{value:$.archigrid.config.vocabularies['units.ancestry_depth']},
+    // classes:""
     // },
 
     'tmp_reference_number' : {
