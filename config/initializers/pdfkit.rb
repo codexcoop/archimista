@@ -7,6 +7,7 @@ PDFKit.configure do |config|
     :margin_bottom => '3cm',
     :margin_left   => '3cm',
     :print_media_type => true,
+    :disable_smart_shrinking => true,
     :encoding => "UTF-8"
   }
 end

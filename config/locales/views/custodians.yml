@@ -111,4 +111,5 @@ it:
   custodian_editors: "Compilatori"
   contact_name: "Contatto"
   contact_type: "Tipo"
-  contacts: "Contatti"       
+  contacts: "Contatti"  
+  headquarter_address: "Sede"

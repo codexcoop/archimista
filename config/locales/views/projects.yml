@@ -61,4 +61,5 @@ it:
   new_project: "Nuovo progetto"
   project_urls: "Collegamenti"
   project_note: "Annotazioni"
-  credit_name: "Nome"        
+  credit_name: "Nome"  
+  display_date: "Estremi cronologici"

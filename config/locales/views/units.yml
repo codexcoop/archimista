@@ -8,6 +8,7 @@ en:
       formatters:
         unit: "unit"
         subunit: "subunit"
+        subsubunit: "subsubunit"
       dialogs:
         add_rows:
         title: "Add units"
@@ -24,9 +25,10 @@ en:
   reorder_add: "+ add"
   reorder_remove: "- remove"
   how_many_rows: "How many units would you like to create?"
-  rows_range: "(from 1 to 100)"
+  rows_range: "From 1 to 100"
   tmp_title: "Temporary title for the new units"
   tmp_unit_type: "Type of the new units"
+  start_at: "Starts at&hellip;"
   error_no_units_selected: "Please select at least one unit"
   confirm_destroy: "Are you sure to destroy the selected units and all the dependent subunits?"
   number_of_rows: "Number of records should be between 1 and 100"
@@ -43,6 +45,7 @@ en:
   new_subunit: "New sub-unit"
   level_file: "File"
   level_subfile: "Sub-file"
+  level_subsubfile: "Sub-sub-file"
   listing_units: "Listing units"
   reference_number: "Reference number"
   reference_number_short: "Ref number"
@@ -143,17 +146,20 @@ en:
   tech_area: "Tech area"
   new_iccd_subject: "New ICCD Subject"
   localization_area: "Localization area"
-  new_iccd_damage: "Add ICCD damage" 
+  new_iccd_damage: "Add ICCD damage"
   unit_editors: "Editors"
   unit_editor: "Editor"
+  numbered_from: "Numbered from"
+  alt_title: "Alternative title"
 it:
   units: "Unità archivistiche"
   # TODO: semplificare !
   units_gridview:
     archigrid:
       formatters:
-        unit: "unit&agrave;"
-        subunit: "sottounit&agrave;"
+        unit: "U"
+        subunit: "SU"
+        subsubunit: "SSU"
       dialogs:
         add_rows:
         title: "Aggiungi unit&agrave;"
@@ -170,9 +176,10 @@ it:
   reorder_add: "+ aggiungi"
   reorder_remove: "- rimuovi"
   how_many_rows: "Quante unit&agrave; vuoi creare?"
-  rows_range: "(da 1 a 100)"
+  rows_range: "Da 1 a 100"
   tmp_title: "Titolo provvisorio delle nuove unità"
   tmp_unit_type: "Tipologia delle nuove unità"
+  start_at: "Inizia da&hellip;"
   error_no_units_selected: "Selezionare almeno una scheda unità"
   confirm_destroy: "Sei sicuro di voler eliminare definitivamente le unità selezionate e tutte le sottounità dipendenti?"
   number_of_rows: "Il numero di record deve essere tra 1 e 100"
@@ -190,6 +197,10 @@ it:
   subunits: "Sottounità archivistiche"
   level_file: "Unità"
   level_subfile: "Sottounità"
+  level_subsubfile: "Sottosottounità"
+  level_file_short: "U"
+  level_subfile_short: "SU"
+  level_subsubfile_short: "SSU"
   new_subunit: "Nuova sottounità"
   listing_units: "Unità archivistiche"
   reference_number: "Segnatura definitiva"
@@ -297,3 +308,5 @@ it:
   new_iccd_damage: "Aggiungi STCS"
   unit_editors: "Compilatori"
   unit_editor: "Compilatore"
+  numbered_from: "Numerate da"
+  alt_title: "Titolo alternativo"

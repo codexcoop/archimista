@@ -5,7 +5,12 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :groups
 
   # Polymorphic resources (must be here, prior to parent resources)
-  map.resources :digital_objects, :only => [:destroy], :collection => { :all => :get, :disabled => :get }
+  map.resources :digital_objects, :only => [:destroy], :collection => {
+    :all => :get,
+    :disabled => :get,
+    :sort => :get,
+    :bulk_destroy => :get
+  }
 
   # Schede
   map.resources :fonds, :except => [:new],
@@ -49,7 +54,10 @@ ActionController::Routing::Routes.draw do |map|
       :textfield_form   => :get,
       :update_event     => :put,
       :edit_iccd        => :get,
-      :show_iccd        => :get
+      :show_iccd        => :get,
+      :move             => :get,
+      :move_down        => :post,
+      :move_up          => :post,
   },
     :collection => {
       :list_oa_mtc      => :get,
@@ -57,10 +65,10 @@ ActionController::Routing::Routes.draw do |map|
       :list_bdm_ogtd    => :get,
       :list_bdm_mtcm    => :get,
       :list_bdm_mtct    => :get,
-      :classify         => :put
+      :classify         => :put,
   } do |units|
     units.resources :children, :controller => 'units', # OPTIMIZE: rinominare in subunits ?
-    :collection   => { :new_iccd => :get }
+    :collection   => { :new_iccd => :get }, :only => 'new'
     units.resources :digital_objects, :except => [:show, :destroy]
   end
 
@@ -110,8 +118,9 @@ ActionController::Routing::Routes.draw do |map|
       :creators                   => :get,
       :custodians                 => :get,
       :labels                     => :get,
-      :units_by_reference_number  => :get, # OPTIMIZE: forse possibile unificare azione con diverso parametro get
-      :units_by_sequence_number   => :get,
+      :units                      => :get,
+      :custodian                  => :get,
+      :project                    => :get,
   }
 
   map.resources :quality_checks, :only => [:index],

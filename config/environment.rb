@@ -1,7 +1,7 @@
 # Be sure to restart your server when you modify this file
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.14' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.17' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -41,7 +41,8 @@ Rails::Initializer.run do |config|
   config.gem "ancestry",      :version => "1.2.4"
   config.gem "will_paginate", :version => "2.3.16"
   config.gem "RedCloth",      :version => "4.2.9"
-  config.gem "paperclip",     :version => "2.4.5"
+  config.gem "paperclip",     :version => "2.7.2"
+  config.gem "cocaine",       :version => "0.3.2"
 
   config.gem "pdfkit",        :version => "0.5.1"
   config.gem "rtf",           :version => "0.5.0"
