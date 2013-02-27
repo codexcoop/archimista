@@ -154,11 +154,15 @@ $(document).ready(function(){
           $("span#jqgrid_kn").trigger(event);
         }
         if(event.which == 32) {
-          if($target_cell.hasClass("editable-jqgrid-native")) {
-            $target_cell.trigger('click');
-          } else {         
-            event.preventDefault();
-            if(!$.archigrid.utils.is_any_dialog_open()) {
+          filter_active = $(document.activeElement).parents('tr').hasClass('ui-search-toolbar');
+          is_modal_open = $.archigrid.utils.is_any_dialog_open();
+
+          if(filter_active || is_modal_open) {
+            $target_cell = undefined;
+          } else {
+            if($target_cell.hasClass("editable-jqgrid-native")) {
+              $target_cell.trigger('click');
+            } else {
               $.archigrid.events.dispatch_standalone_edit($target_cell);
               event.stopImmediatePropagation();
             }
