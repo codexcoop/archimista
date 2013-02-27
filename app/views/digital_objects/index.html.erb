@@ -1,7 +1,6 @@
 <% container_class "container-fluid" %>
 
 <% content_for :status_bar do %>
-  <%# OPTIMIZE: spostare in helper?? Valutare coerenza di testi e codice con tutto il resto %>
   <h2><%= [t(@attachable.class.name.underscore.pluralize), truncate(@attachable.display_name, :length => 100), status_bar_context].join(path_separator) %></h2>
   <div id="links">
     <% target_link = @attachable.class.name == "Source" ? edit_polymorphic_path(@attachable) : polymorphic_path(@attachable) %>
@@ -22,6 +21,9 @@
   </div>
 
   <% if @digital_objects.size > 0 %>
+    <% if @digital_objects.size > 1 %>
+      <p>Puoi modificare l'ordine degli oggetti mediante <em>drag and drop</em>: clicca su un oggetto e trascinalo nella posizione desiderata.</p>
+    <% end %>
     <%= display_page_entries_info @digital_objects %>
 
     <ul id="sortable" class="thumbnails">
@@ -48,7 +50,7 @@
               <% if digital_object.is_image? %>
                 <%= link_to '<i class="icon-zoom-in"></i>', digital_object.asset(:large), :class => "btn fancybox-gallery", :rel => "gallery", :title => t('zoom_in') %>
               <% else %>
-                <%= link_to '<i class="icon-download"></i>', digital_object.asset(:original), :class => "btn", :title => t('download') %>
+                <%= link_to '<i class="icon-download"></i>', digital_object.asset(:original), :class => "btn", :title => t('download'), :target => "new" %>
               <% end %>
               <%= link_to '<i class="icon-edit"></i>', edit_polymorphic_path([@attachable, digital_object]), :class => "btn", :title => t('edit') %>
               <%= link_to '<i class="icon-trash"></i>', digital_object, :confirm => t('are_you_sure'), :method => :delete, :class => "btn", :title => t('destroy') %>

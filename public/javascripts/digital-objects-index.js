@@ -2,6 +2,10 @@ $(document).ready(function() {
 
   uncheckAll();
 
+  if (!checkBoxes()) {
+    $("#toggle-all").prop('disabled', true).addClass('disabled');
+  }
+
   $("#sortable").sortable({
     cursor: 'move',
     placeholder : 'sortable-placeholder',
@@ -14,7 +18,16 @@ $(document).ready(function() {
     }
   });
 
-  $('[id^=digital_object_ids_]').change(function() {
+  $(document).on('change', "[id^=digital_object_ids_]", function() {
+    if($(this).is(':checked') ) {
+      if(allChecked()) {
+        $('#toggle-all').prop('checked', true);
+      }
+    } else {
+      if($('#toggle-all').is(':checked')) {
+        $('#toggle-all').prop('checked', false);
+      }
+    }
     toggleBulkDestroy();
   });
 
@@ -28,13 +41,9 @@ $(document).ready(function() {
     }
   });
 
-  if (!checkBoxes()) {
-    $("#toggle-all").prop('disabled', true).addClass('disabled');
-  }
-
   $(document).on('change', "#toggle-all", function() {
-    var CheckBoxes = $("input[name=digital_object_ids\\[\\]]");
-    CheckBoxes.prop("checked", !CheckBoxes.prop("checked"));
+    var CheckBoxes = $("[id^=digital_object_ids_]");
+    $(this).is(':checked') ? CheckBoxes.prop("checked", true) : CheckBoxes.prop("checked", false);
     toggleBulkDestroy();
   });
 
@@ -55,7 +64,17 @@ $(document).ready(function() {
   }
 
   function checkBoxes() {
-    var test = $("input[name=digital_object_ids\\[\\]]").length ? true : false;
+    var test = $("[id^=digital_object_ids_]").length ? true : false;
+    return test;
+  }
+
+  function allChecked() {
+    var test = true;
+    $("[id^=digital_object_ids_]").each(function() {
+      if(!$(this).is(':checked')) {
+        test = false;
+      }
+    });
     return test;
   }
 

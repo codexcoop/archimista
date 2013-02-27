@@ -1,11 +1,9 @@
 <div class="span12">
 
   <p>Puoi caricare uno o più file dal tuo computer.
-    Formati accettati: <code>JPEG</code> e <code>PDF</code>.
-    <!-- Da discutere: se riteniamo utile aggiungere altre informazioni (peso massimo del file, come fare selezione multipla, ecc.), potremmo fare ul collapse triggerato da "Istruzioni" oppure usare il side. Esempi in fonds/save_a_tree. -->
-  </p>
+  <span class="muted">Formati accettati: <code>JPEG</code> e <code>PDF</code>.
+  Massimo peso di ciascun file: <strong>8Mb</strong></span></p>
 
-<%# TODO: a inizio interazione rendere disabled anche checkbox %>
   <% form_for [@attachable, @digital_object], :html => { :multipart => true, :id => "fileupload", :class => 'skip-prompt' } do |f| %>
     <div class="row fileupload-buttonbar">
       <div class="span7">
@@ -19,7 +17,7 @@
           <i class="icon-upload icon-white"></i>
           <span><%= t('start_upload') %></span>
         </button>
-        <button id="btn-cancel" type="reset" class="btn btn-small btn-warning cancel disabled" style="margin-left: 20px;">
+        <button id="btn-cancel" type="reset" class="btn btn-small btn-warning cancel disabled" style="margin-left: 30px;">
           <i class="icon-ban-circle icon-white"></i>
           <span><%= t('cancel_upload') %></span>
         </button>
@@ -27,7 +25,7 @@
           <i class="icon-trash icon-white"></i>
           <span><%= t('delete_files') %></span>
         </button>
-        <input type="checkbox" class="toggle">
+        <input id="checkbox-delete" type="checkbox" class="toggle disabled">
       </div>
       <div class="span5">
         <!-- The global progress information -->
@@ -43,7 +41,6 @@
       <!-- The loading indicator is shown during file processing -->
       <div class="fileupload-loading"></div>
     </div>
-  <%# TODO: dar conto di upload completato %>
     <div id="fileupload-status" class="hide">Upload completato. Vedi la <%= link_to "lista oggetti", polymorphic_path([@attachable, "digital_objects"]) %>.</div>
     <!-- The table listing the files available for upload/download -->
     <table id="files" role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
@@ -87,7 +84,6 @@
   {% } %}
 </script>
 
-<%# TODO: presentare icona pdf (o la nostra di default o una generata da Paperclip o JqueryFileUpload) %>
 <!-- The template to display files available for download -->
 <script id="template-download" type="text/x-tmpl">
   {% for (var i=0, file; file=o.files[i]; i++) { %}
@@ -116,18 +112,17 @@
   {% } %}
 </script>
 
-<%# OPTIMIZE: testi e interazione di modal pending %>
 <div id="pending" class="modal hide fade">
   <div class="modal-header">
     <a class="close" data-dismiss="modal">×</a>
-    <h3>Nota</h3>
+    <h3>Nota bene</h3>
   </div>
   <div class="modal-body">
-    <p>Ci sono <strong><span id="pending-number"></span> upload in sospeso</strong>.</p>
-    <p>Lasciando questa pagina, annullerai tutti gli upload in coda. Cosa vuoi fare?</p>
+    <p>Al momento ci sono <strong><span id="pending-number"></span> upload in coda</strong>.</p>
+    <p>Lasciando questa pagina annullerai tutti gli upload in coda. Cosa vuoi fare?</p>
   </div>
   <div class="modal-footer">
     <%= link_to "Annulla upload", new_polymorphic_path([@attachable, "digital_object"]), :class => "btn" %>
-    <button class="btn btn-primary" data-dismiss="modal">Continua upload</button>
+    <button class="btn btn-primary" data-dismiss="modal">Rimani sulla pagina</button>
   </div>
 </div>

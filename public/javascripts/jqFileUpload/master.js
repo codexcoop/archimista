@@ -7,7 +7,8 @@ $(function () {
 
   $('#fileupload').fileupload({
     sequentialUploads: true,
-    maxFileSize: 8000000,
+    maxFileSize: 8192000,
+    previewSourceMaxFileSize: 81920000,
     previewMaxWidth: 130,
     previewMaxHeight: 130,
     previewAsCanvas: false,
@@ -31,7 +32,7 @@ $(function () {
 
   $('#fileupload').bind('fileuploadcompleted', function (e, data) {
     completed += 1;
-    $('#btn-delete').prop('disabled', false).removeClass('disabled');
+    $('#btn-delete, #checkbox-delete').prop('disabled', false).removeClass('disabled');
     if ((added - completed) === 0) {
       $("#btn-start, #btn-cancel").prop('disabled', true).addClass('disabled');
       $('#fileupload-status').show();
@@ -39,7 +40,7 @@ $(function () {
   });
 
   $('#fileupload').bind('fileuploaddestroyed', function (e, data) {
-    $('#btn-delete').prop('disabled', true).addClass('disabled');
+    $('#btn-delete, #checkbox-delete').prop('disabled', true).addClass('disabled');
     if ($('#fileupload-status').is(':visible')) { $('#fileupload-status').hide(); }
   });
 
@@ -52,11 +53,7 @@ $(function () {
     if (added === 0) { $('[id^=btn-]').prop('disabled', true).addClass('disabled'); }
   });
 
-  $('#pending').modal({
-    show: false
-  });
-
-  $(document).on("click", "a.to-index", function(e){
+  $(document).on("click", "#header a", function(e){
     if ((added - completed) > 0) {
       e.preventDefault();
       $("#pending-number").text(added - completed);
