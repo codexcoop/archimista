@@ -27,7 +27,7 @@ class CreatorsController < ApplicationController
   def new
     terms
     @creator = Creator.new
-
+    params[:type] ||= 'C'
     @events = @creator.events_for_view
     setup_relation_collections
   end
@@ -99,8 +99,8 @@ class CreatorsController < ApplicationController
       :available => Fond.accessible_by(current_ability, :read).roots.active.count('id'),
       :suggested => Proc.new{ Fond.roots.active.all( :select => 'id, name', :order => "name" ) }
 
-    relation_collections  :related => "institutions", :through => "rel_creator_institutions", 
-      :available => Institution.accessible_by(current_ability, :read).count('id'),            
+    relation_collections  :related => "institutions", :through => "rel_creator_institutions",
+      :available => Institution.accessible_by(current_ability, :read).count('id'),
       :suggested => Proc.new{ Institution.accessible_by(current_ability, :read).all(:select => 'id, name', :order => 'name') }
 
     relation_collections  :related => "related_creators", :through => "rel_creator_creators",

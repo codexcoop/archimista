@@ -7,7 +7,7 @@
 
 <%= render :partial => "shared/generic_error_message", :object => @creator %>
 
-<% form_for @creator, :html => { :"data-creator-type" => params[:type] } do |f|  %>
+<% form_for @creator do |f|  %>
 
   <div id="record-main" class="span9">
     <div class="tabbable">
@@ -24,7 +24,7 @@
           <div class="row">
             <div class="span2">
               <%= f.label :creator_type, t('creator_type') %>
-              <%= terms_select(f, "creators.creator_type", :class => "span2") %>
+              <%= terms_select(f, "creators.creator_type", { :class => "span2", :selected => params[:type] }) %>
             </div>
             <div class="span5">
               <%= f.label :creator_corporate_type, t('creator_corporate_type'), {:class => "hide"} %>

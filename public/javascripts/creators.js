@@ -2,13 +2,7 @@
 
 $(document).ready(function() {
 
-  var creator_type = $("form").attr("data-creator-type");
-
-  if (creator_type == null) {
-    creator_type = $('#creator_creator_type').val();
-  } else {
-    $("#creator_creator_type option[value="+ creator_type +"]").attr('selected', 'selected');
-  }
+  var creator_type = $('#creator_creator_type').val();
 
   switch (creator_type) {
     case "C":
