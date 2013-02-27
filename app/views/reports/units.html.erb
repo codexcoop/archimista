@@ -29,13 +29,13 @@
       <% @units.each do |unit| %>
         <tr>
           <td class="fixed">
-            <div  class="pbi_avoid">
-              <strong><%= unit.send(@order.to_sym) %></strong>
+            <div class="pbi_avoid">
+              <strong><%= @order == "sequence_number" ? unit.display_sequence_number_from_hash(@display_sequence_numbers) : unit.send(@order.to_sym) %></strong>
             </div>
           </td>
           <td>
             <div class="pbi_avoid">
-              <em><%= unit.bracketize_title_if_given %></em>
+              <%= unit.bracketize_title_if_given %>
               <% if unit.arrangement_note.present? %>
                 <br><%= textilize_with_entities(unit.arrangement_note) %>
               <% end %>

@@ -6,9 +6,9 @@
 <div class="span12">
   <p style="margin-bottom: 2em;">Puoi produrre report relativi a un singolo complesso archivistico oppure per soggetto conservatore o per progetto.</p>
   <ul class="nav nav-tabs" id="report-tabs">
-    <li><a href="#fonds" data-toggle="tab"><%=t('fonds')%></a></li>
-    <li><a href="#custodians" data-toggle="tab"><%=t('custodians')%></a></li>
-    <li><a href="#projects" data-toggle="tab"><%=t('projects')%></a></li>
+    <li><a href="#fonds" data-toggle="tab"><%= t('fonds')%></a></li>
+    <li><a href="#custodians" data-toggle="tab"><%= t('custodians')%></a></li>
+    <li><a href="#projects" data-toggle="tab"><%= t('projects')%></a></li>
   </ul>
 
   <div class="tab-content">
@@ -19,6 +19,8 @@
       <% when 2..100 then %>
         <p>Scegli il complesso archivistico:</p>
         <table class="table">
+          <col class="span6" />
+          <col class="span3" />
           <tbody>
             <% @fonds.each do |fond| %>
               <tr>
@@ -28,6 +30,7 @@
                     <span class="light">(<%= fond.fond_type %>)</span>
                   <% end %>
                 </td>
+                <td><%= l fond.updated_at, :format => :long %></td>
               </tr>
             <% end %>
           </tbody>
@@ -37,18 +40,19 @@
       <% end %>
     </div>
 
-    <%# OPTIMIZE: declinare singolare / plurale "complessi archivistici" %>
     <div class="tab-pane" id="custodians">
       <% if @custodians.length > 0 %>
         <% if @custodians.length < 100 %>
           <p>Scegli il soggetto conservatore:</p>
           <table class="table">
+            <col class="span6" />
+            <col class="span3" />
             <tbody>
               <% @custodians.each do |custodian| %>
                 <tr>
                   <td>
-                    <%= link_to custodian.name, custodian_report_path(custodian), {:class => "export-aef-wait", "target-id".to_sym => custodian.id, "target-class" => 'custodian', "target-mode" => "full"} %><br>
-                    <span class="muted"><%= custodian.num %> <%= Fond.human_name(:count => custodian.num).downcase %></span>
+                    <%= link_to custodian.name, custodian_report_path(custodian), {:class => "export-aef-wait", "target-id".to_sym => custodian.id, "target-class" => "custodian", "target-mode" => "full"} %><br>
+                    <span class="muted"><%= custodian.num %> <%= Fond.human_name(:count => custodian.num.to_i).downcase %></span>
                   </td>
                   <td><%= l custodian.updated_at, :format => :long %></td>
                 </tr>
@@ -59,23 +63,24 @@
           <%= render :partial => "form_custodians" %>
         <% end %>
       <% else %>
-        <p>Non sono presenti schede soggetto conservatore collegate a complessi archivistici.<br />
+        <p>Non sono presenti schede soggetto conservatore collegate a complessi archivistici.<br>
           Report per soggetto conservatore non disponibili.</p>
       <% end %>
     </div>
 
-    <%# OPTIMIZE: declinare singolare / plurale "complessi archivistici" %>
     <div class="tab-pane" id="projects">
       <% if @projects.length > 0 %>
         <% if @projects.length < 100 %>
           <p>Scegli il progetto:</p>
           <table class="table">
+            <col class="span6" />
+            <col class="span3" />
             <tbody>
               <% @projects.each do |project| %>
                 <tr>
                   <td>
-                    <%= link_to project.name, project_report_path(project), {:class => "export-aef-wait", "target-id".to_sym => project.id, "target-class" => 'project', "target-mode" => "full"} %><br>
-                    <span class="muted"><%= project.num %> <%= t('fonds').downcase %></span>
+                    <%= link_to project.name, project_report_path(project), {:class => "export-aef-wait", "target-id".to_sym => project.id, "target-class" => "project", "target-mode" => "full"} %><br>
+                    <span class="muted"><%= project.num %> <%= Fond.human_name(:count => project.num.to_i).downcase %></span>
                   </td>
                   <td><%= l project.updated_at, :format => :long %></td>
                 </tr>
@@ -86,7 +91,7 @@
           <%= render :partial => "form_projects" %>
         <% end %>
       <% else %>
-        <p>Non sono presenti schede progetto collegate a complessi archivistici.<br />
+        <p>Non sono presenti schede progetto collegate a complessi archivistici.<br>
           Report per progetto non disponibili.</p>
       <% end %>
     </div>

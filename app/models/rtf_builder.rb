@@ -1,5 +1,5 @@
-# #Override class DocumentStyle for our own purpose TODO: move this to lib, if
-#   possible
+# Override class DocumentStyle for our own purpose
+# TODO: move this to lib, if possible
 
 module RTF
   class DocumentStyle < Style
@@ -263,10 +263,12 @@ class RtfBuilder < ActiveRecord::Base
       :include => [
         :preferred_event, :sources,
         [:units => :preferred_event],
-        [:custodians => [:preferred_name, :custodian_buildings, :custodian_contacts]],
-        [:creators => [:preferred_event, :preferred_name]]
+        [:creators => [:preferred_name, :preferred_event]],
+        [:custodians => [:preferred_name, :custodian_buildings, :custodian_contacts]]
       ],
       :order => "sequence_number")
+
+    root_fond = fonds.first
 
     tmp = "#{Rails.root}/tmp/tmp.rtf"
 
@@ -279,7 +281,7 @@ class RtfBuilder < ActiveRecord::Base
 
     document = Document.new(Font.new(Font::ROMAN, 'Times New Roman'), document_style)
 
-    document.information.title = fonds.first.name
+    document.information.title = root_fond.name
     document.information.author = "Archimista"
 
     document.store(CommandNode.new(document, "\\headerr\\pard\\qr\\plain\\f0\\fs18#{document.information.title}\\par", nil, false))
@@ -289,7 +291,7 @@ class RtfBuilder < ActiveRecord::Base
 
     document.store(CommandNode.new(self, "\\stylesheet#{stylesheet}", nil, false))
 
-    title_page document, styles, "#{fonds.first.name}\n#{fonds.first.preferred_event.full_display_date}"
+    title_page document, styles, "#{root_fond.name}\n#{root_fond.preferred_event.full_display_date}" if root_fond.preferred_event.present?
 
     fonds.each do |fond|
 
@@ -411,8 +413,7 @@ class RtfBuilder < ActiveRecord::Base
   def build_project_rtf_file
     tmp = "#{Rails.root}/tmp/tmp.rtf"
 
-    project_fields =
-      [
+    project_fields = [
       "project_type",
       "display_date",
       "description"
@@ -662,8 +663,7 @@ class RtfBuilder < ActiveRecord::Base
   def build_custodian_rtf_file
     tmp = "#{Rails.root}/tmp/tmp.rtf"
 
-    project_fields =
-      [
+    project_fields = [
       "project_type",
       "display_date",
       "description"

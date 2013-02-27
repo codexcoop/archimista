@@ -46,12 +46,14 @@ module UnitSupport
                   :order => order_sql_for_grid(params) )
     end
 
-    def jqgrid_rows(units, selected_attributes)
+    def jqgrid_rows(units, selected_attributes, display_sequence_numbers)
       units.map do |unit|
         {
           :id => unit.id,
           :cell => selected_attributes.map do |attribute|
             case attribute.to_s
+            when 'sequence_number'
+              unit.display_sequence_number_from_hash(display_sequence_numbers)
             when 'preferred_event'
               [unit.preferred_start_date_display, unit.preferred_end_date_display].uniq.join(" - ")
             else
@@ -98,6 +100,7 @@ module UnitSupport
         fond_ids =  find(:all, :select => "DISTINCT fond_id", :conditions => {:id => unit_ids}).
                     map{|u|u.fond_id} # warning: must be found *before* deletion
         UnitEvent.delete_all({:unit_id => unit_ids})
+        DigitalObject.delete_all({:attachable_type => 'Unit', :attachable_id => unit_ids})
         delete_all({:id => unit_ids})
         bulk_update_fonds_units_count(fond_ids) # warning: must be updated *after* deletion
         unit_ids.size
@@ -120,13 +123,13 @@ module UnitSupport
                 WHERE f1.id IN (#{fond_ids.join(',')})
                 GROUP BY f1.id ) AS units_count
             SET fonds.units_count = units_count.units_count
-            WHERE fonds.id = units_count.fond_id;"
+            WHERE fonds.id = units_count.fond_id;".squish
         when 'postgresql', 'sqlite'
           "UPDATE fonds
           SET units_count = ( SELECT COUNT(units.id) AS count
                               FROM units
                               WHERE fonds.id = units.fond_id )
-          WHERE fonds.id IN (#{fond_ids.join(',')})"
+          WHERE fonds.id IN (#{fond_ids.join(',')});".squish
       end
     end
 
@@ -136,19 +139,11 @@ module UnitSupport
         if attribute == 'fond_name'
           "fonds.name AS fond_name"
         elsif attribute == 'preferred_event'
-          " unit_events.start_date_display  AS preferred_start_date_display,
-            unit_events.end_date_display    AS preferred_end_date_display,
-            unit_events.order_date          AS preferred_order_date ".squish
+          "unit_events.start_date_display  AS preferred_start_date_display,
+           unit_events.end_date_display    AS preferred_end_date_display,
+           unit_events.order_date          AS preferred_order_date".squish
         elsif column.nil?
           next
-        # elsif column.type == :text
-          # sql truncate: string, start counting from position 1, take x characters
-          # syntax compatible with postgres, mysql, sqlite:
-          # SUBSTR('Thomas',2,3) => hom
-          # http://dev.mysql.com/doc/refman/5.1/en/string-functions.html#function_substr
-          # http://www.sqlite.org/lang_corefunc.html
-          # http://www.postgresql.org/docs/8.3/static/functions-string.html
-        #  "SUBSTR(#{table_name}.#{column.name},1,70) AS #{column.name}"
         else
           "#{table_name}.#{column.name}"
         end

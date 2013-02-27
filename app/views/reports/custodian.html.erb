@@ -33,7 +33,7 @@
 
   <% if @custodian.custodian_other_buildings.present? %>
     <div>
-      <strong><%= Custodian.human_name(:custodian_other_buildings) %></strong>
+      <strong><%= Custodian.human_attribute_name(:custodian_other_buildings) %></strong>
       <br />
       <% @custodian.custodian_other_buildings.each do |building| %>
         <p>

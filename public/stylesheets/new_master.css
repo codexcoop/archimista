@@ -246,9 +246,6 @@ select {
 */
   color: #005580;
 }
-#units-index td {
-  border-style: dotted;
-}
 #units-index .unit-actions {
 /*
   visibility: hidden;

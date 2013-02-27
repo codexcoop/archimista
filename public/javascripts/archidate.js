@@ -59,6 +59,7 @@ function init(){
   setup_notes                 .apply(this);
 
   setup_autocomplete_fields   .apply(this);
+
   setup_place_for_entity_type .apply(this);
 }
 

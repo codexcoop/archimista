@@ -9,7 +9,6 @@
                 :'data-controller' => controller_name,
                 :'data-action' => action_name do %>
   <% events.each_with_index do |event, index| %>
-    <%= "<p>" + event.legacy_display_date + "</p>" if event.legacy_display_date.present? %>
     <%= render  :partial => "events/event",
                 :locals => {:entity_form => entity_form,
                             :event => event,

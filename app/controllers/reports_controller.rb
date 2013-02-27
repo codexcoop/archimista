@@ -1,5 +1,6 @@
-#FIXME: custodian report => report vuoto se manca progetto
-#TODO: valutare l'tilizzo di simple_format nelle viste.
+# FIXME: custodian report => report vuoto se manca progetto
+# TODO: valutare l'utilizzo di simple_format nelle viste
+
 class ReportsController < ApplicationController
   def index
     @fonds = Fond.list.
@@ -47,8 +48,7 @@ class ReportsController < ApplicationController
 
   def inventory
 
-    @fond_printable_attributes =
-      [
+    @fond_printable_attributes = [
       "fond_type",
       "length",
       "extent",
@@ -69,8 +69,7 @@ class ReportsController < ApplicationController
       "units_count"
     ]
 
-    @unit_printable_attributes =
-      [
+    @unit_printable_attributes = [
       "tsk",
       "tmp_reference_number",
       "tmp_reference_string",
@@ -98,8 +97,7 @@ class ReportsController < ApplicationController
       "note"
     ]
 
-    @custodian_printable_attributes =
-      [
+    @custodian_printable_attributes = [
       "headquarter_address",
       "custodian_type.custodian_type",
       "legal_status",
@@ -113,8 +111,7 @@ class ReportsController < ApplicationController
       "services"
     ]
 
-    @creator_printable_attributes =
-      [
+    @creator_printable_attributes = [
       "preferred_event.full_display_date",
       "creator_type",
       "creator_corporate_type.corporate_type",
@@ -125,17 +122,23 @@ class ReportsController < ApplicationController
       "note"
     ]
 
-    @fonds = Fond.subtree_of(params[:id]).active.
-      all(:include => [:preferred_event, :sources, [:units => :preferred_event], [:creators => [:preferred_name, :preferred_event]], [:custodians =>  [:preferred_name, :custodian_headquarter, :custodian_contacts]]],
+    @fonds = Fond.subtree_of(params[:id]).active.all(
+      :include => [
+        :preferred_event, :sources,
+        [:units => :preferred_event],
+        [:creators => [:preferred_name, :preferred_event]],
+        [:custodians =>  [:preferred_name, :custodian_headquarter, :custodian_contacts]]
+      ],
       :order => "sequence_number")
-    @root_fond_name = @fonds.first.name
-    @root_fond_id = @fonds.first.id
-    @root_fond_preferred_date = @fonds.first.preferred_event.full_display_date if @fonds.first.preferred_event.present?
+
+    @root_fond = @fonds.first
+    @display_sequence_numbers = Unit.display_sequence_numbers_of(@root_fond)
+
     respond_to do |format|
       format.html
       format.rtf do
         @builder = RtfBuilder.new
-        @builder.target_id = @root_fond_id
+        @builder.target_id = params[:id]
         @builder.dest_file = "#{Rails.root}/public/downloads/inventory.rtf"
         @builder.build_fond_rtf_file
         render :json => @builder
@@ -145,8 +148,8 @@ class ReportsController < ApplicationController
   end
 
   def creators
-    fonds =  Fond.subtree_of(params[:id]).active.
-      all(:include => [:creators => [:preferred_name, :preferred_event]],
+    fonds =  Fond.subtree_of(params[:id]).active.all(
+      :include => [:creators => [:preferred_name, :preferred_event]],
       :order => "sequence_number")
 
     @root_fond_name = fonds.first.name
@@ -161,6 +164,7 @@ class ReportsController < ApplicationController
 
   def units
     @root_fond = Fond.find(params[:id], :select => "id, ancestry, name")
+    @display_sequence_numbers = Unit.display_sequence_numbers_of(@root_fond)
     @order = params[:order] || "sequence_number"
     @units  = @root_fond.descendant_units.all(:conditions => "sequence_number IS NOT NULL",
       :include => [:preferred_event], :order => @order)
@@ -173,8 +177,7 @@ class ReportsController < ApplicationController
   end
 
   def project
-    @project_fields =
-      [
+    @project_fields = [
       "project_type",
       "display_date",
       "description"
@@ -241,7 +244,6 @@ class ReportsController < ApplicationController
       @creators[key] = value.uniq
     end
 
-
     respond_to do |format|
       format.html
       format.rtf do
@@ -256,8 +258,7 @@ class ReportsController < ApplicationController
   end
 
   def custodian
-    @project_fields =
-      [
+    @project_fields = [
       "project_type",
       "display_date",
       "description"
@@ -287,13 +288,13 @@ class ReportsController < ApplicationController
       "headquarter_address"
     ]
 
-    @custodian= Custodian.find(params[:id], :include => [:preferred_name, :custodian_headquarter, :custodian_other_buildings, :sources])
+    @custodian = Custodian.find(params[:id], :include => [:preferred_name, :custodian_headquarter, :custodian_other_buildings, :sources])
     fonds = @custodian.fonds.roots.active(:include =>
         [:preferred_event, :other_names,
         [:projects => [:project_managers, :project_stakeholders]],
         [:creators => [:preferred_event, :preferred_name, :other_names, :sources]], :sources]
     )
-    @projects= Array.new
+    @projects = Array.new
     @fonds = Hash.new {|h,k| h[k] = Array.new}
     @creators = Hash.new {|h,k| h[k] = Array.new}
     @sources = Array.new
@@ -320,7 +321,6 @@ class ReportsController < ApplicationController
     @creators.each do |key, value|
       @creators[key] = value.uniq
     end
-
 
     respond_to do |format|
       format.html

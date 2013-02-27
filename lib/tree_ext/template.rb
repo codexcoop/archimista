@@ -47,9 +47,9 @@ module TreeExt
 
       # If tree_template_markers have been configured as:
       # {:level => "#", :name => "#", :fond_type => "@"}
-      # given a line such as "### nome \# del nodo @ tipologia del nodo"
+      # given a line such as "### nome del nodo @ tipologia del nodo"
       # this method returns an hash like:
-      # {:level => 2, :name => "nome del nodo", :fond_type => tipologia del nodo}
+      # {:level => 2, :name => "nome del nodo", :fond_type => "tipologia del nodo"}
       def params_from_line(line)
         line.strip!
         chars           = line.gsub(markers_regexp){|match| match.to_s[0,1]}.each_char.map

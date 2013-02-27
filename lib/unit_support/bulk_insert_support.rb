@@ -119,6 +119,13 @@ module BulkInsertSupport
       [].tap do |output|
         sets.each_with_index do |values_set, index|
           result = values_set.clone
+          if columns.include?('tmp_reference_number')
+            result[columns.index('tmp_reference_number')] = if params['tmp_reference_number'].to_i == 0
+               nil
+            else
+              index + params['tmp_reference_number'].to_i
+            end
+          end
           result[columns.index('sequence_number')] = index + start_sequence_number if columns.include?('sequence_number')
           result[columns.index('position')] = index + start_position if columns.include?('position')
           output << result

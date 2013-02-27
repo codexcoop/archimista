@@ -17,7 +17,7 @@ class Custodian < ActiveRecord::Base
   has_many  :custodian_identifiers, :dependent => :destroy
   has_many  :custodian_contacts, :dependent => :destroy
   has_one   :custodian_headquarter, :class_name => 'CustodianBuilding', :conditions => {:custodian_building_type => 'sede legale'}
-  has_many  :custodian_other_buildings, :class_name => 'CustodianBuilding', :conditions => "custodian_building_type != 'sede legale'"
+  has_many  :custodian_other_buildings, :class_name => 'CustodianBuilding', :conditions => "custodian_building_type != '' AND custodian_building_type != 'sede legale'"
   has_many  :custodian_buildings, :class_name => 'CustodianBuilding', :dependent => :destroy
   has_many  :custodian_owners, :dependent => :destroy
   has_many  :custodian_urls, :dependent => :destroy
