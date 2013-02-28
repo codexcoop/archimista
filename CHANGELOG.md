@@ -13,11 +13,17 @@
 
 ### Report
 
+### Correzioni di bug
+
+- Unità: in modalità tabella talvolta non era possibile digitare spazi nei campi testo e nelle caselle dei filtri. Riferimento: [http://www.archiviando.org/forum/viewtopic.php?f=65&t=1388](http://www.archiviando.org/forum/viewtopic.php?f=65&t=1388)
+- Soggetti produttori: nella creazione di nuova scheda Persona non si visualizzavano i campi "Luogo di nascita" e "Luogo di morte"
+- Varie correzioni minori
+
 ## Archimista 1.1.0 (22 giugno 2012)
 
 - Migliorate le funzionalità di Esporta / Importa (in formato *aef*).
 È ora possibile esportare e importare i dati non solo di singoli complessi archivistici, ma anche di insiemi di complessi archivistici collegati a un soggetto conservatore o a un progetto.
-- Risolto il problema che azzerava il numero di sequenza delle unità nelle azioni di riordino (si verificava solo nella versione standalone). Era il bug segnalato sul Forum: [http://www.archiviando.org/forum/viewtopic.php?f=65&t=1115](http://www.archiviando.org/forum/viewtopic.php?f=65&t=1115)
+- Risolto il problema che azzerava il numero di sequenza delle unità nelle azioni di riordino (si verificava solo nella versione standalone). Riferimento: [http://www.archiviando.org/forum/viewtopic.php?f=65&t=1115](http://www.archiviando.org/forum/viewtopic.php?f=65&t=1115)
 - Risolto il problema che impediva di "catturare" i nomi di compilatori nelle schede di altre entità (si verificava solo nella versione standalone)
 - Modifiche minori del codice di programmazione e dell'interfaccia utente
 
