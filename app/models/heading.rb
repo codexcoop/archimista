@@ -32,6 +32,8 @@ class Heading < ActiveRecord::Base
   squished_fields :name, :dates, :qualifier
 
   # Named scopes
+  # OPTIMIZE: il metodo sembra inutilizzato.
+  # Modificarlo in modo che venga usato da azione list o eliminarlo
   named_scope :autocomplete_list, lambda{|*term|
     term = term.shift
     if term.present?

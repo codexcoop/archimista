@@ -19,7 +19,9 @@
   <p>
     <%= link_to_unless(params[:view].nil?, "Tutti", headings_path) %>
     <%= @terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a|
-      " | " + link_to_unless(params[:view] == "#{[a.term_value]}", "#{[a.term_value]}", headings_path(:view => "#{[a.term_value]}"))
+      " | " +
+      link_to_unless(params[:view] == "#{[a.term_value]}", "#{[a.term_value]} ", headings_path(:view => "#{[a.term_value]}")) +
+      "<span class='muted'>(#{(@counts_by_type[a.term_value] || 0).to_s})</span>"
     } %>
   </p>
 
@@ -30,10 +32,11 @@
 <table class="table table-sortable">
   <thead>
   <tr>
-    <th><%= sortable("heading_type", t('heading_type')) %></th>
+    <th><%= t('heading_type') %></th>
     <th><%= sortable("name", t('heading_name')) %></th>
+    <%# FIXME: dubbio che servano colonne dates e qualifier %>
     <th><%= sortable("dates", t('heading_dates')) %></th>
-    <th><%= sortable("qualifier", t('heading_qualifier')) %></th>
+    <th><%= t('heading_qualifier') %></th>
     <th>Occorrenze</th>
     <th>&nbsp;</th>
   </tr>

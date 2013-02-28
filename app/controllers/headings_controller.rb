@@ -8,17 +8,16 @@ class HeadingsController < ApplicationController
     conditions = params[:view] ? "heading_type = '#{params[:view]}'" : true
 
     @headings = Heading.accessible_by(current_ability, :read).
-                paginate(:page => params[:page], 
-                         :conditions => conditions, 
-                         :order => sort_column + ' ' + sort_direction
-                        )
-  
-    @units_counts = RelUnitHeading.count(
-      "id",
-      :joins => :heading,
+                paginate(:page => params[:page],
+                         :conditions => conditions,
+                         :order => sort_column + ' ' + sort_direction)
+
+    @counts_by_type = Heading.accessible_by(current_ability, :read).
+      count("id", :group => :heading_type)
+
+    @units_counts = RelUnitHeading.count("id",
       :conditions => {:heading_id => @headings.map(&:id)},
-      :group => :heading_id
-    )
+      :group => :heading_id)
   end
 
   def list
@@ -51,11 +50,9 @@ class HeadingsController < ApplicationController
     @units = Unit.all(
      :include => :rel_unit_headings,
      :conditions => "rel_unit_headings.heading_id = #{@heading.id}"
-    ).paginate(:page => params[:page], 
-                :order => sort_column + ' ' + sort_direction
-    )
+    ).paginate(:page => params[:page])
   end
-  
+
   def new
     terms
     @heading = Heading.new
@@ -195,11 +192,10 @@ class HeadingsController < ApplicationController
     end
   end
 
-
   private
 
   def sort_column
-     params[:sort] || "heading_type, name"
+     params[:sort] || "name"
   end
 
 end

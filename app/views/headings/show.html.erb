@@ -1,34 +1,35 @@
 <% content_for :status_bar do %>
-  <h2><%= t('headings') %><%= path_separator %>Occorrenze</h2>
+  <h2><%= t('headings') %><%= path_separator %>Occorrenze lemma</h2>
   <div id="links">
     <%= link_to_index t('listing_headings'), headings_path %>
   </div>
 <% end %>
 
 <div class="span12">
-	
+
 <h3>[<%= show_value(@heading.heading_type) %>] <%= show_value(@heading.name) %> <%= show_value(@heading.qualifier) %> <%= show_value(@heading.dates) %></h3>
 
-<p>Unità collegate</p>
-	
 <% if @units.size > 0 %>
-  <table id="units-index" class="table table-sortable table-bordered">
-    <col style="width: 30px" />
+  <p>Unità collegate</p>
+  <%= display_page_entries_info @units %>
+
+  <%# FIXME: stile tabella occorrenze unità %>
+  <table id="units-index" class="table">
     <col style="width: 40px" />
     <col style="width: auto" />
     <col style="width: 260px" />
     <col style="width: 150px" />
+    <!--
     <thead>
     <tr>
-      <th><%= check_box_tag 'select_all', nil, false, :id => 'select-all-records' %></th>
       <th><%= sortable("sequence_number", t('sequence_number_short')) %></th>
       <th><%= sortable("title", t('title')) %></th>
     </tr>
     </thead>
+    -->
     <tbody>
     <% @units.each do |unit| %>
       <tr class="<%= cycle("odd", "even") %>">
-        <td><%= check_box_tag 'record_ids[]', unit.id, false, :class => 'selected-record-id' %></td>
         <td class="center muted">
           <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>
         </td>
@@ -57,11 +58,9 @@
 
 <%= will_paginate @units %>
 
-
 <% else %>
-    <p>Non sono presenti unità archivistiche per questo <%= item %>.</p>
+    <p>Nessuna unità collegata a questo lemma.</p>
 <% end %>
-
 
 <%= link_to t('edit'), edit_heading_path(@heading) %> |
 <%= link_to t('back'), headings_path %>
