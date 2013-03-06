@@ -35,7 +35,7 @@
           </td>
           <td>
             <div class="pbi_avoid">
-              <%= unit.bracketize_title_if_given %>
+              <%= unit.formatted_title %>
               <% if unit.arrangement_note.present? %>
                 <br><%= textilize_with_entities(unit.arrangement_note) %>
               <% end %>

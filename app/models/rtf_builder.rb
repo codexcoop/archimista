@@ -379,7 +379,7 @@ class RtfBuilder < ActiveRecord::Base
             index = "unit_#{methods[0]}"
             if unit.send(methods[0].to_sym).present?
               if (methods[0] == 'title')
-                h3(document, styles, unit.send(:bracketize_title_if_given).to_s, "\\s#{stylesheet_codes[index]}")
+                h3(document, styles, unit.send(:formatted_title).to_s, "\\s#{stylesheet_codes[index]}")
               else
                 strong(document, styles, Unit.human_attribute_name(methods[0]))
                 if attribute.include?('.')

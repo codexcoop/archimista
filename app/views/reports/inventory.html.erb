@@ -120,7 +120,7 @@
               <span class="right"><%= u.reference_number %></span>
             </p>
             <p>
-              <strong><%= u.bracketize_title_if_given %></strong>
+              <strong><%= u.formatted_title %></strong>
               <% if u.preferred_event.present? %><br />
                 <em><%= u.preferred_event.full_display_date_with_place %></em>
               <% end %>

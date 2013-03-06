@@ -39,7 +39,7 @@
             <%= link_to unit.title, edit_iccd_unit_path(unit, :t => unit.tsk) %>
             <span class="light">[<%= unit.tsk %>]</span>
           <% else %>
-            <%= link_to unit.bracketize_title_if_given, edit_unit_path(unit) %>
+            <%= link_to unit.formatted_title, edit_unit_path(unit) %>
           <% end %>
           <%# riga di contesto solo se in ricerca o in fond root %>
           <% if @fond.blank? || @fond.is_root? %>

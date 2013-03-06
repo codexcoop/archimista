@@ -13,7 +13,7 @@ class Unit < ActiveRecord::Base
 
   before_validation :set_root_fond_id
   before_save :cache_depth # force ancestry_depth update during move operations
-  #remove_blank_iccd_tsk
+  # remove_blank_iccd_tsk
 
   # Associations and custom modules
 
@@ -213,7 +213,7 @@ class Unit < ActiveRecord::Base
     tsk.present?
   end
 
-  def bracketize_title_if_given
+  def formatted_title
     given_title? ? "[#{title}]" : title
   end
 
@@ -222,8 +222,7 @@ class Unit < ActiveRecord::Base
   # Returns a hash of all the units of the root_fond,
   # where the key is the unit_id and the value is the display_sequence_number.
   # The hash is empty if the root_fond has no subunits.
-  # TODO:
-  # - applicare in edit (?) e reports
+  # TODO: applicare in edit (?)
 
   def self.display_sequence_numbers_of(root_fond, index = 0)
     display_sequence_numbers = {}
@@ -287,6 +286,52 @@ class Unit < ActiveRecord::Base
       :new_external_parent_id => new_external_parent_id,
       :belongs_to             => :fond
     ).classify
+  end
+
+  def self.attributes_for_labels
+    [
+      "root_fond",
+      "fond.name",
+      "formatted_title",
+      "preferred_event.full_display_date_with_place",
+      "reference_number",
+      "tmp_reference_number",
+      "tmp_reference_string",
+      "folder_number",
+      "file_number",
+      # "sort_letter",
+      # "sort_number",
+      "unit_type",
+      "note"
+    ]
+  end
+
+  def self.to_csv(units, root_fond_name, options = {})
+    attributes = attributes_for_labels
+
+    headers = []
+    attributes.each do |attribute|
+      methods = attribute.split('.')
+      headers << human_attribute_name(methods[0])
+    end
+
+    FasterCSV.generate(options) do |csv|
+      csv << headers
+      units.each do |unit|
+        data = []
+        attributes.each do |attribute|
+          methods = attribute.split('.')
+          if attribute.include?('.')
+            data << unit.send(methods[0].to_sym).try(methods[1].to_sym).to_s
+          elsif attribute == "root_fond"
+            data << root_fond_name
+          else
+            data << unit.try(attribute.to_sym).to_s
+          end
+        end
+        csv << data
+      end
+    end
   end
 
   # Callbacks
