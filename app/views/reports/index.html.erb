@@ -13,30 +13,31 @@
 
   <div class="tab-content">
     <div class="tab-pane" id="fonds">
-      <% case @fonds.size
-      when 0 then %>
-        <p>Non sono presenti schede complesso archivistico. Report non disponibili.</p>
-      <% when 2..100 then %>
-        <p>Scegli il complesso archivistico:</p>
-        <table class="table">
-          <col class="span6" />
-          <col class="span3" />
-          <tbody>
-            <% @fonds.each do |fond| %>
-              <tr>
-                <td><%= link_to fond.name, dashboard_report_path(fond) %>
+      <% if @fonds.length > 0 %>
+        <% if @fonds.length < 100 %>
+          <p>Scegli il complesso archivistico:</p>
+          <table class="table">
+            <col class="span6" />
+            <col class="span3" />
+            <tbody>
+              <% @fonds.each do |fond| %>
+                <tr>
+                  <td><%= link_to fond.name, dashboard_report_path(fond) %>
                   <%= fond.preferred_event.try(:full_display_date) %>
                   <% if fond.fond_type.present? %>
                     <span class="light">(<%= fond.fond_type %>)</span>
                   <% end %>
-                </td>
-                <td><%= l fond.updated_at, :format => :long %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
+                  </td>
+                  <td><%= l fond.updated_at, :format => :long %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% else %>
+          <%= render :partial => "form_fonds" %>
+        <% end %>
       <% else %>
-        <%= render :partial => "form_fonds" %>
+        <p>Non sono presenti schede complesso archivistico. Report non disponibili.</p>
       <% end %>
     </div>
 

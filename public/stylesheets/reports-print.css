@@ -25,7 +25,6 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     text-align: justify;
     text-rendering: optimizeLegibility;
   }
-
   /* headers */
   h1, h2, h3, h4 {
     line-height: 1.5em;
@@ -48,7 +47,6 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
   #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index, .rtf-inventory, .rtf-project, .csv, .xls, .rtf-custodian, #order-choice {
     display: none;
   }
-
   .unit-label {
     margin: 4px;
     padding: 4px;

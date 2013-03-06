@@ -164,6 +164,7 @@ class Creator < ActiveRecord::Base
     # legal status / creator_corporate_type_id
     unless is_corporate?
       self.creator_corporate_type_id = nil
+      self.residence = nil
       self.creator_legal_statuses.clear
       self.rel_creator_institutions.clear
     end

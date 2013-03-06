@@ -309,8 +309,4 @@ it:
   unit_editors: "Compilatori"
   unit_editor: "Compilatore"
   numbered_from: "Numerate da"
-  # alt_title: "Titolo alternativo"
-  # formatted_title: "Titolo"
-  # root_fond_id: "Complesso"
-  # sort_letter: "Lettera di ordinamento"
-  # sort_number: "Numero di ordinamento"
+

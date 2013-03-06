@@ -16,8 +16,7 @@
   </div>
   </div>
 
-<% if @headings.size > 0 %>
-
+<% if @counts_by_type.present? %>
 <p>
   <%= link_to_unless(params[:view].nil?, "Tutti", headings_path) %>
   <%= @terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a|
@@ -26,6 +25,9 @@
     "<span class='muted'>(#{(number_with_delimiter(@counts_by_type[a.term_value]) || 0).to_s})</span>"
   } %>
 </p>
+<% end %>
+
+<% if @headings.size > 0  %>
 
 <%= display_page_entries_info @headings %>
 

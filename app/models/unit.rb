@@ -290,7 +290,7 @@ class Unit < ActiveRecord::Base
 
   def self.attributes_for_labels
     [
-      "root_fond",
+      "root_fond_id",
       "fond.name",
       "formatted_title",
       "preferred_event.full_display_date_with_place",
@@ -323,7 +323,7 @@ class Unit < ActiveRecord::Base
           methods = attribute.split('.')
           if attribute.include?('.')
             data << unit.send(methods[0].to_sym).try(methods[1].to_sym).to_s
-          elsif attribute == "root_fond"
+          elsif attribute == "root_fond_id"
             data << root_fond_name
           else
             data << unit.try(attribute.to_sym).to_s

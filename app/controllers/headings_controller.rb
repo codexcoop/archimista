@@ -5,7 +5,7 @@ class HeadingsController < ApplicationController
 
   def index
     terms
-    conditions = params[:view] ? "heading_type = '#{params[:view]}'" : true
+    conditions = params[:view] ? "heading_type = '#{params[:view]}'" : ""
 
     @headings = Heading.accessible_by(current_ability, :read).
                 paginate(:page => params[:page],
