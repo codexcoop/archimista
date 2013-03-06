@@ -113,6 +113,7 @@ class UnitsController < ApplicationController
   def move
     @unit = Unit.find(params[:id])
     @siblings = @unit.siblings.all(:conditions => "fond_id = #{@unit.fond_id}", :order => :position).delete_if{|e| e.id == @unit.id}
+    @display_sequence_numbers = Unit.display_sequence_numbers_of(@unit.fond.root)
     render :partial => 'units/move', :locals => {:units => @siblings}, :object => @unit, :layout => false
   end
 

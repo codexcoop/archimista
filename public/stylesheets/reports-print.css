@@ -21,7 +21,7 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
   }
   body {
     font-family: 'Georgia';
-    font-size: 14pt;
+    font-size: 12pt;
     text-align: justify;
     text-rendering: optimizeLegibility;
   }
@@ -45,24 +45,25 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
   img {
     border: 0;
   }
-  #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index, .rtf-inventory, .rtf-project, .rtf-custodian, #order-choice {
+  #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index, .rtf-inventory, .rtf-project, .csv, .xls, .rtf-custodian, #order-choice {
     display: none;
   }
+
   .unit-label {
-    margin: 1em;
-    padding: 1em;
-    border: 1px solid #000;
+    margin: 4px;
+    padding: 4px;
+    border: 1px solid #ccc;
     border-radius: 1em;
+    width: 9.85cm;
+    height: 3.81cm;
+    text-align: center;
+    vertical-align:top;
   }
-  .unit-label h4 {
-    margin: 0;
-  }
-  .unit-label p.head {
-    border: 0;
-  }
+
   .fond {
     line-height: 1.5em;
   }
+
   .fond p {
     text-align: justify;
     widows: 3;
@@ -86,12 +87,20 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     font-weight: normal;
     text-transform: uppercase;
   }
+  #labels {
+    border-collapse: collapse;
+  }
+  #labels td, #labels th {
+    vertical-align: top;
+    font-size: 10pt;
+  }
   .unit {
-    margin: 20px 0;
-    line-height: 1.5em;
+    margin: 0;
+    /*line-height: 1.5em;*/
   }
   .unit p {
     text-align: justify;
+    line-height: 1em;
   }
   table.table  {
     margin: 0;

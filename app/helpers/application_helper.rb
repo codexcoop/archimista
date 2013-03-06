@@ -185,9 +185,8 @@ module ApplicationHelper
     end
   end
 
-  # Unescapes the entities for special characters that have been escaped by
-  #   RedCloth. For example: fond.description of "Archivio storico Arnoldo
-  #   Mondadori Editore - AME"
+  # Unescapes the entities for special characters that have been escaped by RedCloth.
+  # For example: fond.description of "Archivio storico Arnoldo Mondadori Editore - AME"
 
   def textilize_with_entities(text)
     textilize(text).gsub("&amp;#", "&#")
@@ -220,9 +219,9 @@ module ApplicationHelper
   end
 
   def inline_short_sources(sources)
-    text = Array.new
+    text = []
     sources.each do |source|
-      text.push("[<em>#{source.short_title}</em>]")
+      text << "[<em>#{source.short_title}</em>]"
     end
     text.join(", ")
   end

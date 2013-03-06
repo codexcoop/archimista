@@ -7,19 +7,26 @@
 
 <div class="span12">
   <p>
+    <%= link_to '<i class="icon-download-alt"></i> Genera CSV', labels_report_path(@root_fond, :format => "csv"),  {:class => "csv btn btn-small"}  %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera XLS', labels_report_path(@root_fond, :format => "xls"),  {:class => "xls btn btn-small"}  %>
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', labels_report_path(@root_fond, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
   </p>
-  <% @units.each do |unit| %>
-    <div class="unit-label pbi_avoid">
-      <h4><%= @root_fond.name %></h4>
-      <h5><%= unit.fond.name %></h5>
-      <p>
-        <em><%= unit.title %></em><br /><%= unit.preferred_event.try(:full_display_date) || "[s.d.]" %>
-      </p>
-      <p class="head">
-        <span class="left"><strong><%= t('reference_number')  %></strong>:&nbsp;<%= unit.reference_number %></span>
-        <!--span class="right"><strong><%= t('sequence_number') %></strong>:&nbsp;<%= unit.sequence_number %></span-->
-      </p>
-    </div>
-  <% end %>
+  <table id="labels">
+    <% @units.each_slice(2) do |row| %>
+      <tr>
+        <% row.each do |unit| %>
+          <td>
+            <div class="unit-label pbi_avoid">
+              <p>
+                <strong><%= @root_fond.name %></strong><br />
+                <%= unit.fond.name %><br />
+                <em><%= unit.title %></em><br /><%= unit.preferred_event.try(:full_display_date_with_place) || "[s.d.]" %><br />
+                <%= unit.reference_number %>
+              </p>
+            </div>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
 </div>

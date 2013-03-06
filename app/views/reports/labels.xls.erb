@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:o="urn:schemas-microsoft-com:office:office"
+          xmlns:x="urn:schemas-microsoft-com:office:excel"
+          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:html="http://www.w3.org/TR/REC-html40">
+  <Worksheet ss:Name="Sheet1">
+    <Table>
+      <Row>
+        <% Unit.attributes_for_labels.each do |attribute| %>
+        <% methods = attribute.split('.') %>
+          <Cell><Data ss:Type="String"><%= t(methods [0])  %></Data></Cell>
+        <%  end %>
+      </Row>
+      <% @units.each do |unit| %>
+        <Row>
+          <% Unit.attributes_for_labels.each do |attribute| %>
+            <%  methods = attribute.split('.') %>
+            <%  if attribute.include?('.') %>
+              <%  value = unit.send(methods[0].to_sym).try(methods[1].to_sym).to_s %>
+            <%  else %>
+              <%if(attribute == "root_fond_id") %>
+                <%  value = @root_fond.name %>
+              <%  else %>
+                <% value = unit.try(attribute.to_sym).to_s %>
+              <%  end %>
+            <%  end %>
+            <Cell><Data ss:Type="String"><%= value %></Data></Cell>
+          <%  end %>
+        </Row>
+      <% end %>
+    </Table>
+  </Worksheet>
+</Workbook>
+
+

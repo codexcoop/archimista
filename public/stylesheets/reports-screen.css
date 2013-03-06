@@ -37,15 +37,13 @@ h2 span.spec {
   text-transform: uppercase;
 }
 .unit-label {
-  margin: 1em;
-  padding: 1em;
-  border: 1px solid #000;
+  margin: 4px;
+  padding: 4px;
+  border: 1px solid #ccc;
   border-radius: 1em;
-}
-.unit-label h4 {
-  margin: 0;
-}
-.unit-label p.head {
-  border: 0;
+  width: 9.85cm;
+  height: 3.81cm;
+  text-align: center;
+  vertical-align: top;
 }
 

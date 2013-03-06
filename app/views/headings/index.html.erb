@@ -16,16 +16,16 @@
   </div>
   </div>
 
-  <p>
-    <%= link_to_unless(params[:view].nil?, "Tutti", headings_path) %>
-    <%= @terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a|
-      " | " +
-      link_to_unless(params[:view] == "#{[a.term_value]}", "#{[a.term_value]} ", headings_path(:view => "#{[a.term_value]}")) +
-      "<span class='muted'>(#{(@counts_by_type[a.term_value] || 0).to_s})</span>"
-    } %>
-  </p>
-
 <% if @headings.size > 0 %>
+
+<p>
+  <%= link_to_unless(params[:view].nil?, "Tutti", headings_path) %>
+  <%= @terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a|
+    " | " +
+    link_to_unless(params[:view] == "#{[a.term_value]}", "#{[a.term_value]} ", headings_path(:view => "#{[a.term_value]}")) +
+    "<span class='muted'>(#{(number_with_delimiter(@counts_by_type[a.term_value]) || 0).to_s})</span>"
+  } %>
+</p>
 
 <%= display_page_entries_info @headings %>
 

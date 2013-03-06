@@ -179,6 +179,7 @@ it:
         sort_number: "Numero di ordinamento"
         sequence_number: "Sequenza"
         title: "Titolo"
+        formatted_title: "Titolo"
         given_title: "Attribuito"
         unit_type: "Tipologia"
         content: "Contenuto"
@@ -203,6 +204,7 @@ it:
         fond_id: "Complesso archivistico"
         ancestry: "Gerarchia"
         ancestry_depth: "Livello"
+        root_fond: "Complesso"
         root_fond_id: "Complesso"
         legacy_position: "Posizione"
         legacy_sequence_number: "Corda"
@@ -212,6 +214,7 @@ it:
         medium: "Supporto"
         creation_number: "Numero scheda"
         fond_name: "Classificazione"
+        fond: "Classificazione"
         preferred_event: "Estremi cronologici"
       project:
         description: "Descrizione"

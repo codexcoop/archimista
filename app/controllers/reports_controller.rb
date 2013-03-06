@@ -75,8 +75,8 @@ class ReportsController < ApplicationController
       "tmp_reference_string",
       "folder_number",
       "file_number",
-      "sort_letter",
-      "sort_number",
+      # "sort_letter",
+      # "sort_number",
       "unit_type",
       "medium",
       "content",
@@ -171,9 +171,16 @@ class ReportsController < ApplicationController
   end
 
   def labels
+
     @root_fond = Fond.find(params[:id], :select => "id, ancestry, name")
     @units = @root_fond.descendant_units.all(:conditions => "sequence_number IS NOT NULL",
-      :include => [:fond, :preferred_event])
+      :include => [:fond, :preferred_event], :order => "sequence_number")
+
+    respond_to do |format|
+      format.html
+      format.csv { send_data Unit.to_csv(@units, @root_fond.name) }
+      format.xls
+    end
   end
 
   def project

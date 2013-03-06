@@ -29,10 +29,6 @@ Rails::Initializer.run do |config|
   # config.load_paths += %W( #{RAILS_ROOT}/extras )
 
   # Specify gems that this application depends on and have them installed with rake gems:install
-  # config.gem "bj"
-  # config.gem "hpricot", :version => '0.6', :source => "http://code.whytheluckystiff.net"
-  # config.gem "sqlite3-ruby", :lib => "sqlite3"
-  # config.gem "aws-s3", :lib => "aws/s3"
   config.gem "warden",        :version => "0.10.7"
   config.gem "devise",        :version => "1.0.11"
   config.gem "cancan",        :version => "1.6.7"
@@ -69,11 +65,21 @@ Rails::Initializer.run do |config|
 
   # PDFKit middleware
   config.middleware.use PDFKit::Middleware, {
-    :print_media_type => true,
+    :margin_top    => '2.5cm',
+    :margin_right  => '2cm',
+    :margin_bottom => '2.5cm',
+    :margin_left   => '2cm',
     :footer_font_size => 8,
     :footer_spacing => 15,
     :footer_center => "[page] di [toPage]"
-  }, :only => [ %r[^/reports] ]
+  }, :only => [ %r[/reports/[0-9]+/(inventory|summary|units|creators|custodian|project)] ]
+
+  config.middleware.use PDFKit::Middleware, {
+    :margin_top    => '0.25cm',
+    :margin_right  => '0cm',
+    :margin_bottom => '0cm',
+    :margin_left   => '0cm',
+  }, :only => [ %r[/reports/[0-9]+/labels] ]
 
   if defined?(Footnotes)
     Footnotes::Filter.prefix = 'txmt://open?url=file://%s&amp;line=%d&amp;column=%d'

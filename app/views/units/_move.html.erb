@@ -43,7 +43,9 @@
   </div>
   <div class="modal-body">
 <%# OPTIMIZE: stampare display_sequence_number per rendere più comprensibile interazione %>
-    <p>Unità selezionata: <strong><%= object.title %></strong></p>
+    <p>[<%= object.level_type %>]
+    <%= object.display_sequence_number_from_hash(@display_sequence_numbers) %>
+    <strong><%= object.title %></strong></p>
     <div id="move-unit-choice">
       <% if object.is_not_movable? %>
         <p>Nessuna azione disponibile.</p>
@@ -74,6 +76,7 @@
                 <li>
                   <label class="livesearch radio">
                     <input name="new_parent_id" value="<%= unit.id %>" type="radio" />
+                    <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>:
                     <%= unit.title %>
                   </label>
                 </li>
