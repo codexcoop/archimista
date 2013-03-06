@@ -24,7 +24,7 @@
           <div class="row">
             <div class="span2">
               <%= f.label :creator_type, t('creator_type') %>
-              <%= terms_select(f, "creators.creator_type", { :class => "span2", :selected => params[:type] }) %>
+              <%= terms_select(f, "creators.creator_type", { :class => "span2", :selected => params[:type] || @creator.creator_type }) %>
             </div>
             <div class="span5">
               <%= f.label :creator_corporate_type, t('creator_corporate_type'), {:class => "hide"} %>
