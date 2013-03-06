@@ -51,9 +51,6 @@ class Import < ActiveRecord::Base
             data = ActiveSupport::JSON.decode(line.strip)
             key = data.keys.first
             model = key.camelize.constantize
-            data[key].each do |k,v|
-              data[key].delete(k) unless model.column_names.include?(k)
-            end
             object = model.new(data[key])
             object.db_source = self.identifier
             object.group_id = user.group_id if object.has_attribute? 'group_id'
@@ -373,7 +370,7 @@ class Import < ActiveRecord::Base
 
   def is_valid_file?
     begin
-      extension = File.extname(data_file_name).downcase.gsub('.','')
+      extension = File.extname(data_file_name).downcase.gsub('.', '')
       raise Zip::ZipInternalError unless ['aef'].include? extension
     rescue Zip::ZipInternalError
       raise 'Il file fornito non è di formato <code>aef</code>'
@@ -407,7 +404,11 @@ class Import < ActiveRecord::Base
           next if line.blank?
           data = ActiveSupport::JSON.decode(line.strip)
           raise "Controllo di integrità fallito" unless data['checksum'] == Digest::SHA256.file(data_file).hexdigest
-          raise "File incompatibile con questa versione di #{APP_NAME}" unless data['version'].to_i == APP_VERSION.gsub('.', '').to_i
+          unless AEF_COMPATIBLE_VERSIONS.include?(data['version'])
+            aef_version = data['version'].to_s.scan(%r([0-9])).join(".")
+            raise "File incompatibile con questa versione di #{APP_NAME} (#{APP_VERSION}).<br>
+            Il file <code>aef</code> è stato prodotto con la versione #{aef_version}."
+          end
           self.importable_type = data['attached_entity']
         end
       rescue Exception => e
