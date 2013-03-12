@@ -8,11 +8,15 @@
     <Table>
       <Row>
         <% Unit.attributes_for_labels.each do |attribute| %>
-        <% methods = attribute.split('.') %>
-          <Cell><Data ss:Type="String"><%= t(methods [0])  %></Data></Cell>
-        <%  end %>
+          <% if attribute == '#' %>
+            <Cell><Data ss:Type="String">#</Data></Cell>
+          <% else %>
+            <% methods = attribute.split('.') %>
+            <Cell><Data ss:Type="String"><%= t(methods [0])  %></Data></Cell>
+          <% end %>
+        <% end %>
       </Row>
-      <% @units.each do |unit| %>
+      <% @units.each_with_index do |unit, index| %>
         <Row>
           <% Unit.attributes_for_labels.each do |attribute| %>
             <%  methods = attribute.split('.') %>
@@ -20,7 +24,11 @@
               <%  value = unit.send(methods[0].to_sym).try(methods[1].to_sym).to_s %>
             <%  else %>
               <%if(attribute == "root_fond_id") %>
-                <%  value = @root_fond.name %>
+                <%  value = @fond.root.name %>
+              <%  elsif attribute == "sequence_number" %>
+                <%  value = unit.display_sequence_number_from_hash(@display_sequence_numbers) %>
+              <%  elsif attribute == "#" %>
+                <%  value = index += 1 %>
               <%  else %>
                 <% value = unit.try(attribute.to_sym).to_s %>
               <%  end %>

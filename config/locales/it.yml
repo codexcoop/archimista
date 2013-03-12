@@ -234,6 +234,7 @@ it:
         P: "Persona"
         F: "Famiglia"
         other_names: "Altre denominazioni"
+        legal_status: "Condizione giuridica"
       custodian:
         history: "Cenni storico istituzionali"
         holdings: "Patrimonio"
@@ -243,3 +244,5 @@ it:
         contacts: "Contatti"
         headquarter_address: "Sede legale"
         custodian_other_buildings: "Altre sedi"
+        custodian_type: "Tipologia"
+        legal_status: "Condizione giuridica"

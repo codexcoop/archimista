@@ -5,7 +5,7 @@
   </div>
 <% end %>
 
-<div class="span12">
+<div class="span9">
   <div id="index-controls">
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', creators_report_path(@fond, :format => "pdf"),  {:class => "btn btn-small pdf"}  %>
   </div>
@@ -23,7 +23,7 @@
         <tr class="pbi_avoid">
           <td><%= show_value(creator.try(:creator_type), "t") %></td>
           <td><%= creator.preferred_name.try(:name) %></td>
-          <td class="no-wrap"><%= creator.preferred_event.try(:full_display_date) %></td>
+          <td class="fixed-large"><%= creator.preferred_event.try(:full_display_date) %></td>
         </tr>
       <% end %>
     </tbody>

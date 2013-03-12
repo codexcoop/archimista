@@ -7,10 +7,10 @@
 
 <div class="span12">
 
-  <p>
+  <div id="index-controls">
     <%= link_to '<i class="icon-download-alt"></i> Genera RTF', custodian_report_path(@custodian, :format => "rtf"),  {:class => "rtf-custodian btn btn-small"}  %>
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', custodian_report_path(@custodian, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
-  </p>
+  </div>
 
   <h1><%= @custodian.display_name %></h1>
   <% @custodian_fields.each do |attribute| %>

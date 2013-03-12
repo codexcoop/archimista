@@ -1,7 +1,11 @@
 # FIXME: custodian report => report vuoto se manca progetto
+
 # TODO: valutare l'utilizzo di simple_format nelle viste
 
 class ReportsController < ApplicationController
+
+  LIMIT_FOR_PREVIEW = 100
+
   def index
     @fonds = Fond.list.
       roots.
@@ -41,8 +45,7 @@ class ReportsController < ApplicationController
   end
 
   def summary
-    @fonds = Fond.subtree_of(params[:id]).active.
-      all(:include => [:preferred_event], :order => "sequence_number")
+    @fonds = Fond.subtree_of(params[:id]).active.all(:include => [:preferred_event], :order => "sequence_number")
     @root_fond_name = @fonds.first.name
   end
 
@@ -75,8 +78,6 @@ class ReportsController < ApplicationController
       "tmp_reference_string",
       "folder_number",
       "file_number",
-      # "sort_letter",
-      # "sort_number",
       "unit_type",
       "medium",
       "content",
@@ -118,7 +119,6 @@ class ReportsController < ApplicationController
       "residence",
       "abstract",
       "history",
-      "legal_status",
       "note"
     ]
 
@@ -126,7 +126,7 @@ class ReportsController < ApplicationController
       :include => [
         :preferred_event, :sources,
         [:units => :preferred_event],
-        [:creators => [:preferred_name, :preferred_event]],
+        [:creators => [:preferred_name, :preferred_event, :creator_legal_statuses]],
         [:custodians =>  [:preferred_name, :custodian_headquarter, :custodian_contacts]]
       ],
       :order => "sequence_number")
@@ -166,19 +166,45 @@ class ReportsController < ApplicationController
     @root_fond = Fond.find(params[:id], :select => "id, ancestry, name")
     @display_sequence_numbers = Unit.display_sequence_numbers_of(@root_fond)
     @order = params[:order] || "sequence_number"
-    @units  = @root_fond.descendant_units.all(:conditions => "sequence_number IS NOT NULL",
-      :include => [:preferred_event], :order => @order)
+    @mode = params[:mode] || "full"
+
+    options = {
+      :conditions => "sequence_number IS NOT NULL",
+      :include => [:preferred_event],
+      :order => @order
+    }
+    options.merge!({:limit => LIMIT_FOR_PREVIEW}) if @mode == "preview"
+
+    @units  = @root_fond.descendant_units.all(options)
   end
 
   def labels
+    @fond = Fond.find(params[:id], :select => "id, ancestry, name")
+    @display_sequence_numbers = Unit.display_sequence_numbers_of(@fond.root)
+    params[:mode] ||= "full"
+    params[:subtree] ||= "1"
 
-    @root_fond = Fond.find(params[:id], :select => "id, ancestry, name")
-    @units = @root_fond.descendant_units.all(:conditions => "sequence_number IS NOT NULL",
-      :include => [:fond, :preferred_event], :order => "sequence_number")
+    options = {
+      :include => [:fond, :preferred_event],
+      :order => "units.sequence_number"
+    }
+
+    if params[:subtree] == "1"
+      @subtree_ids = @fond.subtree.active.all(:select => "id").map(&:id)
+      options.merge!({:conditions => {:fond_id => @subtree_ids}})
+    else
+      options.merge!({:conditions => {:fond_id => @fond.id}})
+    end
+
+    @units_count = Unit.count(options)
+
+    options.merge!({:limit => LIMIT_FOR_PREVIEW}) if params[:mode] == "preview"
+
+    @units = Unit.all(options)
 
     respond_to do |format|
       format.html
-      format.csv { send_data Unit.to_csv(@units, @root_fond.name) }
+      format.csv { send_data Unit.to_csv(@units, @fond.root.name, @display_sequence_numbers) }
       format.xls
     end
   end
@@ -215,15 +241,15 @@ class ReportsController < ApplicationController
     ]
 
     @project = Project.find(params[:id], :include => [:project_managers, :project_stakeholders])
-    fonds = @project.fonds.roots.active(:include =>
+    fonds = @project.fonds.roots.active.all(:include =>
         [:preferred_event, :other_names,
         [:custodians => [:preferred_name, :custodian_headquarter, :custodian_other_buildings, :sources]],
         [:creators => [:preferred_event, :preferred_name, :other_names, :sources]], :sources]
     )
-    @custodians = Array.new
-    @fonds = Hash.new {|h,k| h[k] = Array.new}
-    @creators = Hash.new {|h,k| h[k] = Array.new}
-    @sources = Array.new
+    @custodians = []
+    @fonds = Hash.new {|h,k| h[k] = []}
+    @creators = Hash.new {|h,k| h[k] = []}
+    @sources = []
     fonds.each do |fond|
       fond.sources.each do |source|
         @sources.push(source)
@@ -296,15 +322,15 @@ class ReportsController < ApplicationController
     ]
 
     @custodian = Custodian.find(params[:id], :include => [:preferred_name, :custodian_headquarter, :custodian_other_buildings, :sources])
-    fonds = @custodian.fonds.roots.active(:include =>
+    fonds = @custodian.fonds.roots.active.all(:include =>
         [:preferred_event, :other_names,
         [:projects => [:project_managers, :project_stakeholders]],
         [:creators => [:preferred_event, :preferred_name, :other_names, :sources]], :sources]
     )
-    @projects = Array.new
-    @fonds = Hash.new {|h,k| h[k] = Array.new}
-    @creators = Hash.new {|h,k| h[k] = Array.new}
-    @sources = Array.new
+    @projects = []
+    @fonds = Hash.new {|h,k| h[k] = []}
+    @creators = Hash.new {|h,k| h[k] = []}
+    @sources = []
     fonds.each do |fond|
       fond.sources.each do |source|
         @sources.push(source)

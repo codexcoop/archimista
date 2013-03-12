@@ -219,7 +219,7 @@ class Unit < ActiveRecord::Base
 
   # Methods related to sequence_number
 
-  # Returns a hash of all the units of the root_fond,
+  # Returns a hash of all the units of the *root_fond*,
   # where the key is the unit_id and the value is the display_sequence_number.
   # The hash is empty if the root_fond has no subunits.
   # TODO: applicare in edit (?)
@@ -290,6 +290,8 @@ class Unit < ActiveRecord::Base
 
   def self.attributes_for_labels
     [
+      "#",
+      "sequence_number",
       "root_fond_id",
       "fond.name",
       "formatted_title",
@@ -298,26 +300,26 @@ class Unit < ActiveRecord::Base
       "tmp_reference_number",
       "tmp_reference_string",
       "folder_number",
-      "file_number",
-      # "sort_letter",
-      # "sort_number",
-      "unit_type",
-      "note"
+      "file_number"
     ]
   end
 
-  def self.to_csv(units, root_fond_name, options = {})
+  def self.to_csv(units, root_fond_name, sequence_numbers, options = {})
     attributes = attributes_for_labels
 
     headers = []
     attributes.each do |attribute|
-      methods = attribute.split('.')
-      headers << human_attribute_name(methods[0])
+      if attribute == '#'
+        headers << attribute
+      else
+        methods = attribute.split('.')
+        headers << human_attribute_name(methods[0])
+      end
     end
 
     FasterCSV.generate(options) do |csv|
       csv << headers
-      units.each do |unit|
+      units.each_with_index do |unit, index|
         data = []
         attributes.each do |attribute|
           methods = attribute.split('.')
@@ -325,6 +327,10 @@ class Unit < ActiveRecord::Base
             data << unit.send(methods[0].to_sym).try(methods[1].to_sym).to_s
           elsif attribute == "root_fond_id"
             data << root_fond_name
+          elsif attribute == "sequence_number"
+            data << unit.display_sequence_number_from_hash(sequence_numbers)
+          elsif attribute == "#"
+            data << index += 1
           else
             data << unit.try(attribute.to_sym).to_s
           end

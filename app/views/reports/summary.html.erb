@@ -13,20 +13,18 @@
     <thead>
       <tr>
         <th><%= t('short_fond_type') %></th>
-        <th><%= t('level') %></th>
         <th><%= t('name') %></th>
-        <th><%= t('date_event') %> </th>
         <th><%= t('short_units_count') %></th>
+        <th><%= t('date_event') %> </th>
       </tr>
     </thead>
     <tbody>
       <% @fonds.each do |f| %>
         <tr>
           <td><div class="pbi_avoid"><%= f.fond_type %></div></td>
-          <td><div class="pbi_avoid"><%= f.ancestry_depth + 1 %></div></td>
-          <td><div class="pbi_avoid"><%= f.name %></div></td>
-          <td class="no-wrap"><div class="pbi_avoid"><%= f.preferred_event.try(:full_display_date_with_place) %></div></td>
+          <td><div class="pbi_avoid"><%= "&mdash;" * f.ancestry_depth %> <%= f.name %></div></td>
           <td><div class="pbi_avoid"><%= f.try(:units_count) %></div></td>
+          <td class="fixed-large"><div class="pbi_avoid"><%= f.preferred_event.try(:full_display_date_with_place) %></div></td>
         </tr>
       <% end %>
     </tbody>

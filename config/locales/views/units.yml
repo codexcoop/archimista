@@ -309,4 +309,6 @@ it:
   unit_editors: "Compilatori"
   unit_editor: "Compilatore"
   numbered_from: "Numerate da"
+  formatted_title: "Titolo"
+  root_fond_id: "Complesso"
 

@@ -17,10 +17,10 @@
   <table class="table" style="margin-top: 1em">
     <tbody>
       <tr>
-        <td><%= link_to 'Inventario', inventory_report_path(@fond)%></td>
+        <td><%= link_to 'Inventario', inventory_report_path(@fond) %></td>
       </tr>
       <tr>
-        <td><%= link_to_if @units_count > 0, 'Etichette unità', labels_report_path(@fond) %>
+        <td><%= link_to_if @units_count > 0, 'Etichette unità', labels_report_path(@fond, :mode => "preview") %>
             (<%= number_with_delimiter(@units_count) || "0" %>)
           </td>
       </tr>
@@ -35,7 +35,7 @@
         <td><%= link_to 'Struttura complesso archivistico', summary_report_path(@fond) %></td>
       </tr>
       <tr>
-        <td><%= link_to_if @units_count > 0, "Lista unità", units_report_path(@fond) %>
+        <td><%= link_to_if @units_count > 0, "Lista unità", units_report_path(@fond, :mode => "preview") %>
            (<%= number_with_delimiter(@units_count) || "0" %>)</td>
       </tr>
       <tr>

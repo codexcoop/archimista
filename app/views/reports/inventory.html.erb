@@ -4,11 +4,11 @@
     <%= link_to_index "Report", reports_path %>
   </div>
 <% end %>
-<div class="span12">
-  <p>
+<div class="span9">
+  <div id="index-controls">
     <%= link_to '<i class="icon-download-alt"></i> Genera RTF', inventory_report_path(@root_fond, :format => "rtf"), {:class => "rtf-inventory btn btn-small"} %>
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', inventory_report_path(@root_fond, :format => "pdf"), {:class => "pdf btn btn-small"} %>
-  </p>
+  </div>
 
   <div id="cover" class="pb_after">
     <h1>
@@ -39,7 +39,11 @@
               <% if attribute.include?('.') %>
                 <% text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
               <% else %>
-                <% text = custodian.send(attribute.to_sym).to_s %>
+                <% if attribute == 'legal_status' %>
+                  <% text = t(custodian.send(attribute.to_sym).to_s) %>
+                <% else %>
+                  <% text = custodian.send(attribute.to_sym).to_s %>
+                <% end %>
               <% end %>
               <%= textilize_with_entities(text) %>
             <% end %>
@@ -70,13 +74,21 @@
                 <% text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
               <% else %>
                 <% if attribute == 'creator_type' %>
-                  <% text = Creator.human_attribute_name(creator.send(attribute.to_sym).to_s) %>
+                  <% text = t(creator.send(attribute.to_sym).to_s) %>
                 <% else %>
                   <% text = creator.send(attribute.to_sym).to_s %>
                 <% end %>
               <% end %>
               <%= textilize_with_entities(text) %>
             <% end %>
+          <% end %>
+          <% if creator.creator_legal_statuses.present? %>
+            <h5><%= t('creator_legal_status')%></h5>
+            <ul>
+              <% creator.creator_legal_statuses.each do |cls| %>
+                <li><%= show_item(cls.legal_status, ['', ''], "t") %> <%= show_item(cls.note, ["[","]"]) %></li>
+              <% end %>
+            </ul>
           <% end %>
         <% end %>
         <hr />
@@ -86,7 +98,7 @@
         <%  methods = attribute.split('.') %>
         <%  if fond.send(methods[0].to_sym).present? && fond.send(methods[0].to_sym) != 0 %>
           <div>
-            <%# FIXME: hack provvisorio %>
+      <%# FIXME: hack provvisorio %>
             <% string = methods[0].to_s == "description" ? "Contenuto" : t(methods[0]) %>
             <h5><%= string %></h5>
             <%  if attribute.include?('.') %>
@@ -116,8 +128,8 @@
         <% fond.units.each do |u| %>
           <div class="unit pbi_avoid">
             <p class="head">
-              <span class="left"><strong><%= u.display_sequence_number_from_hash(@display_sequence_numbers) %></strong></span>
-              <span class="right"><%= u.reference_number %></span>
+              <span class="pull-left"><strong><%= u.display_sequence_number_from_hash(@display_sequence_numbers) %></strong></span>
+              <span class="pull-right"><%= u.reference_number %></span>
             </p>
             <p>
               <strong><%= u.formatted_title %></strong>

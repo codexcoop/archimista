@@ -1,6 +1,10 @@
 en:
   short_fond_type: "Type"
   short_units_count: "Units"
+  full_preview: "Full preview"
+  limited_preview: "Limited preview"
 it:
   short_fond_type: "Tipologia"
   short_units_count: "Unità"
+  full_preview: "Anteprima completa"
+  limited_preview: "Anteprima limitata"

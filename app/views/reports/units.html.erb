@@ -12,11 +12,18 @@
   <div id="order-choice">
     <p>
       Ordina per:
-      <%= link_to_if @order != "sequence_number", t("sequence_number").downcase,  units_report_path(@root_fond, :order => "sequence_number") %> |
-      <%= link_to_if @order != "reference_number",  t("reference_number").downcase, units_report_path(@root_fond, :order => "reference_number") %> |
-      <%= link_to_if @order != "tmp_reference_string",  t("tmp_reference_string").downcase, units_report_path(@root_fond, :order => "tmp_reference_string") %>
+      <%= link_to_if @order != "sequence_number", t("sequence_number").downcase,  units_report_path(@root_fond, :order => "sequence_number", :mode => @mode) %> |
+      <%= link_to_if @order != "reference_number",  t("reference_number").downcase, units_report_path(@root_fond, :order => "reference_number", :mode => @mode) %> |
+      <%= link_to_if @order != "tmp_reference_string",  t("tmp_reference_string").downcase, units_report_path(@root_fond, :order => "tmp_reference_string", :mode => @mode) %>
     </p>
+    <p>
+      Visualizza:
+      <%= link_to_if @mode != "full",  t('full_preview'), units_report_path(@root_fond, :order => @order, :mode => "full") %> |
+      <%= link_to_if @mode != "preview",  t('limited_preview'), units_report_path(@root_fond, :order => @order, :mode => "preview") %></p>
   </div>
+
+  <%#= render :partial => 'preview_disclaimer', :locals => {:mode => @mode, :items => @units.count} %>
+
   <table class="table">
     <thead>
       <tr>
@@ -35,13 +42,10 @@
           </td>
           <td>
             <div class="pbi_avoid">
-              <%= unit.formatted_title %>
-              <% if unit.arrangement_note.present? %>
-                <br><%= textilize_with_entities(unit.arrangement_note) %>
-              <% end %>
+              <%= "&mdash;" * unit.ancestry_depth %> <%= unit.formatted_title %>
             </div>
           </td>
-          <td class="no-wrap">
+          <td class="fixed-large">
             <div class="pbi_avoid"><%= unit.preferred_event.try(:full_display_date_with_place) %>
             </div>
           </td>

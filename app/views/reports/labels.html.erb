@@ -1,32 +1,72 @@
 <% content_for :status_bar do %>
-  <h2>Report complesso archivistico<%= path_separator %><%= link_to @root_fond.name, dashboard_report_path %><%= path_separator %>Etichette unità</h2>
+  <h2>
+    <%= [
+      'Report complesso archivistico',
+      link_to(@fond.root.name, dashboard_report_path(@fond.root.id)),
+      'Etichette unità'
+    ].join(path_separator) %>
+  </h2>
   <div id="links">
     <%= link_to_index "Report", reports_path %>
   </div>
 <% end %>
 
 <div class="span12">
-  <p>
-    <%= link_to '<i class="icon-download-alt"></i> Genera CSV', labels_report_path(@root_fond, :format => "csv"),  {:class => "csv btn btn-small"}  %>
-    <%= link_to '<i class="icon-download-alt"></i> Genera XLS', labels_report_path(@root_fond, :format => "xls"),  {:class => "xls btn btn-small"}  %>
-    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', labels_report_path(@root_fond, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
-  </p>
-  <table id="labels">
-    <% @units.each_slice(2) do |row| %>
-      <tr>
-        <% row.each do |unit| %>
-          <td>
-            <div class="unit-label pbi_avoid">
-              <p>
-                <strong><%= @root_fond.name %></strong><br />
-                <%= unit.fond.name %><br />
-                <em><%= unit.title %></em><br /><%= unit.preferred_event.try(:full_display_date_with_place) || "[s.d.]" %><br />
-                <%= unit.reference_number %>
-              </p>
-            </div>
-          </td>
-        <% end %>
-      </tr>
-    <% end %>
-  </table>
+  <div id="index-controls">
+    <%= link_to '<i class="icon-download-alt"></i> Genera CSV', labels_report_path(@fond, params.merge({:format => "csv", :mode => nil})), {:class => "csv btn btn-small"} %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera XLS', labels_report_path(@fond, params.merge({:format => "xls", :mode => nil})), {:class => "xls btn btn-small"} %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', labels_report_path(@fond, params.merge({:format => "pdf", :mode => nil})), {:class => "pdf btn btn-small"} %>
+  </div>
+
+  <%= render :partial => 'preview_disclaimer', :locals => {:count => @units_count} %>
+
+  <div id="unit-path-wrapper">
+    <div class="well">
+      <div id="unit-path-controls">
+        <span id="load-fonds-tree-wrapper">
+          <%= link_to "Seleziona un livello", "#",
+            :id => 'load-fonds-tree',
+            :'data-root-fond-id' => @fond.root.id,
+            :'data-fond-id' => @fond.id, :class => "pull-right" %>
+        </span>
+        <span id="close-fonds-tree-wrapper" class="pull-right">
+          <%= link_to t('cancel'), "#", :id => 'close-fonds-tree' %>
+          |
+          <%= link_to t('confirm'), '#', :id => 'confirm-new-branch' %>
+        </span>
+      </div>
+      <%= @fond.path_items.map(&:name).join(path_separator) %>
+      <div id="unit-path-tree-wrapper"  class="hide">
+        <div id="unit-path-tree" style="height: 460px; overflow: auto;">
+        </div>
+      </div>
+      <div id="descendants-choice">
+        <%= check_box_tag("include-subtree", "", {:checked => "checked"}) %>&nbsp;Includi i livelli sottostanti
+      </div>
+    </div>
+  </div>
+
+  <% if @units.any? %>
+    <table id="labels">
+      <% @units.each_slice(2) do |row| %>
+        <tr>
+          <% row.each do |unit| %>
+            <td>
+              <div class="unit-label pbi_avoid">
+                <p>
+                  <strong><%= @fond.root.name %></strong><br />
+                  <%= unit.fond.name %><br />
+                  <em><%= unit.title %></em><br />
+                  <%= unit.preferred_event.try(:full_display_date_with_place) || "[s.d.]" %><br />
+                  <%= unit.reference_number %>
+                </p>
+              </div>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    </table>
+  <% else %>
+    <p id="turn-off-buttons">Non sono presenti unità nei livelli selezionati.</p>
+  <% end %>
 </div>
