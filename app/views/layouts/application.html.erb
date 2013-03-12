@@ -12,13 +12,7 @@
     <% end %>
   <% end %>
   <title><%= controller_name %> - <%= action_name %></title>
-  <%= stylesheet_link_tag "bootstrap.min",
-                          "jquery-ui-1.8.18",
-                          "master",
-                          "new_master", # FIXME: eliminare a fine lavoro
-                          "markitup",
-                          "fancybox",
-                          :cache => "/assets/application" %>
+  <%= default_stylesheets %>
   <%= stylesheet_link_tag "treeview" %>
   <% if controller_name == "reports" %>
     <%= stylesheet_link_tag "reports-print", :media => "print" %>
@@ -57,6 +51,7 @@
   <% end %>
   <% if controller_name == "reports" %>
     <%= javascript_include_tag "reports" %>
+    <%#= javascript_include_tag "units-jump_to" %>
   <% end %>
   <% if controller_name == "quality_checks" %>
     <%= javascript_include_tag "quality_checks" %>

@@ -1,5 +1,11 @@
 module ApplicationHelper
 
+  # AssetTagHelper
+  def default_stylesheets
+    stylesheet_link_tag "bootstrap.min", "jquery-ui-1.8.18", "master", "markitup", "fancybox",
+      :cache => "/assets/application"
+  end
+
   # LayoutHelper
   def body_id
     actions = %w[treeview gridview]
@@ -44,7 +50,7 @@ module ApplicationHelper
   end
 
   def link_to_index(name, target)
-    link_to('<span class="ui-icon ui-icon-triangle-1-w"></span>' + name, target, :class => "to-index")
+    link_to(name, target, :class => "to-index")
   end
 
   def edit_object_path(object)

@@ -3,7 +3,7 @@ table.reports  {
   padding: 0;
   border-collapse: collapse;
   border-spacing: 0;
-  width: 760px;
+  width: 100%;
 }
 .reports tr {
   margin: 0;
@@ -19,8 +19,28 @@ table.reports  {
   text-align: center;
 }
 .reports td.fixed {
-  width: 25%;
+  width: 20%;
 }
+td.fixed-large {
+  width: 40%;
+}
+/* headers */
+h1, h2, h3, h4 {
+  line-height: 1.5em;
+}
+h1 {
+  font-size: 20pt;
+}
+h2 {
+  font-size: 18pt;
+}
+h3 {
+  font-size: 16pt;
+}
+h4 {
+  font-size: 14pt;
+}
+
 h2 span.date {
   font-size: 0.7em;
   display: block;
@@ -46,4 +66,20 @@ h2 span.spec {
   text-align: center;
   vertical-align: top;
 }
-
+.head {
+  overflow: hidden;
+  width: 100%;
+  border-bottom: 1px solid #000;
+  line-height: 2em;
+}
+.fond {
+  line-height: 1.5em;
+}
+.fond p {
+  text-align: justify;
+  widows: 3;
+  orphans: 3;
+}
+#cover {
+  display: none;
+}

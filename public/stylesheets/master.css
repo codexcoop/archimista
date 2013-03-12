@@ -1,11 +1,506 @@
-/* BASIC TYPOGRAPHY
------------------------------------------------------ */
-/* TODO: dubbio se mantenere default h3 e fare classi per nostri h3 più piccoli. Vedi reports */
-h3 {
-  font-size: 13px;
+/*
+  Title: Archimate master styles for screen media
+  Author: Codex, Pavia (IT) - http://www.codexcoop.it
+  Created: 2011-2013
+*/
+
+/* TODO: [LOW] testare IE e inibire accesso istanza server a browser obsoleti */
+
+body {
+  padding-top: 80px;
+  /* background: #E3E9ED; */
 }
+
+/* Header
+----------------------------------------------------- */
+/* navbar */
+.navbar {
+  margin-bottom: 0;
+}
+.navbar-inner {
+  background: #333 url(/images/overlay.png) repeat-x;
+}
+.navbar .container-fluid {
+  padding-left: 5px;
+}
+.navbar .nav > li > a {
+  color: #aaa;
+  padding: 10px 13px 11px 13px;
+  border-right: 1px solid #999;
+  border-right-color: rgba(153, 153, 153, 0.6);
+}
+.navbar .nav > li > a:hover, .navbar .nav .open > .dropdown-toggle {
+  background: #222 url(/images/overlay.png) repeat-x;
+}
+.navbar .nav .active > a, .navbar .nav .active > a:hover  {
+  background: inherit;
+}
+.navbar .dropdown-menu {
+  width: 220px;
+}
+.navbar-text {
+  font-size: 11px;
+}
+.navbar-text a {
+  color: #fff;
+}
+
+/* status-bar */
+/* Modello: .subnav ==> http://twitter.github.com/bootstrap/assets/css/docs.css */
+#status-bar {
+  position: fixed;
+  top: 40px;
+  left: 0;
+  right: 0;
+  z-index: 1020;
+  height: 40px;
+  background-color: #eeeeee; /* Old browsers */
+  background-repeat: repeat-x; /* Repeat the gradient */
+  background-image: -moz-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* FF3.6+ */
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #f5f5f5), color-stop(100%, #eeeeee)); /* Chrome, Safari4+ */
+  background-image: -webkit-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* Chrome 10+, Safari 5.1+ */
+  background-image: -ms-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* IE10+ */
+  background-image: -o-linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* Opera 11.10+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f5f5f5', endColorstr='#eeeeee', GradientType=0 ); /* IE6-9 */
+  background-image: linear-gradient(top, #f5f5f5 0%, #eeeeee 100%); /* W3C */
+  border-bottom: 1px solid #ccc; /* oppure #e5e5e5; */
+}
+/* quickfix per evitare sovrapposizione di path lunghissimi a #links */
+/* FIXME: invertire ordine di elementi e usare float right su #links; rendere più preciso allineamento tra h2 e #links */
+#status-bar h2 {
+  width: 80%;
+  margin: 0;
+  padding: 15px 18px 13px 18px;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 13px;
+  text-shadow: 0 1px 0 #ffffff;
+}
+/* OPTIMIZE: rinominare in separator (?, ma equivale a bootstrap divider),
+si usa in diversi contesti, attenzione a spazi */
+.divider {
+  padding: 0 5px;
+  color: #999999;
+}
+#status-bar .active a {
+  color: #333333;
+}
+#status-bar #links {
+  position: absolute;
+  top: 11px;
+  right: 20px;
+  font-size: 11px;
+  line-height: 18px;
+}
+a.to-index:before {
+  display: block;
+  float: left;
+  width: 0;
+  height: 0;
+  margin-top: 5px;
+  margin-right: 5px;
+  border-color: transparent;
+  border-right-color: #999999;
+  border-style: solid;
+  border-width: 4px 4px 4px 0;
+  content: " ";
+}
+
+/* Content
+----------------------------------------------------- */
+#content .container {
+  min-width: 980px;
+  min-height: 460px;
+  margin: 15px 0;
+  padding: 0 18px;
+}
+#content .container-fluid {
+  min-width: 980px;
+  min-height: 460px;
+  margin: 15px 0;
+}
+
+/* Footer
+----------------------------------------------------- */
+#footer {
+  margin: 12px 0 0 0;
+  padding: 6px 20px 10px 20px;
+  border-top: 1px solid #ccc;
+  font-size: 11px;
+  line-height: 1;
+  color: #999;
+}
+
+/* Record pages
+----------------------------------------------------- */
+.nav-tabs {
+  font-size: 12px;
+}
+#record-container {
+  width: 1000px;
+}
+#record-container.container-fluid {
+  width: auto;
+}
+#record-main {
+  min-height: 460px;
+  padding-right: 19px;
+  border-right: 1px solid #ccc;
+}
+#record-side {
+  width: 260px;
+  position: fixed;
+  top: 95px;
+  left: 740px;
+  right: 0;
+}
+#record-main label, #record-main .row-labels,
+#ajax-form-wrapper label, #ajax-form-wrapper .row-labels {
+  margin-bottom: 5px;
+  font-size: 12px;
+  color: #666;
+}
+a.add_child {
+  font-size: 11px;
+  font-weight: bold;
+}
+a.add_child:before, a.new:before {
+  content: "+ ";
+}
+/* TODO: riordinare ! */
+#side-nav {
+  text-align: center;
+}
+#side-meta {
+  font-size: 11px;
+  color: #666;
+}
+#updater {
+  margin: 0;
+}
+#updater dt {
+  color: #999;
+  font-weight: normal;
+}
+#updater dd {
+  margin: 0;
+}
+#record-side hr {
+  margin: 14px 0;
+  border-top-color: #ddd;
+  border-bottom-color: #eee;
+}
+#record-side span.nav-counter {
+  display: inline-block;
+  padding: 4px 0;
+}
+.destroy-link {
+  padding: 0 4px;
+  font-size: 11px;
+  color: #999;
+}
+.destroy-link:hover {
+  padding: 0 4px;
+  font-size: 11px;
+  text-decoration: none;
+  color: white;
+  background: red;
+}
+select {
+  width: 140px;
+}
+.btn-small .caret {
+  margin-top: 7px;
+  margin-left: 4px;
+}
+
+/* Tables
+----------------------------------------------------- */
+/* table-summary */
+.table-summary td {
+  padding-left: 0;
+  border-top: 0;
+  border-bottom: 1px solid #ddd;
+}
+/* table-sortable */
+.table th, .table-sortable th {
+  padding: 4px 8px;
+  font-size: 11px;
+  color: #666;
+  background: #efefef;
+}
+.table-sortable th a {
+  text-decoration: none;
+  padding-right: 13px;
+  color: #666;
+  background: url(/images/th-sortable.png) no-repeat 100% 4px;
+}
+.table-sortable th a.asc {
+  background-position: 100% -27px;
+}
+.table-sortable th a.desc {
+  background-position: 100% -56px;
+}
+/* specific tables */
+.fond-units {
+  margin: 4px 0;
+  color: #999;
+}
+.fond-units i {
+  opacity: 0.4;
+}
+.fond-units a {
+  text-decoration: underline;
+  color: #999;
+}
+.fond-units a:hover {
+/*
+  text-decoration: none;
+*/
+  color: #005580;
+}
+#units-index .unit-actions {
+/*
+  visibility: hidden;
+*/
+  font-size: 11px;
+  color: #999;
+}
+#units-index .unit-actions a {
+  text-decoration: none;
+  color: #999;
+}
+#units-index .unit-actions a:hover {
+  text-decoration: underline;
+}
+/* OPTIMIZE: rivedere */
+.table .center, td.center, div.center {
+  text-align: center;
+}
+/* table-show */
+h3.section {
+  margin: 0 0 10px 0;
+  padding: 3px 6px 4px 6px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 18px;
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  color: #fff;
+  background: #999;
+}
+.table-show {
+  width: 98%;
+/* width: 692px; */ /* TODO: forse meglio calcolare al pixel */
+  margin-bottom: 18px;
+}
+.table-show th,
+.table-show td {
+  padding: 8px 6px;
+  line-height: 18px;
+  text-align: left;
+  vertical-align: top;
+  border-bottom: 1px dotted #ddd;
+}
+.table-show th {
+  width: 204px;
+  border-right: 1px dotted #ddd;
+  font-weight: normal;
+  color: #666;
+}
+.table-show td {
+  padding: 8px 0 8px 8px;
+}
+/* ??? */
+.table-show td .light {
+  color: #000;
+}
+
+/* Forms: custom IDS and CLASSES
+----------------------------------------------------- */
+h3.row-header {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+  font-size: 12px;
+  color: #666;
+}
+.destroy {
+  margin-top: 5px;
+}
+.destroy label {
+  display: inline;
+  margin-left: 2px;
+  font-size: 11px;
+  font-weight: normal;
+}
+.row-group {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #ccc;
+}
+textarea.x-short-content {
+  height: 3em;
+}
+textarea.short-content {
+  height: 6em;
+}
+textarea.medium-content {
+  height: 9em;
+}
+textarea.long-content {
+  height: 24em;
+}
+textarea.x-long-content {
+  height: 36em;
+}
+label.inline {
+  display: inline;
+  font-weight: normal;
+}
+#user-form input[type="text"], #user-form input[type="password"] {
+  width: 380px;
+}
+#user-form select {
+  width: 220px;
+}
+#user-form {
+  padding-bottom: 0;
+}
+
+/* Patterns
+----------------------------------------------------- */
 .light {
   color: #666;
+}
+.blank {
+  color: #999;
+}
+.odd {
+  background: #fff;
+}
+.even {
+  background: #F9F9F9;
+}
+.inline-msg {
+  padding-left: 5px;
+  color: #f00;
+}
+.alert-success {
+  z-index: 3000;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 300px;
+  margin-top: 1px;
+  margin-left: -150px;
+}
+.sortable-placeholder {
+  background: #fcf8e3;
+}
+
+/* Fonds + headings: misc
+----------------------------------------------------- */
+#remove-node, #create {
+  padding: 10px;
+}
+.highlight {
+  font-weight: bold;
+}
+
+/* Units: modals + misc
+----------------------------------------------------- */
+#mass-classify-modal {
+  width: 700px;
+  margin-left: -350px; /* margine negativo = metà dell'ampiezza */
+}
+#mass-reorder-modal {
+  width: 860px;
+  margin-left: -430px;
+}
+/* FIXME: non vanno bene proprietà hover su elementi <a> jump-to-tree. Bootstrap sovrascrive jsTree */
+#jump-to-wrap {
+  float: left;
+}
+#jump-to {
+  margin: 6px 10px 6px 18px;
+}
+#jump-to-dialog {
+  margin: 0 18px;
+  width: 700px;
+  height: 460px;
+}
+#jump-to-tree {
+  padding: 10px 15px;
+  height: 440px;
+  overflow: auto;
+}
+#standalone-edit-command-wrapper {
+  position: absolute;
+  display: block;
+  top: 0;
+  right: 0;
+  margin-right: 3px;
+  text-decoration: none;
+}
+#standalone-edit-command {
+  color: #fff;
+  text-decoration: none;
+}
+#preferred-event-dialog {
+  width: 780px;
+  margin-left: -390px;
+}
+#unit-path-title {
+  line-height: 13px;
+  margin-bottom: 10px;
+}
+
+/* Relations
+----------------------------------------------------- */
+.relation-selection {
+  margin-bottom: 18px;
+}
+
+/* Digital objects
+----------------------------------------------------- */
+#sortable > li {
+  margin-bottom: 24px;
+}
+#sortable .thumbnail img {
+  display: block;
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  cursor: move;
+}
+#sortable .img-container {
+  height: 210px;
+  margin-bottom: 10px;
+}
+#sortable .title {
+  height: 42px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+#sortable .actions {
+  padding: 8px 0 4px 0;
+  border-top: 1px solid #ddd;
+}
+#sortable .check-digital-object {
+  float: right;
+  margin-top: 8px;
+  margin-right: 4px;
+}
+
+/* -----------------------------------------------------
+FIXME: residui di vecchio master.css.
+Rivedere e riordinare
+-------------------------------------------------------- */
+/* dubbio se mantenere default h3 e fare classi per nostri h3 più piccoli. Vedi reports */
+h3 {
+  font-size: 13px;
 }
 
 /* index-controls */
@@ -44,30 +539,10 @@ h3 {
   float: right;
 }
 
-/* BUTTONS and LINKS
------------------------------------------------------ */
-a.to-index {
-  line-height: 1;
-}
-a.to-index .ui-icon {
-  float: left;
-  background-image: url(/images/smoothness/ui-icons_888888_256x240.png);
-}
-
-/* FLASH & ERRORS
------------------------------------------------------ */
+/* Misc */
 /* Come vengono presentati errori su altri tipi input ?*/
 .fieldWithErrors input, .fieldWithErrors select, .fieldWithErrors textarea {
   border: 1px solid red;
-}
-
-/* PATTERNS
------------------------------------------------------ */
-.warning {
-  color: #f00;
-}
-.filters {
-  font-size: 11px;
 }
 
 /* text editor: provvisoriamente disattivato */
@@ -81,19 +556,14 @@ a.to-index .ui-icon {
   font-size: 10px;
 }
 
-/* provvisorio */
-div.pdf-list {
-  width: 460px;
-}
-div.pdf-list p {
-  margin: 0;
-  padding: 6px 0;
-  border-bottom: 1px solid #ccc;
-}
-
-/* OPTIMIZE: da qui in avanti, riordinare / ricollocare */
-.jstree em { /* units_count */
+/* units_count: ricollocare */
+.jstree em {
   font-style: normal;
   text-shadow: none;
   color: #666;
 }
+
+/* -----------------------------------------------------
+Fine FIXME
+-------------------------------------------------------- */
+

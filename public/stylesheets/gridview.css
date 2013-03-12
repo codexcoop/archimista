@@ -52,9 +52,9 @@ background: #fbf9ee url(images/ui-bg_glass_55_fbf9ee_1x400.png) 50% 50% repeat-x
   width: 30px;
   float: left;
 }
-#columns-list label { 
-  display: inline-block; 
+#columns-list label {
+  display: inline-block;
   width: 400px;
   margin-left: 10px;
-  font-weight: normal;  
+  font-weight: normal;
 }

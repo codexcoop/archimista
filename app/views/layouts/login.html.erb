@@ -5,16 +5,14 @@
   <head>
     <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
     <title><%= controller.controller_name %> - <%= controller.action_name %></title>
-    <%# FIXME: caricare subito i CSS cache e forse anhe JS %>
-    <%= stylesheet_link_tag "bootstrap.min" %>
-    <%= stylesheet_link_tag "master" %>
+    <%= default_stylesheets %>
     <style type="text/css">
       #login {
         padding: 5em 0 0 0;
         background: #f0f0f0;
       }
       #login-form {
-        width: 300px; /* span4 */
+        width: 300px;
         margin: 0 auto;
         padding: 18px 30px 11px 30px;
         border: 2px solid #ccc;
@@ -23,17 +21,23 @@
         border-radius: 4px;
         background: #fff;
       }
-      h1 {
+      #login-form h1 {
         margin: 0 0 20px 0;
         border-bottom: 1px solid #ccc;
         font-size: 24px;
         line-height: 36px;
       }
-      label.checkbox {
+      #login-form label.checkbox {
         font-size: 11px;
       }
-      input[type="submit"] {
+      #login-form input[type="submit"] {
         margin-top: 20px;
+      }
+      #login-form .alert-success {
+        position: static;
+        width: auto;
+        margin-top: 0;
+        margin-left: 0;
       }
     </style>
   </head>

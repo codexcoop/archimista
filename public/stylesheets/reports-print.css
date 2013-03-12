@@ -1,21 +1,16 @@
-/*
-REMARKS
-
-- interlinea sui <p> attualmente 1.5em
-- font Georgia, serif in attesa di decisione definitiva
-- font-size 10pt testo normale e 20 18 16 12 pt per h1 h2 h3 h4 rispettivamente
-FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
-
-*/
-
 @media print {
 
   html, body {
     margin: 0;
     padding: 0;
     width: 800px;
+    /*
+    OPTIMIZE: secondo me la regola su width in px è da togliere del tutto.
+    Distorce la dimensione "reale" dei font.
+    Lasciando che il testo riempia tutto il body, i valori di headers e testo andranno diminuiti.
+    */
   }
-  html{
+  html {
     color: #000;
     background: #FFF;
   }
@@ -44,7 +39,13 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
   img {
     border: 0;
   }
-  #header, #menu, #status-bar, #footer, #footnotes_debug, .pdf, .back, .to-index, .rtf-inventory, .rtf-project, .csv, .xls, .rtf-custodian, #order-choice {
+  #header,
+  #footer,
+  #footnotes_debug,
+  #index-controls,
+  #order-choice,
+  #preview-disclaimer,
+  #unit-path-wrapper {
     display: none;
   }
   .unit-label {
@@ -57,11 +58,9 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     text-align: center;
     vertical-align:top;
   }
-
   .fond {
     line-height: 1.5em;
   }
-
   .fond p {
     text-align: justify;
     widows: 3;
@@ -108,9 +107,8 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     width: 100%;
     /*table-layout:fixed;*/
   }
-  td.no-wrap {
-    overflow: hidden;
-    white-space: nowrap
+  td.fixed-large {
+    width: 40%;
   }
   .table tbody tr {
     margin: 0;
@@ -123,11 +121,11 @@ FEEL FREE TO TWEAK THIS IF YOU THINK WILL BE BETTER
     padding: 5px;
     text-align: left;
   }
-  .left {
-    float: left;
-  }
-  .right {
+  .pull-right {
     float: right;
+  }
+  .pull-left {
+    float: left;
   }
   .head {
     overflow: hidden;

@@ -1,3 +1,7 @@
+/* OPTIMIZE: usato solo qui, dismettere o usare .text-warning quando aggiorneremo bootstrap */
+.warning {
+  color: #f00;
+}
 table.summary {
   width: 760px;
   margin: 18px 0;
