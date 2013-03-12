@@ -8,6 +8,8 @@ class DigitalObjectsController < ApplicationController
       paginate(:include => :attachable, :page => params[:page],
       :order => sort_column + ' ' + sort_direction).
       delete_if {|o| o.attachable.nil? || (o.attachable.has_attribute?("sequence_number") && o.attachable.sequence_number.nil?) }
+
+    # FIXME: retrieving del path di fonds/units è query intensive. Ma per ora teniamocelo...
   end
 
   # Polymorphic association - nested resource

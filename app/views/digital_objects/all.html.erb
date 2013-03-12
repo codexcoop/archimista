@@ -37,7 +37,19 @@
             <td><%= digital_object.asset_file_name %>
               <p><span class="muted">Allegato a:</span>
                 <%= link_to t("activerecord.models.#{digital_object.attachable_type.downcase}.one"), polymorphic_path([digital_object.attachable, "digital_objects"]) %><br>
-                <span class="light"><%= digital_object.attachable.display_name %></span></p></td>
+                <%# FIXME: codice sporco e pesante. Vedi controller/all %>
+                <span class="light">
+                <% if digital_object.attachable_type == "Fond" %>
+                  <%= digital_object.attachable.path_items.map(&:name).join(path_separator) %>
+                <% elsif digital_object.attachable_type == "Unit" %>
+                  <%= (digital_object.attachable.ancestors.map(&:name) << digital_object.attachable.display_name).join(path_separator) %><br>
+                  <em>Complesso</em>: <%= digital_object.attachable.fond.path_items.map(&:name).join(path_separator) %>
+                <% else %>
+                  <%= digital_object.attachable.display_name %>
+                <% end %>
+                </span>
+              </p>
+            </td>
             <td><%= l digital_object.updated_at, :format => :long %></td>
             <td><%= link_to t('destroy'), digital_object, :confirm => t('are_you_sure'), :method => :delete %></td>
           </tr>
@@ -50,7 +62,7 @@
     <p>Non sono ancora presenti oggetti digitali.</p>
     <p><strong>Nota</strong>. Gli oggetti digitali possono essere creati all'interno delle seguenti schede:</p>
     <ul>
-  <%# TODO: digital_objects per fonds (treeview) %>
+      <%# TODO: digital_objects per fonds (treeview) %>
       <li>Complessi archivistici</li>
       <li>Unità archivistiche</li>
       <li>Soggetti produttori</li>
