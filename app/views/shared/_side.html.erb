@@ -93,7 +93,7 @@
         <% target_link = @unit.is_root? ? new_fond_unit_path : new_unit_child_path %>
         Vai alla <%= link_to 'scheda normale', target_link %>
       <% else %>
-        Vai alla <%= link_to 'scheda normale', edit_unit_path(@unit)  + "?t=#{@unit.tsk}" %>
+        Vai alla <%= link_to 'scheda normale', edit_unit_path(@unit, :t => @unit.tsk) %>
       <% end %>
       <hr />
     <% end %>
@@ -103,7 +103,7 @@
         <% target_link = @unit.is_root? ? new_iccd_fond_units_path : new_iccd_unit_children_path %>
         Vai alla <%= link_to 'scheda speciale', target_link %>
       <% else %>
-        Vai alla <%= link_to 'scheda speciale', edit_iccd_unit_path(@unit)  + "?t=#{@unit.tsk}" %>
+        Vai alla <%= link_to 'scheda speciale', edit_iccd_unit_path(@unit, :t => @unit.tsk) %>
       <% end %>
       <hr />
     <% end %>

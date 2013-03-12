@@ -42,9 +42,8 @@
     <h3>Modifica livello</h3>
   </div>
   <div class="modal-body">
-<%# OPTIMIZE: stampare display_sequence_number per rendere più comprensibile interazione %>
-    <p>[<%= object.level_type %>]
-    <%= object.display_sequence_number_from_hash(@display_sequence_numbers) %>
+    <p><span class="muted">[<%= object.level_type %>]
+    <%= object.display_sequence_number_from_hash(@display_sequence_numbers) %>.</span>
     <strong><%= object.title %></strong></p>
     <div id="move-unit-choice">
       <% if object.is_not_movable? %>
@@ -52,31 +51,35 @@
       <% else %>
         <p>Azioni disponibili:</p>
         <% if object.is_movable_up? %>
-          <p><%= radio_button_tag 'action', 'up' %> Sposta al livello superiore</p>
+          <% target_level = object.ancestry_depth == 1 ? "unità" : "sottounità" %>
+          <p><%= radio_button_tag 'action', 'up' %> Trasforma la <%= object.level_type.downcase %> in <%= target_level %></p>
         <% end %>
         <% if object.is_movable_down? && units.any? %>
-          <p><%= radio_button_tag 'action', 'down' %> Sposta al livello inferiore</p>
+          <% target_level = object.ancestry_depth == 1 ? "sottosottounità" : "sottounità" %>
+          <p><%= radio_button_tag 'action', 'down' %> Trasforma la <%= object.level_type.downcase %> in <%= target_level %></p>
         <% end %>
       </div>
-      <div id="move-unit-up" style="display:none">
+      <div id="move-unit-up" class="hide">
         <% if object.is_movable_up? %>
           <div>
             <% form_tag({:controller => 'units', :action => 'move_up', :id => object.id}, {:id => "move-up-form", :class => "skip-prompt"}) do %>
             <% end %>
-            <p class="muted">L'unità sarà inserita come ultimo figlio del livello superiore <strong><%= @unit.parent.title %></strong>.</p>
+            <p class="muted">L'attuale <%= object.level_type.downcase %> sarà inserita come ultimo fratello di <%= @unit.parent.display_sequence_number_from_hash(@display_sequence_numbers) %>. <strong><%= @unit.parent.title %></strong>.</p>
           </div>
         <% end %>
       </div>
-      <div id="move-unit-down" style="display:none">
+      <div id="move-unit-down" class="hide">
         <% if object.is_movable_down? && units.any? %>
-          <p>Scegli il nuovo padre tra quelli disponibili.</p>
+          <p>Scegli il nuovo padre tra quelli disponibili:</p>
           <% form_tag({:controller => 'units', :action => 'move_down', :id => object.id}, {:id => "move-down-form", :class => "skip-prompt"}) do %>
             <ul id="units-list" class="unstyled">
               <% units.each do |unit| %>
                 <li>
                   <label class="livesearch radio">
                     <input name="new_parent_id" value="<%= unit.id %>" type="radio" />
-                    <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>:
+                    <span class="muted">
+                    <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>.
+                    </span>
                     <%= unit.title %>
                   </label>
                 </li>
@@ -84,13 +87,14 @@
             </ul>
           <% end %>
         <% end %>
-        <p class="muted">L'unità sarà inserita come ultimo figlio del padre selezionato.</p>
+        <p class="muted">L'attuale <%= object.level_type.downcase %> sarà inserita come ultimo figlio del padre selezionato.</p>
       <% end %>
     </div>
+
   </div>
   <div class="modal-footer">
-    <button id="back" class="btn pull-left" style="display:none"><%= t('back') %></button>
+    <button id="back" class="btn pull-left hide"><%= t('back') %></button>
     <button class="btn" data-dismiss="modal"><%= t('cancel') %></button>
-    <button id="confirm-move" class="submit btn btn-primary disabled">Sposta</button>
+    <button id="confirm-move" class="submit btn btn-primary disabled">Trasforma</button>
   </div>
 </div>

@@ -50,7 +50,7 @@ module RTF
       text << "\\margt#{@top_margin}"         unless @top_margin.nil?
       text << "\\margb#{@bottom_margin}"      unless @bottom_margin.nil?
       text << "\\gutter#{@gutter}"            unless @gutter.nil?
-      text << '\sectd\lndscpsxn'              if @orientation == LANDSCAPE
+      text << "\\sectd\\lndscpsxn"            if @orientation == LANDSCAPE
       text << "\\facingp\\margmirror"         unless @enable_facing_pages == false
       text << "\\widowctrl"                   unless @enable_widow_control == false
       text << "\\titlepg"                     unless @enable_title_page == false
@@ -131,7 +131,6 @@ class RtfBuilder < ActiveRecord::Base
 
   def custodian_printable_attributes
     [
-      "display_name",
       "headquarter_address",
       "custodian_type.custodian_type",
       "legal_status",
@@ -149,14 +148,12 @@ class RtfBuilder < ActiveRecord::Base
 
   def creator_printable_attributes
     [
-      "display_name",
       "preferred_event.full_display_date",
       "creator_type",
       "creator_corporate_type.corporate_type",
       "residence",
       "abstract",
       "history",
-      "legal_status",
       "note"
     ]
   end
@@ -180,7 +177,13 @@ class RtfBuilder < ActiveRecord::Base
   def custodian_printable_attributes
     [
       "headquarter_address",
+      "custodian_type.custodian_type",
+      "legal_status",
+      "owner",
+      "contact_person",
       "history",
+      "administrative_structure",
+      "collecting_policies",
       "holdings",
       "accessibility",
       "services"
@@ -263,7 +266,7 @@ class RtfBuilder < ActiveRecord::Base
       :include => [
         :preferred_event, :sources,
         [:units => :preferred_event],
-        [:creators => [:preferred_name, :preferred_event]],
+        [:creators => [:preferred_name, :preferred_event, :creator_legal_statuses]],
         [:custodians => [:preferred_name, :custodian_buildings, :custodian_contacts]]
       ],
       :order => "sequence_number")
@@ -309,13 +312,17 @@ class RtfBuilder < ActiveRecord::Base
               if attribute.include?('.')
                 text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s
               else
-                text = custodian.send(attribute.to_sym).to_s
+                if attribute == 'legal_status'
+                  text = translate_value(custodian.send(attribute.to_sym).to_s)
+                else
+                  text = custodian.send(attribute.to_sym).to_s
+                end
               end
               p(document, styles, text, "\\s#{stylesheet_codes[index]}")
             end
           end
           if custodian.custodian_contacts.present?
-            contacts = Array.new
+            contacts = []
             strong(document, styles, Custodian.human_attribute_name("contacts"))
             custodian.custodian_contacts.each do |contact|
               contacts.push("#{Custodian.human_attribute_name(contact.contact_type)}: #{contact.contact}")
@@ -345,6 +352,16 @@ class RtfBuilder < ActiveRecord::Base
               end
               p(document, styles, text, "\\s#{stylesheet_codes[index]}")
             end
+          end
+          if creator.creator_legal_statuses.present?
+            statuses = []
+            strong(document, styles, Creator.human_attribute_name('legal_status'))
+            creator.creator_legal_statuses.each do |cls|
+              text = translate_value(cls.legal_status)
+              text.concat( "[#{cls.note}]") if cls.note
+              statuses.push(text)
+            end
+            list document, statuses, styles
           end
         end
       end
@@ -1073,6 +1090,10 @@ class RtfBuilder < ActiveRecord::Base
     ].
       delete_if{|fragment| fragment.blank?}.
       join(" ")
+  end
+
+  def translate_value(value)
+    I18n::translate(value)
   end
 
 end
