@@ -1,5 +1,7 @@
 ## Archimista 1.2.0 (non rilasciato)
 
+La nuova versione consolida e migliora le funzionalità dell'applicazione, con particolare riguardo a Oggetti digitali, Unità e Report. Si segnalano le novità principali.
+
 ### Oggetti digitali
 
 - Funzionalità di upload multiplo di file per singolo record di entità (Unità archivistica, Soggetto produttore, ecc.)
@@ -9,9 +11,17 @@
 ### Unità
 
 - Possibilità di creare unità di terzo livello (sottosottounità)
+- Possibilità di modificare il livello delle unità (convertire unità in sottounità e viceversa, convertire sottounità in sottosottounità e viceversa)
+- Visualizzazione del numero di sequenza di sottounità e sottounità nella forma: 1.1, 1.1.1
 - ...
 
 ### Report
+
+- Aggiunto report per *Soggetto conservatore*
+- Aggiunto report per *Progetto*
+- Migliorato il report *Inventario*
+- Migliorato il report *Etichette unità*, con possibilità di esportazione in formato CSV / Excel per una completa personalizzazione mediante word processor
+- ...
 
 ### Correzioni di bug
 
