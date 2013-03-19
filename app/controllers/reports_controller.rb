@@ -47,6 +47,13 @@ class ReportsController < ApplicationController
   def summary
     @fonds = Fond.subtree_of(params[:id]).active.all(:include => [:preferred_event], :order => "sequence_number")
     @root_fond_name = @fonds.first.name
+    respond_to do |format|
+      format.html
+      format.pdf do
+        filename = pdf_init("summary.html")
+        render :json => {:file => "#{filename}.pdf"}
+      end
+    end
   end
 
   def inventory
@@ -73,11 +80,6 @@ class ReportsController < ApplicationController
     ]
 
     @unit_printable_attributes = [
-      "tsk",
-      "tmp_reference_number",
-      "tmp_reference_string",
-      "folder_number",
-      "file_number",
       "unit_type",
       "medium",
       "content",
@@ -94,8 +96,7 @@ class ReportsController < ApplicationController
       "access_condition",
       "access_condition_note",
       "use_condition",
-      "use_condition_note",
-      "note"
+      "use_condition_note"
     ]
 
     @custodian_printable_attributes = [
@@ -126,8 +127,8 @@ class ReportsController < ApplicationController
       :include => [
         :preferred_event, :sources,
         [:units => :preferred_event],
-        [:creators => [:preferred_name, :preferred_event, :creator_legal_statuses]],
-        [:custodians =>  [:preferred_name, :custodian_headquarter, :custodian_contacts]]
+        [:creators => [:preferred_name, :preferred_event, :creator_legal_statuses, :sources]],
+        [:custodians =>  [:preferred_name, :custodian_headquarter, :custodian_contacts, :sources]]
       ],
       :order => "sequence_number")
 
@@ -136,12 +137,17 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.pdf do
+        filename = pdf_init("inventory.html")
+        render :json => {:file => "#{filename}.pdf"}
+      end
       format.rtf do
+        filename = Time.now.strftime("%Y%m%d%H%M%S")
         @builder = RtfBuilder.new
         @builder.target_id = params[:id]
-        @builder.dest_file = "#{Rails.root}/public/downloads/inventory.rtf"
+        @builder.dest_file = "#{Rails.root}/public/downloads/#{filename}.rtf"
         @builder.build_fond_rtf_file
-        render :json => @builder
+        render :json => {:file => "#{filename}.rtf"}
         return
       end
     end
@@ -160,53 +166,21 @@ class ReportsController < ApplicationController
       :joins => :rel_creator_fonds,
       :conditions => "rel_creator_fonds.fond_id IN (#{ids})",
       :include => [:preferred_name, :preferred_event]).uniq
+    respond_to do |format|
+      format.html
+      format.pdf do
+        filename = pdf_init("creators.html")
+        render :json => {:file => "#{filename}.pdf"}
+      end
+    end
   end
 
   def units
-    @root_fond = Fond.find(params[:id], :select => "id, ancestry, name")
-    @display_sequence_numbers = Unit.display_sequence_numbers_of(@root_fond)
-    @order = params[:order] || "sequence_number"
-    @mode = params[:mode] || "full"
-
-    options = {
-      :conditions => "sequence_number IS NOT NULL",
-      :include => [:preferred_event],
-      :order => @order
-    }
-    options.merge!({:limit => LIMIT_FOR_PREVIEW}) if @mode == "preview"
-
-    @units  = @root_fond.descendant_units.all(options)
+    units_list("units.html")
   end
 
   def labels
-    @fond = Fond.find(params[:id], :select => "id, ancestry, name")
-    @display_sequence_numbers = Unit.display_sequence_numbers_of(@fond.root)
-    params[:mode] ||= "full"
-    params[:subtree] ||= "1"
-
-    options = {
-      :include => [:fond, :preferred_event],
-      :order => "units.sequence_number"
-    }
-
-    if params[:subtree] == "1"
-      @subtree_ids = @fond.subtree.active.all(:select => "id").map(&:id)
-      options.merge!({:conditions => {:fond_id => @subtree_ids}})
-    else
-      options.merge!({:conditions => {:fond_id => @fond.id}})
-    end
-
-    @units_count = Unit.count(options)
-
-    options.merge!({:limit => LIMIT_FOR_PREVIEW}) if params[:mode] == "preview"
-
-    @units = Unit.all(options)
-
-    respond_to do |format|
-      format.html
-      format.csv { send_data Unit.to_csv(@units, @fond.root.name, @display_sequence_numbers) }
-      format.xls
-    end
+    units_list("labels.html")
   end
 
   def project
@@ -279,13 +253,17 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.pdf do
+        filename = pdf_init("project.html")
+        render :json => {:file => "#{filename}.pdf"}
+      end
       format.rtf do
+        filename = Time.now.strftime("%Y%m%d%H%M%S")
         @builder = RtfBuilder.new
         @builder.target_id = params[:id]
-        @builder.dest_file = "#{Rails.root}/public/downloads/project.rtf"
+        @builder.dest_file = "#{Rails.root}/public/downloads/#{filename}.rtf"
         @builder.build_project_rtf_file
-        render :json => @builder
-        return
+        render :json => {:file => "#{filename}.rtf"}
       end
     end
   end
@@ -357,14 +335,103 @@ class ReportsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.pdf do
+        filename = pdf_init("custodian.html")
+        render :json => {:file => "#{filename}.pdf"}
+      end
       format.rtf do
+        filename = Time.now.strftime("%Y%m%d%H%M%S")
         @builder = RtfBuilder.new
         @builder.target_id = params[:id]
-        @builder.dest_file = "#{Rails.root}/public/downloads/custodian.rtf"
+        @builder.dest_file = "#{Rails.root}/public/downloads/#{filename}.rtf"
         @builder.build_custodian_rtf_file
-        render :json => @builder
-        return
+        render :json => {:file => "#{filename}.rtf"}
       end
     end
+  end
+
+  def download
+    file = "#{Rails.root}/public/downloads/#{params[:file]}"
+    send_file(file)
+  end
+
+  private
+
+  def units_list(action)
+    @fond = Fond.find(params[:id], :select => "id, ancestry, name")
+    @display_sequence_numbers = Unit.display_sequence_numbers_of(@fond.root)
+    params[:order] ||= "sequence_number"
+    params[:mode] ||= "full"
+    params[:subtree] ||= "1"
+
+    options = {
+      :conditions => "sequence_number IS NOT NULL",
+      :include => [:preferred_event],
+      :order => "units.#{params[:order]}"
+    }
+
+    if params[:subtree] == "1"
+      @subtree_ids = @fond.subtree.active.all(:select => "id").map(&:id)
+      options.merge!({:conditions => {:fond_id => @subtree_ids}})
+    else
+      options.merge!({:conditions => {:fond_id => @fond.id}})
+    end
+
+    @units_count = Unit.count(options)
+
+    options.merge!({:limit => LIMIT_FOR_PREVIEW}) if params[:mode] == "preview"
+
+    @units = Unit.all(options)
+
+    respond_to do |format|
+      format.html
+      format.pdf do
+        filename = pdf_init(action)
+        render :json => {:file => "#{filename}.pdf"}
+      end
+      format.csv do
+        filename = Time.now.strftime("%Y%m%d%H%M%S")
+        File.open("#{Rails.root}/public/downloads/#{filename}.csv", 'w') do |f|
+          f.write(Unit.to_csv(@units, @fond.root.name, @display_sequence_numbers))
+        end
+        render :json => {:file => "#{filename}.csv"}
+      end
+      format.xls do
+        filename = Time.now.strftime("%Y%m%d%H%M%S")
+        File.open("#{Rails.root}/public/downloads/#{filename}.xls", 'w') do |f|
+          f.write(render_to_string)
+        end
+        render :json => {:file => "#{filename}.xls"}
+      end
+
+    end
+  end
+
+  def pdf_init(action)
+    options = {
+      :margin_top    => '2.5cm',
+      :margin_right  => '2cm',
+      :margin_bottom => '2.5cm',
+      :margin_left   => '2cm',
+      :footer_font_size => 8,
+      :footer_spacing => 15,
+      :footer_center => "[page] di [toPage]"
+    }
+
+    if action == "labels.html"
+      options = {
+        :margin_top    => '0.25cm',
+        :margin_right  => '0cm',
+        :margin_bottom => '0cm',
+        :margin_left   => '0cm',
+      }
+    end
+
+    filename = Time.now.strftime("%Y%m%d%H%M%S")
+    html = render_to_string(:action => action)
+    kit = PDFKit.new(html, options)
+    kit.stylesheets << "#{Rails.root}/public/stylesheets/reports-print.css"
+    kit.to_file("#{Rails.root}/public/downloads/#{filename}.pdf")
+    filename
   end
 end

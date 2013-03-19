@@ -18,33 +18,9 @@
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', labels_report_path(@fond, params.merge({:format => "pdf", :mode => nil})), {:class => "pdf btn btn-small"} %>
   </div>
 
-  <%= render :partial => 'preview_disclaimer', :locals => {:count => @units_count} %>
+  <%= render :partial => 'subtree_selector', :locals => {:root_id => @fond.root.id, :fond_id => @fond.id} %>
 
-  <div id="unit-path-wrapper">
-    <div class="well">
-      <div id="unit-path-controls">
-        <span id="load-fonds-tree-wrapper">
-          <%= link_to "Seleziona un livello", "#",
-            :id => 'load-fonds-tree',
-            :'data-root-fond-id' => @fond.root.id,
-            :'data-fond-id' => @fond.id, :class => "pull-right" %>
-        </span>
-        <span id="close-fonds-tree-wrapper" class="pull-right">
-          <%= link_to t('cancel'), "#", :id => 'close-fonds-tree' %>
-          |
-          <%= link_to t('confirm'), '#', :id => 'confirm-new-branch' %>
-        </span>
-      </div>
-      <%= @fond.path_items.map(&:name).join(path_separator) %>
-      <div id="unit-path-tree-wrapper"  class="hide">
-        <div id="unit-path-tree" style="height: 460px; overflow: auto;">
-        </div>
-      </div>
-      <div id="descendants-choice">
-        <%= check_box_tag("include-subtree", "", {:checked => "checked"}) %>&nbsp;Includi i livelli sottostanti
-      </div>
-    </div>
-  </div>
+  <%= render :partial => 'preview_disclaimer', :locals => {:count => @units_count} %>
 
   <% if @units.any? %>
     <table id="labels">

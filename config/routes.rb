@@ -121,7 +121,10 @@ ActionController::Routing::Routes.draw do |map|
       :units                      => :get,
       :custodian                  => :get,
       :project                    => :get,
-  }
+    },
+    :collection => {
+      :download => :get,
+    }
 
   map.resources :quality_checks, :only => [:index],
     :member => {

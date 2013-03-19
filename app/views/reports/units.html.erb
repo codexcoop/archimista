@@ -1,5 +1,11 @@
 <% content_for :status_bar do %>
-  <h2>Report complesso archivistico<%= path_separator %><%= link_to @root_fond.name, dashboard_report_path %><%= path_separator %>Lista unità per <%= t(@order).downcase  %></h2>
+  <h2>
+    <%= [
+      'Report complesso archivistico',
+      link_to(@fond.root.name, dashboard_report_path(@fond.root.id)),
+      "Lista unità"
+    ].join(path_separator) %>
+  </h2>
   <div id="links">
     <%= link_to_index "Report", reports_path %>
   </div>
@@ -7,50 +13,54 @@
 
 <div class="span12">
   <div id="index-controls">
-    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', units_report_path(@root_fond, :format => "pdf", :order => @order),  {:class => "btn btn-small pdf"}  %>
-  </div>
-  <div id="order-choice">
-    <p>
-      Ordina per:
-      <%= link_to_if @order != "sequence_number", t("sequence_number").downcase,  units_report_path(@root_fond, :order => "sequence_number", :mode => @mode) %> |
-      <%= link_to_if @order != "reference_number",  t("reference_number").downcase, units_report_path(@root_fond, :order => "reference_number", :mode => @mode) %> |
-      <%= link_to_if @order != "tmp_reference_string",  t("tmp_reference_string").downcase, units_report_path(@root_fond, :order => "tmp_reference_string", :mode => @mode) %>
-    </p>
-    <p>
-      Visualizza:
-      <%= link_to_if @mode != "full",  t('full_preview'), units_report_path(@root_fond, :order => @order, :mode => "full") %> |
-      <%= link_to_if @mode != "preview",  t('limited_preview'), units_report_path(@root_fond, :order => @order, :mode => "preview") %></p>
+    <%= link_to '<i class="icon-download-alt"></i> Genera CSV', units_report_path(@fond, params.merge({:format => "csv", :mode => nil})), {:class => "csv btn btn-small"} %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera XLS', units_report_path(@fond, params.merge({:format => "xls", :mode => nil})), {:class => "xls btn btn-small"} %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera PDF', units_report_path(@fond, params.merge({:format => "pdf", :mode => nil})), {:class => "btn btn-small pdf"} %>
   </div>
 
-  <%#= render :partial => 'preview_disclaimer', :locals => {:mode => @mode, :items => @units.count} %>
+  <%= render :partial => 'subtree_selector', :locals => {:root_id => @fond.root.id, :fond_id => @fond.id} %>
 
-  <table class="table">
-    <thead>
-      <tr>
-        <th><%= t(@order) %></th>
-        <th><%= t("title") %></th>
-        <th class="span2"><%= t("date_event") %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @units.each do |unit| %>
+  <%= render :partial => 'preview_disclaimer', :locals => {:count => @units_count} %>
+
+  <% if @units.any? %>
+    <div id="order-choice">
+      <p>
+        Ordina per:
+        <%= link_to_if params[:order] != "sequence_number", t("sequence_number").downcase,  units_report_path(@root_fond, params.merge({:order => "sequence_number"})) %> |
+        <%= link_to_if params[:order] != "reference_number",  t("reference_number").downcase, units_report_path(@root_fond, params.merge({:order => "reference_number"})) %> |
+        <%= link_to_if params[:order] != "tmp_reference_string",  t("tmp_reference_string").downcase, units_report_path(@root_fond, params.merge({:order => "tmp_reference_string"})) %>
+      </p>
+    </div>
+    <table class="table table-bordered">
+      <thead>
         <tr>
-          <td class="fixed">
-            <div class="pbi_avoid">
-              <strong><%= @order == "sequence_number" ? unit.display_sequence_number_from_hash(@display_sequence_numbers) : unit.send(@order.to_sym) %></strong>
-            </div>
-          </td>
-          <td>
-            <div class="pbi_avoid">
-              <%= "&mdash;" * unit.ancestry_depth %> <%= unit.formatted_title %>
-            </div>
-          </td>
-          <td class="fixed-large">
-            <div class="pbi_avoid"><%= unit.preferred_event.try(:full_display_date_with_place) %>
-            </div>
-          </td>
+          <th><%= t(params[:order]) %></th>
+          <th><%= t("title") %></th>
+          <th class="span2"><%= t("date_event") %></th>
         </tr>
-      <%  end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @units.each do |unit| %>
+          <tr>
+            <td class="fixed">
+              <div class="pbi_avoid">
+                <%= params[:order] == "sequence_number" ? unit.display_sequence_number_from_hash(@display_sequence_numbers) : unit.send(params[:order].to_sym) %>
+              </div>
+            </td>
+            <td>
+              <div class="pbi_avoid">
+                <%= "&mdash;" * unit.ancestry_depth %> <%= unit.formatted_title %>
+              </div>
+            </td>
+            <td class="fixed-large">
+              <div class="pbi_avoid"><%= unit.preferred_event.try(:full_display_date_with_place) %>
+              </div>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <p id="turn-off-buttons">Non sono presenti unità nei livelli selezionati.</p>
+  <% end %>
 </div>

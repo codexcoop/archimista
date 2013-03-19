@@ -1,0 +1,27 @@
+<%# OPTIMIZE: togliere stile in linea. Da fare insieme a stile di selector in units/form %>
+<div id="unit-path-wrapper">
+  <div class="well">
+    <div id="unit-path-controls">
+      <span id="load-fonds-tree-wrapper">
+        <%= link_to "Seleziona un livello", "#",
+          :id => 'load-fonds-tree',
+          :'data-root-fond-id' => root_id,
+          :'data-fond-id' => fond_id, :class => "pull-right" %>
+      </span>
+      <span id="close-fonds-tree-wrapper" class="pull-right">
+        <%= link_to t('cancel'), "#", :id => 'close-fonds-tree' %>
+        |
+        <%= link_to t('confirm'), '#', :id => 'confirm-new-branch' %>
+      </span>
+    </div>
+    <p><%= @fond.path_items.map(&:name).join(path_separator) %></p>
+    <div id="unit-path-tree-wrapper" class="hide" style="padding-bottom: 10px;">
+      <div id="unit-path-tree" style="height: 380px; overflow: auto;">
+      </div>
+    </div>
+    <div id="descendants-choice" style="font-size: 12px;">
+      <% checked = params[:subtree] == "1" ? true : false %>
+      <%= check_box_tag("include-subtree", params[:subtree], checked) %>&nbsp;&nbsp;Includi i livelli discendenti
+    </div>
+  </div>
+</div>

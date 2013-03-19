@@ -7,7 +7,7 @@
 
 <div class="span12">
   <div id="index-controls">
-    <%= link_to '<i class="icon-download-alt"></i> Genera RTF', project_report_path(@project, :format => "rtf"),  {:class => "rtf-project btn btn-small"} %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera RTF', project_report_path(@project, :format => "rtf"),  {:class => "rtf btn btn-small"} %>
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', project_report_path(@project, :format => "pdf"),  {:class => "pdf btn btn-small"}  %>
   </div>
 
@@ -18,14 +18,13 @@
       <div>
         <p>
           <strong><%= Project.human_attribute_name(methods[0].to_sym) %></strong>
-          <br />
-          <% if attribute.include?('.') %>
-            <% text = @project.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
-          <% else %>
-            <% text = @project.send(attribute.to_sym).to_s %>
-          <% end %>
-          <%= text %>
         </p>
+        <% if attribute.include?('.') %>
+          <% text = @project.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+        <% else %>
+          <% text = @project.send(attribute.to_sym).to_s %>
+        <% end %>
+        <%= textilize_with_entities(text) %>
       </div>
     <% end %>
   <% end %>
@@ -66,14 +65,13 @@
         <div>
           <p>
             <strong><%= Custodian.human_attribute_name(methods[0].to_sym) %></strong>
-            <br />
-            <% if attribute.include?('.') %>
-              <% text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
-            <% else %>
-              <% text = custodian.send(attribute.to_sym).to_s %>
-            <% end %>
-            <%= text %>
           </p>
+          <% if attribute.include?('.') %>
+            <% text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+          <% else %>
+            <% text = custodian.send(attribute.to_sym).to_s %>
+          <% end %>
+          <%= textilize_with_entities(text) %>
         </div>
       <% end %>
     <% end %>
@@ -121,14 +119,13 @@
               <div>
                 <p>
                   <strong><%= Creator.human_attribute_name(methods[0].to_sym) %></strong>
-                  <br />
-                  <% if attribute.include?('.') %>
-                    <% text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
-                  <% else %>
-                    <% text = creator.send(attribute.to_sym).to_s %>
-                  <% end %>
-                  <%= text %>
                 </p>
+                <% if attribute.include?('.') %>
+                  <% text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+                <% else %>
+                  <% text = creator.send(attribute.to_sym).to_s %>
+                <% end %>
+                <%= textilize_with_entities(text) %>
               </div>
             <% end %>
           <% end %>
@@ -160,14 +157,13 @@
           <div>
             <p>
               <strong><%= Fond.human_attribute_name(methods[0].to_sym) %></strong>
-              <br />
-              <% if attribute.include?('.') %>
-                <% text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
-              <% else %>
-                <% text = fond.send(attribute.to_sym).to_s %>
-              <% end %>
-              <%= text %>
             </p>
+            <% if attribute.include?('.') %>
+              <% text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
+            <% else %>
+              <% text = fond.send(attribute.to_sym).to_s %>
+            <% end %>
+            <%= textilize_with_entities(text) %>
           </div>
         <% end %>
       <% end %>

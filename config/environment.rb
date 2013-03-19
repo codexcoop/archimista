@@ -62,7 +62,7 @@ Rails::Initializer.run do |config|
   # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
   config.i18n.load_path += Dir[File.join(RAILS_ROOT, 'config', 'locales', '**', '*.{rb,yml}')]
   config.i18n.default_locale = :it
-
+=begin
   # PDFKit middleware
   config.middleware.use PDFKit::Middleware, {
     :margin_top    => '2.5cm',
@@ -80,7 +80,7 @@ Rails::Initializer.run do |config|
     :margin_bottom => '0cm',
     :margin_left   => '0cm',
   }, :only => [ %r[/reports/[0-9]+/labels] ]
-
+=end
   if defined?(Footnotes)
     Footnotes::Filter.prefix = 'txmt://open?url=file://%s&amp;line=%d&amp;column=%d'
   end

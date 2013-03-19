@@ -35,7 +35,7 @@ $(document).ready(function () {
     return false;
   });
 
-  $(".rtf-inventory").click(function (event) {
+  $(".xls, .csv, .pdf, .rtf").click(function(event){
     event.preventDefault();
     $.blockUI({
       message: 'Generazione documento in corso'
@@ -43,49 +43,14 @@ $(document).ready(function () {
     $.ajax({
       url: $(this).attr('href'),
       data: {},
-      dataType: "text",
-      success: function () {
+      dataType: "json",
+      success: function (data) {
         $.unblockUI();
-        $(window.location).attr('href', "/downloads/inventory.rtf");
+        $(window.location).attr('href', "/reports/download?file=" + data.file);
       }
     });
     return false;
   });
-
-  $(".rtf-project").click(function (event) {
-    event.preventDefault();
-    $.blockUI({
-      message: 'Generazione documento in corso'
-    });
-    $.ajax({
-      url: $(this).attr('href'),
-      data: {},
-      dataType: "text",
-      success: function () {
-        $.unblockUI();
-        $(window.location).attr('href', "/downloads/project.rtf");
-      }
-    });
-    return false;
-  });
-
-  $(".rtf-custodian").click(function (event) {
-    event.preventDefault();
-    $.blockUI({
-      message: 'Generazione documento in corso'
-    });
-    $.ajax({
-      url: $(this).attr('href'),
-      data: {},
-      dataType: "text",
-      success: function () {
-        $.unblockUI();
-        $(window.location).attr('href', "/downloads/custodian.rtf");
-      }
-    });
-    return false;
-  });
-
 
   if( $('#turn-off-buttons').length ) {
     $(".btn").each(function() {
@@ -133,7 +98,9 @@ $(document).ready(function () {
     var fond_id       = options.fond_id || $command.data('fond-id');
     var root_fond_id  = options.root_fond_id || $command.data('root-fond-id');
 
-    if (!root_fond_id) return false;
+    if (!root_fond_id) {
+      return false;
+    }
 
     if ($current_root.length == 0) {
       ajax_tree(root_fond_id, fond_id);
@@ -152,7 +119,7 @@ $(document).ready(function () {
     $("#close-fonds-tree-wrapper").show();
     $("#unit-path-tree-wrapper").slideDown('slow');
     load_fonds_tree({
-      command:this
+      command: this
     });
     return false;
   });
@@ -178,19 +145,19 @@ $(document).ready(function () {
 
       $.each(variables, function(key, elem) {
         var tmp = elem.split("=");
-        if(tmp[0] == 'mode') {
+        if(tmp[0] == 'mode' || tmp[0] == 'order') {
           params[tmp[0]] = tmp[1];
         }
       });
 
       if ($("#include-subtree").is(":checked")) {
-        params.subtree = 1
+        params.subtree = 1;
       } else {
-        params.subtree = 0
+        params.subtree = 0;
       }
 
       $.each(params, function(key, elem) {
-        get.push(key + "=" + elem)
+        get.push(key + "=" + elem);
       });
       $(window.location).attr('href', dest + '?' + get.join('&'));
     }

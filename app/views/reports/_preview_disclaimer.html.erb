@@ -1,10 +1,10 @@
 <div id="preview-disclaimer">
   <% if count > ReportsController::LIMIT_FOR_PREVIEW %>
     <p>
-      Anteprima di <%= ReportsController::LIMIT_FOR_PREVIEW %> elementi su un totale di <%= number_with_delimiter(count) %> selezionati.<br />
+      Anteprima di <%= ReportsController::LIMIT_FOR_PREVIEW %> elementi su un totale di <strong><%= number_with_delimiter(count) %></strong> selezionati.
       <span class="muted">I file generati forniscono sempre un report completo degli elementi selezionati.</span>
     </p>
   <% else %>
-    <p>Elementi selezionati: <%= number_with_delimiter(count) %></p>
+    <p>Elementi selezionati: <strong><%= number_with_delimiter(count) %></strong></p>
   <% end %>
 </div>

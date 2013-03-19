@@ -34,7 +34,7 @@
     font-size: 16pt;
   }
   h4 {
-    font-size: 14pt;
+    font-size: 12pt;
   }
   img {
     border: 0;
@@ -130,8 +130,9 @@
   .head {
     overflow: hidden;
     width: 100%;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid #ccc;
     line-height: 2em;
+    vertical-align: top;
   }
   #cover {
     margin: auto;
@@ -144,7 +145,9 @@
   #cover .date {
     font-size: 18pt;
   }
-
+  strong.field-header{
+    display: block;
+  }
   /* Page Breaks */
   .pb_before {
     page-break-before: always !important;

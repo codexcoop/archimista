@@ -6,7 +6,7 @@
 <% end %>
 <div class="span9">
   <div id="index-controls">
-    <%= link_to '<i class="icon-download-alt"></i> Genera RTF', inventory_report_path(@root_fond, :format => "rtf"), {:class => "rtf-inventory btn btn-small"} %>
+    <%= link_to '<i class="icon-download-alt"></i> Genera RTF', inventory_report_path(@root_fond, :format => "rtf"), {:class => "rtf btn btn-small"} %>
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', inventory_report_path(@root_fond, :format => "pdf"), {:class => "pdf btn btn-small"} %>
   </div>
 
@@ -35,7 +35,9 @@
           <% @custodian_printable_attributes.each do |attribute| %>
             <% methods = attribute.split('.') %>
             <% if custodian.send(methods[0].to_sym).present? %>
-              <h5><%= t(methods[0]) %></h5>
+              <p>
+                <strong class="field-header"><%= t(methods[0]) %></strong>
+              </p>
               <% if attribute.include?('.') %>
                 <% text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
               <% else %>
@@ -51,11 +53,26 @@
           <% if custodian.custodian_contacts.present? %>
             <% contacts = Array.new %>
             <div>
-              <h5><%= t("contacts") %></h5>
+              <p>
+                <strong class="field-header"><%= t("contacts") %></strong>
+              </p>
               <% custodian.custodian_contacts.each do |contact| %>
                 <% contacts.push("#{Custodian.human_attribute_name(contact.contact_type)}: #{contact.contact}") %>
               <% end %>
               <%= contacts.join(', ') %>
+            </div>
+          <% end %>
+          <% if custodian.sources.present? %>
+            <div>
+              <p>
+                <strong class="field-header"><%= Source.human_name({:count => custodian.sources.size}) %></strong>
+              </p>
+              <% custodian.sources.each do |source| %>
+                <p>
+                  <em><%= source.short_title %></em><br />
+                  <%= formatted_source(source) %>
+                </p>
+              <% end %>
             </div>
           <% end %>
         <% end %>
@@ -69,7 +86,9 @@
           <% @creator_printable_attributes.each do |attribute| %>
             <% methods = attribute.split('.') %>
             <% if creator.send(methods[0].to_sym).present? %>
-              <h5><%= t(methods[0]) %></h5>
+              <p>
+                <strong class="field-header"><%= t(methods[0]) %></strong>
+              </p>
               <% if attribute.include?('.') %>
                 <% text = creator.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
               <% else %>
@@ -83,12 +102,27 @@
             <% end %>
           <% end %>
           <% if creator.creator_legal_statuses.present? %>
-            <h5><%= t('creator_legal_status')%></h5>
+            <p>
+              <strong class="field-header"><%= t('creator_legal_status')%></strong>
+            </p>
             <ul>
               <% creator.creator_legal_statuses.each do |cls| %>
                 <li><%= show_item(cls.legal_status, ['', ''], "t") %> <%= show_item(cls.note, ["[","]"]) %></li>
               <% end %>
             </ul>
+          <% end %>
+          <% if creator.sources.present? %>
+            <div>
+              <p>
+                <strong class="field-header"><%= Source.human_name({:count => creator.sources.size}) %></strong>
+              </p>
+              <% creator.sources.each do |source| %>
+                <p>
+                  <em><%= source.short_title %></em><br />
+                  <%= formatted_source(source) %>
+                </p>
+              <% end %>
+            </div>
           <% end %>
         <% end %>
         <hr />
@@ -100,7 +134,9 @@
           <div>
       <%# FIXME: hack provvisorio %>
             <% string = methods[0].to_s == "description" ? "Contenuto" : t(methods[0]) %>
-            <h5><%= string %></h5>
+            <p>
+              <strong class="field-header"><%= string %></strong>
+            </p>
             <%  if attribute.include?('.') %>
               <%  text = fond.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
             <% else %>
@@ -113,10 +149,12 @@
 
       <% if fond.sources.present? %>
         <div>
-          <h5><%= Source.human_name({:count => fond.sources.size}) %></h5>
+          <p>
+            <strong class="field-header"><%= Source.human_name({:count => fond.sources.size}) %></strong>
+          </p>
           <% fond.sources.each do |source| %>
             <p>
-              <em><%= source.short_title %></em>
+              <em><%= source.short_title %></em><br />
               <%= formatted_source(source) %>
             </p>
           <% end %>
@@ -124,24 +162,25 @@
       <% end %>
 
       <% if fond.units.present? %>
-        <h4><%= Unit.human_name({:count => fond.units.size}) %></h4>
+        <h3><%= Unit.human_name({:count => fond.units.size}) %></h3>
         <% fond.units.each do |u| %>
           <div class="unit pbi_avoid">
             <p class="head">
               <span class="pull-left"><strong><%= u.display_sequence_number_from_hash(@display_sequence_numbers) %></strong></span>
               <span class="pull-right"><%= u.reference_number %></span>
             </p>
-            <p>
-              <strong><%= u.formatted_title %></strong>
+            <h4><%= u.formatted_title %>
               <% if u.preferred_event.present? %><br />
-                <em><%= u.preferred_event.full_display_date_with_place %></em>
+                <span class="date"><em><%= u.preferred_event.full_display_date_with_place %></em></span>
               <% end %>
-            </p>
+            </h4>
             <% @unit_printable_attributes.each do |attribute| %>
               <% methods = attribute.split('.') %>
               <% if u.send(methods[0].to_sym).present? %>
                 <div>
-                  <h5><%= t(methods[0])%></h5>
+                  <p>
+                    <strong class="field-header"><%= t(methods[0])%></strong>
+                  </p>
                   <% if attribute.include?('.') %>
                     <% text = u.send(methods[0].to_sym).send(methods[1].to_sym).to_s %>
                   <% else %>

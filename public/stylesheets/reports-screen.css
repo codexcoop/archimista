@@ -38,7 +38,7 @@ h3 {
   font-size: 16pt;
 }
 h4 {
-  font-size: 14pt;
+  font-size: 12pt;
 }
 
 h2 span.date {
@@ -69,8 +69,9 @@ h2 span.spec {
 .head {
   overflow: hidden;
   width: 100%;
-  border-bottom: 1px solid #000;
+  border-bottom: 1px solid #ccc;
   line-height: 2em;
+  vertical-align: top;
 }
 .fond {
   line-height: 1.5em;
@@ -82,4 +83,7 @@ h2 span.spec {
 }
 #cover {
   display: none;
+}
+strong.field-header{
+  display: block;
 }

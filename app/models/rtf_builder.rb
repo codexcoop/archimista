@@ -1,4 +1,5 @@
 # Override class DocumentStyle for our own purpose
+
 # TODO: move this to lib, if possible
 
 module RTF
@@ -100,14 +101,8 @@ class RtfBuilder < ActiveRecord::Base
     [
       "title",
       "preferred_event.full_display_date_with_place",
-      "tsk",
+      "sequence_number",
       "reference_number",
-      "tmp_reference_number",
-      "tmp_reference_string",
-      "folder_number",
-      "file_number",
-      "sort_letter",
-      "sort_number",
       "unit_type",
       "medium",
       "content",
@@ -124,10 +119,14 @@ class RtfBuilder < ActiveRecord::Base
       "access_condition",
       "access_condition_note",
       "use_condition",
-      "use_condition_note",
-      "note"
+      "use_condition_note"
     ]
   end
+
+  # unit_NON_printable_attributes: "tsk", "tmp_reference_number",
+  # "tmp_reference_string", "folder_number", "file_number", "sort_letter",
+  # "sort_number", "note"
+
 
   def custodian_printable_attributes
     [
@@ -266,12 +265,13 @@ class RtfBuilder < ActiveRecord::Base
       :include => [
         :preferred_event, :sources,
         [:units => :preferred_event],
-        [:creators => [:preferred_name, :preferred_event, :creator_legal_statuses]],
-        [:custodians => [:preferred_name, :custodian_buildings, :custodian_contacts]]
+        [:creators => [:preferred_name, :preferred_event, :creator_legal_statuses, :sources]],
+        [:custodians => [:preferred_name, :custodian_buildings, :custodian_contacts, :sources]]
       ],
       :order => "sequence_number")
 
     root_fond = fonds.first
+    sequence_numbers = Unit.display_sequence_numbers_of(root_fond)
 
     tmp = "#{Rails.root}/tmp/tmp.rtf"
 
@@ -294,7 +294,11 @@ class RtfBuilder < ActiveRecord::Base
 
     document.store(CommandNode.new(self, "\\stylesheet#{stylesheet}", nil, false))
 
-    title_page document, styles, "#{root_fond.name}\n#{root_fond.preferred_event.full_display_date}" if root_fond.preferred_event.present?
+    title = []
+    title.push(root_fond.name)
+    title.push(root_fond.preferred_event.full_display_date) if root_fond.preferred_event.present?
+
+    title_page document, styles, title.join("\n")
 
     fonds.each do |fond|
 
@@ -329,6 +333,13 @@ class RtfBuilder < ActiveRecord::Base
             end
             p(document, styles, contacts.join(', '), "\\s#{stylesheet_codes['custodian_custodian_contacts']}")
           end
+          if custodian.sources.present?
+            strong(document, styles, Source.human_name({:count => custodian.sources.size}))
+            custodian.sources.each do |source|
+              em(document, styles, source.short_title, "\\s#{stylesheet_codes['source_short_title']}")
+              p(document, styles, formatted_source(source), "\\s#{stylesheet_codes['source_formatted_source']}")
+            end
+          end
         end
       end
 
@@ -362,6 +373,13 @@ class RtfBuilder < ActiveRecord::Base
               statuses.push(text)
             end
             list document, statuses, styles
+          end
+          if creator.sources.present?
+            strong(document, styles, Source.human_name({:count => creator.sources.size}))
+            creator.sources.each do |source|
+              em(document, styles, source.short_title, "\\s#{stylesheet_codes['source_short_title']}")
+              p(document, styles, formatted_source(source), "\\s#{stylesheet_codes['source_formatted_source']}")
+            end
           end
         end
       end
@@ -401,6 +419,8 @@ class RtfBuilder < ActiveRecord::Base
                 strong(document, styles, Unit.human_attribute_name(methods[0]))
                 if attribute.include?('.')
                   text = unit.send(methods[0].to_sym).send(methods[1].to_sym).to_s
+                elsif attribute == 'sequence_number'
+                  text = unit.display_sequence_number_from_hash(sequence_numbers).to_s
                 else
                   text = unit.send(attribute.to_sym).to_s
                 end
@@ -573,7 +593,7 @@ class RtfBuilder < ActiveRecord::Base
       end
 
       if custodian.custodian_other_buildings.present?
-        strong(document, styles, Custodian.human_name(:custodian_other_buildings))
+        strong(document, styles, Custodian.human_attribute_name(:custodian_other_buildings))
         custodian.custodian_other_buildings.each do |building|
           text = formatted_custodian_building(building)
           text += " (#{building.custodian_building_type})" if building.custodian_building_type.present?
@@ -780,7 +800,7 @@ class RtfBuilder < ActiveRecord::Base
     end
 
     if custodian.custodian_other_buildings.present?
-      strong(document, styles, Custodian.human_name(:custodian_other_buildings))
+      strong(document, styles, Custodian.human_attribute_name(:custodian_other_buildings))
       custodian.custodian_other_buildings.each do |building|
         text = formatted_custodian_building(building)
         text += " (#{building.custodian_building_type})" if building.custodian_building_type.present?
@@ -929,7 +949,7 @@ class RtfBuilder < ActiveRecord::Base
 
   def strong document, styles, string, stylesheet_code='\\s15'
     document.paragraph(styles['P']) do |p|
-      p.store(CommandNode.new(self, stylesheet_code, nil, false,false))
+      p.store(CommandNode.new(self, stylesheet_code, nil, false, false))
       p.apply(styles['STRONG']) do |t|
         t << string
       end
@@ -938,7 +958,7 @@ class RtfBuilder < ActiveRecord::Base
 
   def em document, styles, string, stylesheet_code=nil
     document.paragraph(styles['P']) do |p|
-      p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['EM']) do |t|
         t << string
       end
@@ -948,7 +968,7 @@ class RtfBuilder < ActiveRecord::Base
   def title_page document, styles, string, stylesheet_code=nil
     tokens = string.split("\n")
     document.paragraph(styles['TITLE']) do |p|
-      p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['TITLE_DEFAULT']) do |t|
         tokens.each do |token|
           unless token.empty?
@@ -963,7 +983,7 @@ class RtfBuilder < ActiveRecord::Base
 
   def h1 document, styles, string, stylesheet_code=nil
     document.paragraph(styles['P']) do |p|
-      p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['H1']) do |t|
         t << string
         t.line_break
@@ -973,7 +993,7 @@ class RtfBuilder < ActiveRecord::Base
 
   def h2 document, styles, string, stylesheet_code=nil
     document.paragraph(styles['P']) do |p|
-      p.store(CommandNode.new(document, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.store(CommandNode.new(document, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['H2']) do |t|
         t << string
       end
@@ -983,7 +1003,7 @@ class RtfBuilder < ActiveRecord::Base
 
   def h3 document, styles, string, stylesheet_code=nil
     document.paragraph(styles['P']) do |p|
-      p.store(CommandNode.new(document, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.store(CommandNode.new(document, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['H3']) do |t|
         t << string
       end
@@ -993,7 +1013,7 @@ class RtfBuilder < ActiveRecord::Base
 
   def h4 document, styles, string, stylesheet_code=nil
     document.paragraph(styles['P']) do |p|
-      p.store(CommandNode.new(self, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
+      p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['H4']) do |t|
         t << string
       end
@@ -1002,18 +1022,22 @@ class RtfBuilder < ActiveRecord::Base
   end
 
   def p document, styles, string, stylesheet_code=nil
-    unless string.blank?
-      tokens = string.split("\n")
-      document.paragraph(styles['P']) do |p|
-        p.store(CommandNode.new(document, stylesheet_code, nil, false,false)) unless stylesheet_code.nil?
-        p.apply(styles['DEFAULT']) do |t|
-          tokens.each do |token|
-            unless token.empty?
-              t << token.strip
-              t.line_break
-            end
+    parser = Parser.new(string)
+    nodes = parser.parse
+    nodes.each do |node|
+      case node.type
+      when 'text'
+        document.paragraph(styles['P']) do |p|
+          p.store(CommandNode.new(document, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
+          p.apply(styles['DEFAULT']) do |t|
+            t << node.content
+            t.line_break
           end
         end
+      when 'ordered_list'
+        list(document, node.content, styles, :decimal)
+      when 'unordered_list'
+        list(document, node.content, styles)
       end
     end
   end
@@ -1037,8 +1061,8 @@ class RtfBuilder < ActiveRecord::Base
     nil
   end
 
-  def list(document, elements, styles)
-    document.list do |ul|
+  def list(document, elements, styles, kind=:bullets)
+    document.list(kind) do |ul|
       elements.each do |element|
         ul.item do |li|
           li.apply(styles['DEFAULT']){|x| x << element}
@@ -1096,4 +1120,7 @@ class RtfBuilder < ActiveRecord::Base
     I18n::translate(value)
   end
 
+
 end
+
+
