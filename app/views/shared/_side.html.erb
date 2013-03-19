@@ -12,7 +12,11 @@
       <% end %>
 
       <% unless %w[new create].include?(action_name) %>
-        <%= link_to t('destroy'), object, :confirm => t('are_you_sure'), :method => :delete, :class => "destroy-link pull-right"%>
+        <% if controller_name == "fonds" %>
+          <%= link_to_unless(@descendant_units_count > 0, t('destroy'), object, :confirm => t('are_you_sure'), :method => :delete, :class => "destroy-link pull-right") do |name| "<span class='muted destroy-link pull-right' title='Per poter eliminare il complesso devi prima eliminare le unità collegate al complesso o ai complessi discendenti.'>#{name}</span>" end %>
+        <% else %>
+          <%= link_to t('destroy'), object, :confirm => t('are_you_sure'), :method => :delete, :class => "destroy-link pull-right" %>
+        <% end %>
       <% end %>
     </div>
     <hr />

@@ -117,20 +117,18 @@ class FondsController < ApplicationController
       paginate(:page => params[:page], :order => sort_column + ' ' + sort_direction, :include => :preferred_event)
 
     if @fonds.size > 0
-      @units_counts = Unit.count(
-        "id",
-        :joins => :fond,
+      @units_counts = Unit.count("id", :joins => :fond,
         :conditions => {:root_fond_id => @fonds.map(&:id), :fonds => {:trashed => false}},
-        :group => :root_fond_id
-      )
+        :group => :root_fond_id)
     end
   end
 
   def show
     langs
     @fond = Fond.find(params[:id])
-    @created = User.find(@fond.created_by)
-    @updated = User.find(@fond.updated_by)
+    # FIXME: bisognerebbe testare se il fond ha una qualsiasi unità discendente, anche trashed
+    @descendant_units_count = Unit.count("id", :joins => :fond,
+      :conditions => {:fond_id => @fond.subtree_ids, :fonds => {:trashed => false}})
 
     respond_to do |format|
       format.html

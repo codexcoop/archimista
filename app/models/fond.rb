@@ -40,8 +40,8 @@ class Fond < ActiveRecord::Base
   has_many :fond_owners, :dependent => :destroy
   has_many :fond_urls, :dependent => :destroy
 
-  # OPTIMIZE nella grid c'è un doppio ordinamento per sequence_number
   has_many :units, :dependent => :destroy, :order => "units.sequence_number"
+  # OPTIMIZE: disambiguare nome dell'associazione => descendant_units_of_root ???
   has_many :descendant_units, :class_name => "Unit", :foreign_key => :root_fond_id, :readonly => true
 
   def active_descendant_units_count

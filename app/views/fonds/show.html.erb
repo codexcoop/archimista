@@ -67,6 +67,12 @@
       <th><%= t('arrangement_note') %></th>
       <td><%= show_value(textilize(@fond.arrangement_note)) %></td>
     </tr>
+    <tr>
+      <th>&nbsp;</th>
+      <td><% total_count = @fond.is_root? ? @fond.active_descendant_units_count : @fond.units_count %>
+      <%= link_to "#{number_with_delimiter(total_count)} " + t('view_unit').downcase, fond_units_path(@fond) %>
+      <%= '<span class="muted">(totale del complesso)</span>' if @fond.is_root? %></td>
+    </tr>
   </table>
 
   <h3 class="section"><%= t('other_information_area') %></h3>
