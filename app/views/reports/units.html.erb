@@ -18,9 +18,9 @@
     <%= link_to '<i class="icon-download-alt"></i> Genera PDF', units_report_path(@fond, params.merge({:format => "pdf", :mode => nil})), {:class => "btn btn-small pdf"} %>
   </div>
 
-  <%= render :partial => 'subtree_selector', :locals => {:root_id => @fond.root.id, :fond_id => @fond.id} %>
+  <%= render :partial => 'subtree_selector.html', :locals => {:root_id => @fond.root.id, :fond_id => @fond.id} %>
 
-  <%= render :partial => 'preview_disclaimer', :locals => {:count => @units_count} %>
+  <%= render :partial => 'preview_disclaimer.html', :locals => {:count => @units_count} %>
 
   <% if @units.any? %>
     <div id="order-choice">
