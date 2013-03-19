@@ -222,7 +222,6 @@ class Unit < ActiveRecord::Base
   # Returns a hash of all the units of the *root_fond*,
   # where the key is the unit_id and the value is the display_sequence_number.
   # The hash is empty if the root_fond has no subunits.
-  # TODO: applicare in edit (?)
 
   def self.display_sequence_numbers_of(root_fond, index = 0)
     display_sequence_numbers = {}
@@ -296,11 +295,11 @@ class Unit < ActiveRecord::Base
       "fond.name",
       "formatted_title",
       "preferred_event.full_display_date_with_place",
-      "reference_number",
       "tmp_reference_number",
       "tmp_reference_string",
       "folder_number",
-      "file_number"
+      "file_number",
+      "reference_number"
     ]
   end
 

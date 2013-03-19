@@ -65,7 +65,7 @@
 <% if @units.size > 0 %>
   <table id="units-index" class="table table-sortable table-bordered">
     <col style="width: 30px" />
-    <col style="width: 40px" />
+    <col style="width: 80px" />
     <col style="width: auto" />
     <col style="width: 260px" />
     <col style="width: 150px" />
@@ -82,7 +82,8 @@
     <% @units.each do |unit| %>
       <tr class="<%= cycle("odd", "even") %>">
         <td><%= check_box_tag 'record_ids[]', unit.id, false, :class => 'selected-record-id' %></td>
-        <td class="center muted">
+        <%# OPTIMIZE: togliere stile in linea e fare classe %>
+        <td class="muted" style="text-align: right; padding-right: 20px;">
           <%= unit.display_sequence_number_from_hash(@display_sequence_numbers) %>
         </td>
         <td>

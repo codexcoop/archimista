@@ -120,17 +120,17 @@ class UnitsController < ApplicationController
   def move_up
     @unit = Unit.find(params[:id])
     @parent = @unit.parent
-    @unit.ancestry = @parent.ancestry
-    @unit.ancestry_depth = @parent.ancestry_depth
-    @unit.position = Unit.prepare_position_by('position DESC').first(:conditions => {:ancestry => @parent.ancestry}).position + 1
-    @unit.save
 
-    Unit.descendants_of(@parent).all(:order => :position).each_with_index do |unit, index|
-      unit.position = index + 1
-      unit.save
+    Unit.transaction do
+      @unit.ancestry = @parent.ancestry
+      @unit.ancestry_depth = @parent.ancestry_depth
+      @unit.position = Unit.prepare_position_by('position DESC').
+        first(:conditions => {:ancestry => @parent.ancestry, :root_fond_id => @unit.fond.root.id}).position + 1
+      @unit.save!
+
+      Fond.find(@unit.root_fond_id).rebuild_external_sequence_by('position')
     end
 
-    Fond.find(@unit.root_fond_id).rebuild_external_sequence_by('position')
     flash[:notice] = "Unità spostata correttamente"
     redirect_to :back
   end
@@ -139,19 +139,16 @@ class UnitsController < ApplicationController
     @unit = Unit.find(params[:id])
     @old_parent = @unit.parent
     @new_parent = Unit.find(params[:new_parent_id])
-    @unit.ancestry = @new_parent.ancestry.blank? ? @new_parent.id.to_s : @new_parent.ancestry+'/'+@new_parent.id.to_s
-    @unit.ancestry_depth = @unit.ancestry_depth + 1
-    @unit.position = Unit.prepare_position_by('position DESC').first(:conditions => {:ancestry => @new_parent.ancestry}).position + 1
-    @unit.save
 
-    if @old_parent.present? && @old_parent.has_children?
-      Unit.descendants_of(@old_parent).all(:order => :position).each_with_index do |unit, index|
-        unit.position = index + 1
-        unit.save
-      end
+    Unit.transaction do
+      @unit.ancestry = @new_parent.ancestry.blank? ? @new_parent.id.to_s : @new_parent.ancestry + '/' + @new_parent.id.to_s
+      @unit.ancestry_depth = @unit.ancestry_depth + 1
+      @unit.position = Unit.prepare_position_by('position DESC').
+        first(:conditions => {:ancestry => @new_parent.ancestry, :root_fond_id => @unit.fond.root.id}).position + 1
+      @unit.save!
+
+      Fond.find(@unit.root_fond_id).rebuild_external_sequence_by('position')
     end
-
-    Fond.find(@unit.root_fond_id).rebuild_external_sequence_by('position')
 
     flash[:notice] = "Unità spostata correttamente"
     redirect_to :back
