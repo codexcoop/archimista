@@ -203,7 +203,7 @@
               <li>
     <%# FIXME: creator_association_type_id sarà sempre popolato %>
                 (<%= rel.creator_association_type ? rel.creator_association_type.association_type : "legacy data: qualifica non presente" %>)
-                <%= link_to rel.related_creator.preferred_name.name, edit_creator_path(rel.related_creator) %>
+                <%= link_to rel.related_creator.preferred_name.name, creator_path(rel.related_creator) %>
                 <%= rel.related_creator.preferred_event.full_display_date if rel.related_creator.preferred_event %>
               </li>
             <% end -%>
