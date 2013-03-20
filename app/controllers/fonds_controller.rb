@@ -250,6 +250,11 @@ class FondsController < ApplicationController
         Unit.update_all("root_fond_id = #{@new_root.id}", ["root_fond_id = ?", @fond.id])
         @new_root.update_deletable_status
         @fond.update_deletable_status
+
+        # The merged fond is not a root anymore, so clear the relations specific to root fonds.
+        @fond.rel_custodian_fonds.clear
+        @fond.rel_project_fonds.clear
+
         flash[:notice] = 'Complessi archivistici uniti'
         redirect_to treeview_fond_url(@new_root.id)
       else
