@@ -37,22 +37,24 @@ $(document).ready(function () {
 
   $(".xls, .csv, .pdf, .rtf").click(function(event){
     event.preventDefault();
-    $.blockUI({
-      message: 'Generazione documento in corso'
-    });
-    $.ajax({
-      url: $(this).attr('href'),
-      data: {},
-      dataType: "json",
-      success: function (data) {
-        $.unblockUI();
-        $(window.location).attr('href', "/reports/download?file=" + data.file);
-      }
-    });
+    if($(this).attr('href') != "#") {
+      $.blockUI({
+        message: 'Generazione documento in corso'
+      });
+      $.ajax({
+        url: $(this).attr('href'),
+        data: {},
+        dataType: "json",
+        success: function (data) {
+          $.unblockUI();
+          $(window.location).attr('href', "/reports/download?file=" + data.file);
+        }
+      });
+    }
     return false;
   });
 
-  if( $('#turn-off-buttons').length ) {
+  if($('#turn-off-buttons').length) {
     $(".btn").each(function() {
       $(this).prop('disabled', true).addClass('disabled');
       $(this).prop("href","#");

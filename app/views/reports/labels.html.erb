@@ -23,7 +23,7 @@
   <%= render :partial => 'preview_disclaimer.html', :locals => {:count => @units_count} %>
 
   <% if @units.any? %>
-    <table id="labels">
+    <table style="margin:auto;" id="labels">
       <% @units.each_slice(2) do |row| %>
         <tr>
           <% row.each do |unit| %>

@@ -80,6 +80,16 @@ class ReportsController < ApplicationController
     ]
 
     @unit_printable_attributes = [
+      "preferred_event.full_display_date_with_place",
+      "content",
+      "physical_description",
+      "preservation",
+      "preservation_note",
+      "reference_number",
+      "tmp_reference_number",
+      "tmp_reference_string",
+    ]
+=begin
       "unit_type",
       "medium",
       "content",
@@ -97,8 +107,7 @@ class ReportsController < ApplicationController
       "access_condition_note",
       "use_condition",
       "use_condition_note"
-    ]
-
+=end
     @custodian_printable_attributes = [
       "headquarter_address",
       "custodian_type.custodian_type",
@@ -142,7 +151,7 @@ class ReportsController < ApplicationController
         render :json => {:file => "#{filename}.pdf"}
       end
       format.rtf do
-        filename = Time.now.strftime("%Y%m%d%H%M%S")
+        filename = "inventory-#{Time.now.strftime('%Y%m%d%H%M%S')}"
         @builder = RtfBuilder.new
         @builder.target_id = params[:id]
         @builder.dest_file = "#{Rails.root}/public/downloads/#{filename}.rtf"
@@ -258,7 +267,7 @@ class ReportsController < ApplicationController
         render :json => {:file => "#{filename}.pdf"}
       end
       format.rtf do
-        filename = Time.now.strftime("%Y%m%d%H%M%S")
+        filename = "project-#{Time.now.strftime('%Y%m%d%H%M%S')}"
         @builder = RtfBuilder.new
         @builder.target_id = params[:id]
         @builder.dest_file = "#{Rails.root}/public/downloads/#{filename}.rtf"
@@ -340,7 +349,7 @@ class ReportsController < ApplicationController
         render :json => {:file => "#{filename}.pdf"}
       end
       format.rtf do
-        filename = Time.now.strftime("%Y%m%d%H%M%S")
+        filename = "custodian-#{Time.now.strftime('%Y%m%d%H%M%S')}"
         @builder = RtfBuilder.new
         @builder.target_id = params[:id]
         @builder.dest_file = "#{Rails.root}/public/downloads/#{filename}.rtf"
@@ -383,6 +392,8 @@ class ReportsController < ApplicationController
 
     @units = Unit.all(options)
 
+    filename = "#{File.basename(action,'.*')}-#{Time.now.strftime('%Y%m%d%H%M%S')}"
+
     respond_to do |format|
       format.html
       format.pdf do
@@ -390,14 +401,12 @@ class ReportsController < ApplicationController
         render :json => {:file => "#{filename}.pdf"}
       end
       format.csv do
-        filename = Time.now.strftime("%Y%m%d%H%M%S")
         File.open("#{Rails.root}/public/downloads/#{filename}.csv", 'w') do |f|
           f.write(Unit.to_csv(@units, @fond.root.name, @display_sequence_numbers))
         end
         render :json => {:file => "#{filename}.csv"}
       end
       format.xls do
-        filename = Time.now.strftime("%Y%m%d%H%M%S")
         File.open("#{Rails.root}/public/downloads/#{filename}.xls", 'w') do |f|
           f.write(render_to_string)
         end
@@ -427,7 +436,15 @@ class ReportsController < ApplicationController
       }
     end
 
-    filename = Time.now.strftime("%Y%m%d%H%M%S")
+    prefix = File.basename(action, '.*')
+
+    unless ["labels", "inventory", "project", "custodian"].include? prefix
+      options.merge!({:orientation => 'Landscape', :dpi => '150'})
+    else
+      options.merge!({:dpi => '300'})
+    end
+
+    filename = "#{prefix}-#{Time.now.strftime('%Y%m%d%H%M%S')}"
     html = render_to_string(:action => action)
     kit = PDFKit.new(html, options)
     kit.stylesheets << "#{Rails.root}/public/stylesheets/reports-print.css"

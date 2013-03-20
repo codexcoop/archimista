@@ -99,9 +99,29 @@ class RtfBuilder < ActiveRecord::Base
 
   def unit_printable_attributes
     [
+      "sequence_number",
       "title",
       "preferred_event.full_display_date_with_place",
-      "sequence_number",
+      "content",
+      "physical_description",
+      "preservation",
+      "preservation_note",
+      "reference_number",
+      "tmp_reference_number",
+      "tmp_reference_string",
+    ]
+  end
+
+=begin
+numero, titolo, estremi cronologici (con note), contenuto, descrizione
+estrinseca (con eventuale stato di conservazione) e segnatura (provvisoria o
+definitiva)
+
+  def unit_printable_attributes
+    [
+      "title",
+      "preferred_event.full_display_date_with_place", "
+      sequence_number",
       "reference_number",
       "unit_type",
       "medium",
@@ -123,27 +143,12 @@ class RtfBuilder < ActiveRecord::Base
     ]
   end
 
-  # unit_NON_printable_attributes: "tsk", "tmp_reference_number",
-  # "tmp_reference_string", "folder_number", "file_number", "sort_letter",
-  # "sort_number", "note"
-
-
-  def custodian_printable_attributes
-    [
-      "headquarter_address",
-      "custodian_type.custodian_type",
-      "legal_status",
-      "owner",
-      "contact_person",
-      "history",
-      "administrative_structure",
-      "collecting_policies",
-      "holdings",
-      "accessibility",
-      "services",
-      "custodian_contacts"
-    ]
-  end
+  unit_NON_printable_attributes:
+    "tsk", tmp_reference_number",
+    "tmp_reference_string", "folder_number",
+    "file_number", "sort_letter",
+    "sort_number", "note"
+=end
 
   def creator_printable_attributes
     [
@@ -185,13 +190,14 @@ class RtfBuilder < ActiveRecord::Base
       "collecting_policies",
       "holdings",
       "accessibility",
-      "services"
+      "services",
+      "custodian_contacts"
     ]
   end
 
   def stylesheet_codes
     stylesheet_codes = Hash.new
-    start = 19
+    start = 20
     entities = ["fond", "unit", "custodian", "creator", "project", "source"]
 
     entities.each do |entity|
@@ -210,7 +216,8 @@ class RtfBuilder < ActiveRecord::Base
     stylesheet << "{\\s15\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext15 archimista_header;}\n"
     stylesheet << "{\\s16\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext16 archimista_section_header;}\n"
     stylesheet << "{\\s17\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext17 archimista_scons;}\n"
-    stylesheet << "{\\s18\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext18 archimista_sprod;}\n"
+    stylesheet << "{\\s18\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext18 archimista_sprod;}\n"
+    stylesheet << "{\\s19\\widctlpar \\f0\\fs4\\lang1040 \\sbasedon0\\snext19 separator;}\n"
 
     stylesheet_codes.each do |attribute, code|
       stylesheet << "{\\s#{code}\\widctlpar \\f0\\fs20\\lang1040 \\sbasedon0\\snext#{code} #{attribute};}\n"
@@ -307,11 +314,11 @@ class RtfBuilder < ActiveRecord::Base
       if fond.custodians.present?
         h2(document, styles, Custodian.human_name)
         fond.custodians.each do |custodian|
-          h3(document, styles, custodian.display_name, "\\s#{stylesheet_codes['custodian_display_name']}")
+          h3(document, styles, custodian.display_name, "\\s17")
           custodian_printable_attributes.each do |attribute|
             methods = attribute.split('.')
             if custodian.send(methods[0].to_sym).present?
-              strong(document, styles, Custodian.human_attribute_name(methods[0]))
+              strong(document, styles, Custodian.human_attribute_name(methods[0])) unless attribute == "custodian_contacts"
               index = "custodian_#{methods[0]}"
               if attribute.include?('.')
                 text = custodian.send(methods[0].to_sym).send(methods[1].to_sym).to_s
@@ -346,7 +353,7 @@ class RtfBuilder < ActiveRecord::Base
       if fond.creators.present?
         h2(document, styles, Creator.human_name({:count => fond.creators.size}))
         fond.creators.each do |creator|
-          h3(document, styles, creator.display_name, "\\s#{stylesheet_codes['creator_display_name']}")
+          h3(document, styles, creator.display_name, "\\s18")
           creator_printable_attributes.each do |attribute|
             methods = attribute.split('.')
             if creator.send(methods[0].to_sym).present?
@@ -409,18 +416,31 @@ class RtfBuilder < ActiveRecord::Base
       if fond.units.present?
         h2(document, styles, Unit.human_name({:count => fond.units.size}))
         fond.units.each do |unit|
+          if unit.reference_number.present?
+            unit.tmp_reference_number = nil
+            unit.tmp_reference_string = nil
+          end
+
+          if unit.tmp_reference_number.present?
+            unit.tmp_reference_string = nil
+          end
+
           unit_printable_attributes.each do |attribute|
             methods = attribute.split('.')
             index = "unit_#{methods[0]}"
             if unit.send(methods[0].to_sym).present?
               if (methods[0] == 'title')
                 h3(document, styles, unit.send(:formatted_title).to_s, "\\s#{stylesheet_codes[index]}")
+              elsif methods[0] == 'sequence_number'
+                text = unit.display_sequence_number_from_hash(sequence_numbers).to_s
+                p(document, styles, text, "\\s#{stylesheet_codes[index]}")
               else
                 strong(document, styles, Unit.human_attribute_name(methods[0]))
                 if attribute.include?('.')
                   text = unit.send(methods[0].to_sym).send(methods[1].to_sym).to_s
-                elsif attribute == 'sequence_number'
-                  text = unit.display_sequence_number_from_hash(sequence_numbers).to_s
+                  if(methods[0] == 'preferred_event')
+                    text.concat("\n#{unit.send(methods[0].to_sym).send('note').to_s}")
+                  end
                 else
                   text = unit.send(attribute.to_sym).to_s
                 end
@@ -428,6 +448,7 @@ class RtfBuilder < ActiveRecord::Base
               end
             end
           end
+          draw_line document unless unit == fond.units.last
         end
         my_page_break(document)
       end
@@ -606,7 +627,7 @@ class RtfBuilder < ActiveRecord::Base
       end
       if custodian.sources.present?
         strong(document, styles, Source.human_name({:count => custodian.sources.size}))
-        p(document, styles, inline_short_sources(custodian.sources))
+        p(document, styles, inline_short_sources(custodian.sources), "\\s#{stylesheet_codes['source_short_title']}")
       end
 
       fonds[custodian.id].each do |fond|
@@ -637,7 +658,7 @@ class RtfBuilder < ActiveRecord::Base
             end
             if creator.sources.present?
               strong(document, styles,Source.human_name({:count => creator.sources.size}))
-              p(document, styles, inline_short_sources(creator.sources))
+              p(document, styles, inline_short_sources(creator.sources), "\\s#{stylesheet_codes['source_short_title']}")
 
             end
           end
@@ -671,7 +692,7 @@ class RtfBuilder < ActiveRecord::Base
         end
         if fond.sources.present?
           strong(document, styles, Source.human_name({:count => fond.sources.size}))
-          p(document, styles, inline_short_sources(fond.sources))
+          p(document, styles, inline_short_sources(fond.sources), "\\s#{stylesheet_codes['source_short_title']}")
         end
       end
     end
@@ -814,7 +835,7 @@ class RtfBuilder < ActiveRecord::Base
 
     if custodian.sources.present?
       strong(document, styles, Source.human_name({:count => custodian.sources.size}))
-      p(document, styles, inline_short_sources(custodian.sources))
+      p(document, styles, inline_short_sources(custodian.sources), "\\s#{stylesheet_codes['source_short_title']}")
     end
 
     projects.each do |project|
@@ -885,7 +906,7 @@ class RtfBuilder < ActiveRecord::Base
             end
             if creator.sources.present?
               strong(document, styles,Source.human_name({:count => creator.sources.size}))
-              p(document, styles, inline_short_sources(creator.sources))
+              p(document, styles, inline_short_sources(creator.sources), "\\s#{stylesheet_codes['source_short_title']}")
 
             end
           end
@@ -919,7 +940,7 @@ class RtfBuilder < ActiveRecord::Base
         end
         if fond.sources.present?
           strong(document, styles, Source.human_name({:count => fond.sources.size}))
-          p(document, styles, inline_short_sources(fond.sources))
+          p(document, styles, inline_short_sources(fond.sources), "\\s#{stylesheet_codes['source_short_title']}")
         end
       end
     end
@@ -1056,7 +1077,7 @@ class RtfBuilder < ActiveRecord::Base
   end
 
   def draw_line document
-    document.store(CommandNode.new(document, '\pard \brdrb \brdrs\brdrw10\brsp20 {\fs4\~}\par \pard', nil, false))
+    document.store(CommandNode.new(document, '\pard \s19 \brdrb \brdrs\brdrw5\brsp10 {\fs4\~}\par \pard', nil, false))
     document.line_break
     nil
   end

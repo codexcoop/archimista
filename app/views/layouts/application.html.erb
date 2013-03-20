@@ -2,20 +2,10 @@
 <html lang="<%= I18n.default_locale.to_s %>">
 <head>
   <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <% if controller_name == "reports" %>
-    <meta name="pdfkit-title" content="<%= @root_fond_name %>" />
-    <% unless ["labels", "inventory", "project", "custodian"].include? action_name %>
-    <meta name="pdfkit-orientation" content="Landscape" />
-    <meta name="pdfkit-dpi" content="150" />
-    <% else %>
-    <meta name="pdfkit-dpi" content="300" />
-    <% end %>
-  <% end %>
   <title><%= controller_name %> - <%= action_name %></title>
   <%= default_stylesheets %>
   <%= stylesheet_link_tag "treeview" %>
   <% if controller_name == "reports" %>
-    <%= stylesheet_link_tag "reports-print", :media => "print" %>
     <%= stylesheet_link_tag "reports-screen", :media => "screen" %>
   <% end %>
   <% if controller_name == "quality_checks" %>
@@ -51,7 +41,6 @@
   <% end %>
   <% if controller_name == "reports" %>
     <%= javascript_include_tag "reports" %>
-    <%#= javascript_include_tag "units-jump_to" %>
   <% end %>
   <% if controller_name == "quality_checks" %>
     <%= javascript_include_tag "quality_checks" %>

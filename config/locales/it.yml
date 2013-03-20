@@ -246,3 +246,5 @@ it:
         custodian_other_buildings: "Altre sedi"
         custodian_type: "Tipologia"
         legal_status: "Condizione giuridica"
+        contact_person: "Referente"
+        administrative_structure: "Struttura amministrativa"
