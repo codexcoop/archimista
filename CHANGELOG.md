@@ -1,7 +1,6 @@
 ## Archimista 1.2.0 (non rilasciato)
 
-La nuova versione consolida e migliora le funzionalità dell'applicazione, con particolare riguardo a Oggetti digitali, Unità e Report.
-Si segnalano le novità principali.
+La nuova versione consolida e migliora le funzionalità dell'applicazione, con particolare riguardo a Oggetti digitali, Unità e Report. Si segnalano le novità principali.
 
 ### Oggetti digitali
 
@@ -19,6 +18,7 @@ Si segnalano le novità principali.
 
 - Migliorato il report *Inventario*
 - Migliorato il report *Etichette unità*, con possibilità di esportazione in formato CSV / Excel per una completa personalizzazione mediante word processor
+- Migliorato il report *Lista unità*, con possibilità di esportazione in formato CSV / Excel
 - Aggiunto il report per *Soggetto conservatore*
 - Aggiunto il report per *Progetto*
 

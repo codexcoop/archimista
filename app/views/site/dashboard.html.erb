@@ -2,7 +2,8 @@
   <style type="text/css">
     body { padding-top: 40px; }
     #status-bar { display: none; }
-    .thumbnails li { border: 1px solid #ccc; }
+    .thumbnails .logo { display: block; border: 1px solid #ccc; }
+    #supervisors .history { display: block; text-align: center; margin: 6px 0 0 6px; font-size: 10px; line-height: 10px; color: #666; }
   </style>
 <% end %>
 
@@ -38,14 +39,14 @@
   </table>
 </div>
 
-<div class="span10" style="margin-top: 3em; padding-top: 1em; border-top: 2px solid #eee;">
+<div class="span11" style="margin-top: 3em; padding-top: 1em; border-top: 2px solid #eee;">
   <h2 style="font-size: 14px; font-weight: normal;">
     Benvenuto su <strong><%= "#{APP_NAME} #{APP_VERSION} #{APP_STATUS}" %></strong>
   </h2>
-  <p>Applicazione web multipiattaforma gratuita ed open source per la descrizione di archivi storici e la realizzazione di inventari, censimenti e guide.</p>
+  <p style="width: 700px">Applicazione web multipiattaforma gratuita ed open source per la descrizione di archivi storici e la realizzazione di inventari, censimenti e guide.</p>
 </div>
 
-<div class="span12">
+<div class="span10">
   <p><strong>Sito ufficiale</strong>:
   <%= link_to_unless(APP_EDITION == "standalone", "http://www.archimista.it", "http://www.archimista.it") %><br />
   Contiene informazioni e notizie relative ad Archimista, il manuale d'uso e la versione standalone per Windows.</p>
@@ -56,26 +57,34 @@
   </dl>
 </div>
 
-<div class="span7">
+<div class="span11 clearfix" style="width: 810px;">
+<div class="pull-left">
   <p>Archimista è un progetto promosso da:</p>
   <ul class="thumbnails">
     <li class="span2">
-      <%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-mibac-dga.jpg'), 'http://www.archivi.beniculturali.it') %>
+      <span class="logo"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-mibac-dga.jpg'), 'http://www.archivi.beniculturali.it') %></span>
     </li>
     <li class="span2">
-      <%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-lombardia.jpg'), 'http://www.cultura.regione.lombardia.it') %>
+      <span class="logo"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-lombardia.jpg'), 'http://www.cultura.regione.lombardia.it') %></span>
     </li>
     <li class="span2">
-      <%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-piemonte.jpg'),
-          'http://www.regione.piemonte.it/cultura/cms/patrimonio-culturale/archivi.html') %>
+      <span class="logo"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-piemonte.jpg'), 'http://www.regione.piemonte.it/cultura/cms/patrimonio-culturale/archivi.html') %></span>
     </li>
   </ul>
 </div>
-<div class="span2">
+<div class="pull-right">
   <p>Soggetto coordinatore:</p>
-  <ul class="thumbnails">
-    <li class="span2"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-polimi.jpg'), 'http://www.polimi.it') %></li>
+  <ul id="supervisors" class="thumbnails">
+    <li class="span2">
+      <span class="logo"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-polimi.jpg'), 'http://www.polimi.it') %></span>
+      <span class="history">2012-2013</span>
+    </li>
+    <li class="span2">
+      <span class="logo"><%= link_to_unless(APP_EDITION == "standalone", image_tag('logo-unipv.jpg'), 'http://www.unipv.it') %></span>
+    <span class="history">2011-2012</span>
+    </li>
   </ul>
+</div>
 </div>
 
 <div class="span9">
