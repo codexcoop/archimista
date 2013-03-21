@@ -15,7 +15,7 @@
     background: #FFF;
   }
   body {
-    font-family: 'Georgia';
+    font-family: 'Georgia', serif;
     font-size: 12pt;
     text-align: justify;
     text-rendering: optimizeLegibility;
