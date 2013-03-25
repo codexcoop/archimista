@@ -1,4 +1,4 @@
-## Archimista 1.2.0 (non rilasciato)
+## Archimista 1.2.0 (25 marzo 2013)
 
 La nuova versione consolida e migliora le funzionalità dell'applicazione, con particolare riguardo a Oggetti digitali, Unità e Report. Si segnalano le novità principali.
 
