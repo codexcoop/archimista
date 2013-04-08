@@ -1,1 +1,2 @@
-{"username":"admin_archimista","password":"admin_archimista","role":"superadmin","group_id":1,"first_name":"Admin","last_name":"Archimista","email":"admin@site.com","active":true}
+{"username":"admin_archimista","password":"admin_archimista","role":"superadmin","group_id":1,"first_name":"Admin","last_name":"Archimista","email":"admin@example.com","active":true}
+{"username":"guest","password":"guest","role":"author","group_id":1,"first_name":"Utente","last_name":"Predefinito","email":"author@example.com","active":true}
