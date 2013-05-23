@@ -157,11 +157,13 @@ class Import < ActiveRecord::Base
                               SET ancestry = (SELECT #{ancestry}
                               FROM units parents
                               WHERE units.db_source = '#{self.identifier}'
+                              AND parents.db_source = '#{self.identifier}'
                               AND units.legacy_parent_unit_id = parents.legacy_id
                               AND units.ancestry_depth = #{n})
                               WHERE EXISTS (
                                 SELECT * FROM units parents
                                 WHERE units.db_source = '#{self.identifier}'
+                                AND parents.db_source = '#{self.identifier}'
                                 AND units.legacy_parent_unit_id = parents.legacy_id
                                 AND units.ancestry_depth = #{n});")
       end
@@ -170,6 +172,7 @@ class Import < ActiveRecord::Base
         ar_connection.execute("UPDATE units u, units parents
                               SET u.ancestry = CONCAT_WS('/', parents.ancestry, CAST(parents.id AS char))
                               WHERE u.db_source = '#{self.identifier}'
+                              AND parents.db_source = '#{self.identifier}'
                               AND u.legacy_parent_unit_id = parents.legacy_id
                               AND u.ancestry_depth = #{n};")
       end
@@ -179,6 +182,7 @@ class Import < ActiveRecord::Base
                              SET ancestry = CONCAT_WS('/', parents.ancestry, CAST(parents.id AS varchar))
                              FROM units parents
                              WHERE units.db_source = '#{self.identifier}'
+                             AND parents.db_source = '#{self.identifier}'
                              AND units.legacy_parent_unit_id = parents.legacy_id
                              AND units.ancestry_depth = #{n};")
       end
