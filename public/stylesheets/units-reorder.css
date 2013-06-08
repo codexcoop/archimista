@@ -28,10 +28,7 @@
 }
 .reorder-attribute label, .reorder-attribute select {
   margin: 0;
-  padding: 0;
-}
-.reorder-attribute label {
-  padding-top: 8px;
+  line-height: 32px;
 }
 .reorder-label {
   display: inline-block;

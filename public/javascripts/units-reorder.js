@@ -6,7 +6,6 @@ $(document).ready(function(){
   });
 
   $(".reorder-attributes.available").find('input, select').prop('disabled', true);
-  $(".reorder-attributes").disableSelection();
   $(".reorder-checkbox, .reorder-direction, .reorder-remove").hide();
   $(".reorder-attributes.available label").bind('click', function(event){
     event.preventDefault();
