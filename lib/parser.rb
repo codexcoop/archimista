@@ -9,33 +9,46 @@ class Parser
   end
 
   def parse
-    return @nodes if @text.nil? || @parsed
-    @text = @text.gsub(/\*{1}(.*?)\*{1}/, "\\b \\1\\b0")
-    @text = @text.gsub(/\_{1}(.*?)\_{1}/, "\\i \\1\\i0")
+    return @nodes if @text.blank? || @parsed
+
     list = []
     list_type = ""
+
+    @text = @text.strip
+    @text = @text.gsub(/\*{1}(.*?)\*{1}/, "\\b \\1\\b0")
+    @text = @text.gsub(/\_{1}(.*?)\_{1}/, "\\i \\1\\i0")
+
     @text.split("\n").each do |line|
-      line.next if line.empty?
       if line =~ /(#+)(.*)/
         list_type = "ordered_list"
         list << line.gsub(/(#+)(.*)/, "\\2").strip
-        line.next
+        next
       elsif line =~ /(\*+)(.*)/
         list_type = "unordered_list"
         list << line.gsub(/(\*+)(.*)/, "\\2").strip
-        line.next
+        next
       else
-        if list.empty?
-          node = ParserNode.new('text', line.strip)
-          @nodes << node
-        else
+        if !list.empty?
           node = ParserNode.new(list_type, list)
           @nodes << node
           list = []
           list_type = ""
         end
+        if line.strip.empty?
+          node = ParserNode.new('newline', nil)
+        else
+          node = ParserNode.new('text', line.strip)
+        end
+        @nodes << node
       end
+      next
     end
+
+    if !list.empty?
+      node = ParserNode.new(list_type, list)
+      @nodes << node
+    end
+
     @parsed = true
     @nodes
   end

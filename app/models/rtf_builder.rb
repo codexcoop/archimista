@@ -112,44 +112,6 @@ class RtfBuilder < ActiveRecord::Base
     ]
   end
 
-=begin
-numero, titolo, estremi cronologici (con note), contenuto, descrizione
-estrinseca (con eventuale stato di conservazione) e segnatura (provvisoria o
-definitiva)
-
-  def unit_printable_attributes
-    [
-      "title",
-      "preferred_event.full_display_date_with_place", "
-      sequence_number",
-      "reference_number",
-      "unit_type",
-      "medium",
-      "content",
-      "arrangement_note",
-      "related_materials",
-      "physical_type",
-      "physical_description",
-      "physical_container_type",
-      "physical_container_title",
-      "physical_container_number",
-      "preservation",
-      "preservation_note",
-      "restoration",
-      "access_condition",
-      "access_condition_note",
-      "use_condition",
-      "use_condition_note"
-    ]
-  end
-
-  unit_NON_printable_attributes:
-    "tsk", tmp_reference_number",
-    "tmp_reference_string", "folder_number",
-    "file_number", "sort_letter",
-    "sort_number", "note"
-=end
-
   def creator_printable_attributes
     [
       "preferred_event.full_display_date",
@@ -190,8 +152,7 @@ definitiva)
       "collecting_policies",
       "holdings",
       "accessibility",
-      "services",
-      "custodian_contacts"
+      "services"
     ]
   end
 
@@ -348,6 +309,7 @@ definitiva)
             end
           end
         end
+        draw_line document, styles
       end
 
       if fond.creators.present?
@@ -389,6 +351,7 @@ definitiva)
             end
           end
         end
+        draw_line document, styles
       end
 
       fond_printable_attributes.each do |attribute|
@@ -448,7 +411,7 @@ definitiva)
               end
             end
           end
-          draw_line document unless unit == fond.units.last
+          draw_line document, styles unless unit == fond.units.last
         end
         my_page_break(document)
       end
@@ -1019,7 +982,7 @@ definitiva)
         t << string
       end
     end
-    document.line_break
+    my_line_break document, styles
   end
 
   def h3 document, styles, string, stylesheet_code=nil
@@ -1029,7 +992,7 @@ definitiva)
         t << string
       end
     end
-    document.line_break
+    my_line_break document, styles
   end
 
   def h4 document, styles, string, stylesheet_code=nil
@@ -1039,7 +1002,7 @@ definitiva)
         t << string
       end
     end
-    document.line_break
+    my_line_break document, styles
   end
 
   def p document, styles, string, stylesheet_code=nil
@@ -1047,12 +1010,11 @@ definitiva)
     nodes = parser.parse
     nodes.each do |node|
       case node.type
-      when 'text'
+      when 'text', 'newline'
         document.paragraph(styles['P']) do |p|
           p.store(CommandNode.new(document, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
           p.apply(styles['DEFAULT']) do |t|
             t << node.content
-            t.line_break
           end
         end
       when 'ordered_list'
@@ -1061,6 +1023,7 @@ definitiva)
         list(document, node.content, styles)
       end
     end
+    my_line_break document, styles
   end
 
   # La documentazione sembra essere ambigua su \page e \pard \insrsid \page \par
@@ -1071,14 +1034,23 @@ definitiva)
     nil
   end
 
+  def my_line_break document, styles
+    document.paragraph(styles['P']) do |p|
+      p.apply(styles['DEFAULT']) do |t|
+        t << nil
+      end
+    end
+    nil
+  end
+
   def turn_on_page_numbering document
     document.store(CommandNode.new(document, '\header\pard\qr\plain\f0\chpgn\par', nil, false))
     nil
   end
 
-  def draw_line document
+  def draw_line document, styles
     document.store(CommandNode.new(document, '\pard \s19 \brdrb \brdrs\brdrw5\brsp10 {\fs4\~}\par \pard', nil, false))
-    document.line_break
+    my_line_break document, styles
     nil
   end
 
