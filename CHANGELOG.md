@@ -1,3 +1,7 @@
+## Archimista 1.2.1 (18 giugno 2013)
+
+Correzione di bug. Vedi [dettaglio](https://github.com/codexcoop/archimista/compare/v1.2.0...v1.2.1)
+
 ## Archimista 1.2.0 (25 marzo 2013)
 
 La nuova versione consolida e migliora le funzionalità dell'applicazione, con particolare riguardo a Oggetti digitali, Unità e Report. Si segnalano le novità principali.
