@@ -951,14 +951,14 @@ class RtfBuilder < ActiveRecord::Base
 
   def title_page document, styles, string, stylesheet_code=nil
     tokens = string.split("\n")
-    document.paragraph(styles['TITLE']) do |p|
-      p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
-      p.apply(styles['TITLE_DEFAULT']) do |t|
-        tokens.each do |token|
-          unless token.empty?
+    tokens.each do |token|
+      unless token.empty?
+        document.paragraph(styles['TITLE']) do |p|
+          p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
+          p.apply(styles['TITLE_DEFAULT']) do |t|
             t << token.strip
-            t.line_break
           end
+          my_line_break document, styles
         end
       end
     end
@@ -970,9 +970,9 @@ class RtfBuilder < ActiveRecord::Base
       p.store(CommandNode.new(self, stylesheet_code, nil, false, false)) unless stylesheet_code.nil?
       p.apply(styles['H1']) do |t|
         t << string
-        t.line_break
       end
     end
+    my_line_break document, styles
   end
 
   def h2 document, styles, string, stylesheet_code=nil
