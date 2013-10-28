@@ -51,6 +51,7 @@ class Import < ActiveRecord::Base
             data = ActiveSupport::JSON.decode(line.strip)
             key = data.keys.first
             model = key.camelize.constantize
+            data[key].delete_if{|k, v| not model.column_names.include? k}
             object = model.new(data[key])
             object.db_source = self.identifier
             object.group_id = user.group_id if object.has_attribute? 'group_id'
