@@ -96,7 +96,7 @@ module UnitSupport
       return false if ids.blank?
 
       transaction do
-        unit_ids = ids.map{|id| find(id).subtree_ids}.flatten
+        unit_ids = ids.map{|id| find(id).subtree_ids}.flatten.uniq
         fond_ids =  find(:all, :select => "DISTINCT fond_id", :conditions => {:id => unit_ids}).
                     map{|u|u.fond_id} # warning: must be found *before* deletion
         UnitEvent.delete_all({:unit_id => unit_ids})
