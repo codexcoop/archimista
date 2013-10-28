@@ -188,7 +188,7 @@ class HeadingsController < ApplicationController
       end
       redirect_to(headings_url, :notice => "Lemmi importati")
     else
-      redirect_to(headings_url, :notice => "Si è verificato un errore durante l'importazione dei lemmi")
+      redirect_to(headings_url, :alert => "Si è verificato un errore durante l'importazione dei lemmi")
     end
   end
 
