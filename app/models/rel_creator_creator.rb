@@ -5,7 +5,7 @@ class RelCreatorCreator < ActiveRecord::Base
     record.creator_association_type_id ||= 1
   end
 
- # Callbacks
+  # Callbacks
 
   after_save do |record|
     if record.inverse_association.nil?
@@ -25,15 +25,15 @@ class RelCreatorCreator < ActiveRecord::Base
     record.inverse_association.destroy rescue nil
   end
 
- # Associations
+  # Associations
 
- belongs_to :creator
- belongs_to :related_creator, :class_name => "Creator"
- belongs_to :creator_association_type
+  belongs_to :creator
+  belongs_to :related_creator, :class_name => "Creator"
+  belongs_to :creator_association_type
 
- def inverse_association
+  def inverse_association
     creator.inverse_rel_creator_creators.find(:first, :conditions => "creator_id = #{self.related_creator_id}")
- end
+  end
 
 end
 

@@ -152,3 +152,7 @@
   line-height: 1;
   background: #e8e8e8;
 }
+
+#fond_editors {
+max-width:670px; position:relative;
+}
