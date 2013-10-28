@@ -17,7 +17,7 @@ class Heading < ActiveRecord::Base
 
   # Validations
   validates_presence_of :name
-  validates_uniqueness_of :name, :scope => [:heading_type, :dates, :qualifier, :db_source], :case_sensitive => false
+  validates_uniqueness_of :name, :scope => [:heading_type, :dates, :qualifier, :db_source, :group_id], :case_sensitive => false
 
   # Virtual attributes
   def full_string
