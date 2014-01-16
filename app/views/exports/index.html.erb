@@ -61,7 +61,7 @@
                   <td>
                     <%= link_to custodian.name, '#', {:class => "export-aef-wait", "target-id".to_sym => custodian.id, "target-class" => "custodian", "target-mode" => "full"} %><br>
                     <span class="muted"><%= custodian.num %> <%= Fond.human_name(:count => custodian.num.to_i).downcase %></span>
-                    <% if custodian.db_source.present? %>
+                    <% if Rails.env == "development" && custodian.db_source.present? %>
                       <span class="light">(<%= custodian.db_source %>)</span>
                     <% end %>
                   </td>

@@ -205,6 +205,7 @@ module ApplicationHelper
       [
         h(source.author),
         (source.title.present? ? content_tag(:em, h(source.title)) : nil),
+        h(source.place),
         h(source.publisher),
         h(source.date_string)
       ].

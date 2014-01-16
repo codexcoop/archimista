@@ -6,7 +6,7 @@
       <% if object.present? %>
         <ul>
           <% object.each do |source| %>
-            <li><%= formatted_source(source) %></li>
+            <li><%= source.short_title %> = <%= formatted_source(source) %></li>
           <% end %>
         </ul>
       <%  else %>
