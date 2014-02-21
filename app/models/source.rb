@@ -67,7 +67,7 @@ class Source < ActiveRecord::Base
     end
 
     {
-      :select => "id, author, title, short_title, publisher, year, date_string",
+      :select => "id, author, title, short_title, place, publisher, year, date_string",
       :conditions => conditions,
       :order => "short_title",
       :limit => limit
