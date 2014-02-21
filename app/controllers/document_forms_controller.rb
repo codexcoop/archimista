@@ -1,9 +1,10 @@
 class DocumentFormsController < ApplicationController
+  helper_method :sort_column
   load_and_authorize_resource
 
   def index
     @document_forms = DocumentForm.accessible_by(current_ability, :read).
-                      paginate(:page => params[:page], :order => 'lower(name)')
+                      paginate(:page => params[:page], :order => sort_column + ' ' + sort_direction)
   end
 
   def list
@@ -39,7 +40,7 @@ class DocumentFormsController < ApplicationController
                       document_form.group_id = current_user.group_id
                      end
     if @document_form.save
-      redirect_to(@document_form, :notice => 'Scheda creata')
+      redirect_to(edit_document_form_url(@document_form), :notice => 'Scheda creata')
     else
       render :action => "new"
     end
@@ -49,7 +50,7 @@ class DocumentFormsController < ApplicationController
     @document_form = DocumentForm.find(params[:id])
 
     if @document_form.update_attributes(params[:document_form])
-      redirect_to(@document_form, :notice => 'Scheda aggiornata')
+      redirect_to(edit_document_form_url(@document_form), :notice => 'Scheda aggiornata')
     else
       render :action => "edit"
     end
@@ -60,6 +61,12 @@ class DocumentFormsController < ApplicationController
     @document_form.destroy
 
     redirect_to(document_forms_url)
+  end
+
+  private
+
+  def sort_column
+    params[:sort] || "name"
   end
 
 end

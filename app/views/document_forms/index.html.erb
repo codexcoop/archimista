@@ -13,8 +13,8 @@
 <table class="table table-sortable">
   <thead>
   <tr>
-    <th class="span7"><%= t('document_forms_name') %></th>
-    <th class="span2"><%= t('updated_at') %></th>
+    <th class="span7"><%= sortable("name", t('document_forms_name')) %></th>
+    <th class="span2"><%= sortable("updated_at", t('updated_at')) %></th>
     <th class="span1">&nbsp;</th>
     <th class="span1">&nbsp;</th>
   </tr>
@@ -30,6 +30,8 @@
   <% end %>
   </tbody>
 </table>
+
+<%= will_paginate @document_forms %>
 
 <% else %>
   <p>Non sono presenti schede profilo documentario.</p>
