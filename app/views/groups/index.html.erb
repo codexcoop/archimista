@@ -14,17 +14,19 @@
 </div>
 
 <div class="row">
-  <div class="span6">
-    <table class="table">
+  <div class="span10">
+    <table class="table table-sortable">
       <tr>
-        <th><%= t('name') %></th>
+        <th><%= sortable("name", t('name')) %></th>
         <th class="center"><%= t('users_count') %></th>
+        <th><%= sortable("created_at", t('created_at')) %></th>
         <th>&nbsp;</th>
       </tr>
       <% @groups.each do |group| %>
       <tr>
         <td><%= link_to_unless(group.name == 'default', group.name, edit_group_path(group)) %></td>
         <td class="center"><%= group.users.count %></td>
+        <td><%= l group.created_at, :format => :long %></td>
         <td>
           <%= link_to_if(group.is_empty?, t('destroy'), group, :method => :delete) do |text| '' end %>
         </td>

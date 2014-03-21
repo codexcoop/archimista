@@ -1,9 +1,11 @@
 class GroupsController < ApplicationController
+  helper_method :sort_column
+
   load_and_authorize_resource
 
   def index
     @groups = Group.accessible_by(current_ability, :manage).
-                    all(:order => "id")
+                    all(:order => sort_column + ' ' + sort_direction)
   end
 
   def show
@@ -43,6 +45,12 @@ class GroupsController < ApplicationController
     @group.destroy
 
     redirect_to(groups_url, :notice => "Eliminato il gruppo: #{@group.name}")
+  end
+
+  private
+
+  def sort_column
+    params[:sort] || "created_at"
   end
 
 end

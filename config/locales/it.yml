@@ -1,6 +1,7 @@
 # Common keys
 
 it:
+  created_at: "Data creazione"
   updated_at: "Data modifica"
   updated_by: "Aggiornato da utente"
   unsaved_record: "Scheda non ancora salvata"
@@ -199,8 +200,8 @@ it:
         access_condition_note: "Nota alla condizione di accesso"
         use_condition: "Riproduzione"
         use_condition_note: "Nota alla condizione di riproduzione"
-        created_at: "Creazione"
-        updated_at: "Aggiornamento"
+        # created_at: "Creazione"
+        # updated_at: "Aggiornamento"
         fond_id: "Complesso archivistico"
         ancestry: "Gerarchia"
         ancestry_depth: "Livello"
