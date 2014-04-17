@@ -5,7 +5,7 @@ module TreeExt
       attr_accessor :memoized_global_position
 
       # The direct parent_id of the object (when the parent is of the same class),
-      # or a marked id of the object of the association given as external_parent
+      # or a marked id of the object of the association given as external_parent.
       # Example: if Unit is a continuation of the Fond tree (external parent is a Fond):
       # - Unit#10223 has ancestry "10222" and fond_id 2263 => its parent is the Unit#10222 => structural_parent_id 10222
       # - Unit#10222 has ancestry blank and fond_id 2263 => its parent is the Fond#2263 => structural_parent_id "F2263"
@@ -14,7 +14,7 @@ module TreeExt
         parent_id || "F#{send(self.class.external_parent_foreign_key)}"
       end
 
-      # A symbol of the attribute which identifies the external root
+      # A symbol of the attribute which identifies the external root.
       # Example: if Unit is a continuation of the Fond tree (external parent is a Fond):
       # the external_root_id is :root_fond_id
       def external_root_id
@@ -22,7 +22,7 @@ module TreeExt
       end
 
       # The direct parent of the object (when the parent is of the same class),
-      # or the object of the association given as external_parent
+      # or the object of the association given as external_parent.
       # Example: if Unit is a continuation of the Fond tree (external parent is a Fond):
       # - Unit#10223 has ancestry "10222" and fond_id 2263 => its parent is the Unit#10222
       # - Unit#10222 has ancestry blank and fond_id 2263 => its parent is the Fond#2263
@@ -43,9 +43,9 @@ module TreeExt
         end
       end
 
-      # example: structural ancestors be fonds, and this node be a unit
-      # if is root and has position == 1, its parent is a fond, and the preceding
-      # unit is the last unit or subunit descending from the preceding fonds
+      # Example: structural ancestors be fonds, and this node be a unit.
+      # If is root and has position == 1, its parent is a fond, and the preceding unit
+      # is the last unit or subunit descending from the preceding fonds.
       def preceding_of_a_root_in_first_position
         return unless is_root? && position == 1
         self.class.
@@ -55,12 +55,12 @@ module TreeExt
             :joins => [:fond],
             :order => "fonds.sequence_number, units.sequence_number",
             :conditions => "units.fond_id IN (#{structural_root.subtree_ids.join(', ')})
-                            AND fonds.sequence_number < #{structural_parent.sequence_number}" )
+                            AND fonds.sequence_number < #{structural_parent.sequence_number}")
       end
 
-      # example: structural ancestors be fonds, and this node be a unit
-      # if is root and has position > 1, its parent is a fond, and the preceding unit is the preceding
-      # unit belonging to the same fond, or its last subunit
+      # Example: structural ancestors be fonds, and this node be a unit.
+      # If is root and has position > 1, its parent is a fond, and the preceding unit
+      # is the preceding unit belonging to the same fond, or its last subunit.
       def preceding_of_a_root_in_non_first_position
         return unless is_root? && position > 1
         self.class.
@@ -69,22 +69,20 @@ module TreeExt
             :conditions => "fond_id = #{fond_id} AND ancestry_depth = #{ancestry_depth} AND position < #{position}",
             :order => "position").
           subtree.
-          find(:last,
-            :select => "id, ancestry, sequence_number",
-            :order => "sequence_number" )
+          find(:last, :select => "id, ancestry, sequence_number", :order => "sequence_number")
       end
 
-      # example: structural ancestors be fonds, and this node be a unit
-      # if is not a root and has position == 1, its parent is another unit,
-      # it is the first child, so its direct preceding unit must be its parent
+      # Example: structural ancestors be fonds, and this node be a unit.
+      # If is not a root and has position == 1, its parent is another unit,
+      # it is the first child, so its direct preceding unit must be its parent.
       def preceding_of_a_node_in_first_position
         return unless !is_root? && position == 1
         parent
       end
 
-      # example: structural ancestors be fonds, and this node be a unit
-      # if is not a root and has position > 1, its parent is another unit,
-      # and its preceding is the preceding subunit
+      # Example: structural ancestors be fonds, and this node be a unit.
+      # If is not a root and has position > 1, its parent is another unit,
+      # and its preceding is the preceding subunit.
       def preceding_of_a_node_in_non_first_position
         return unless !is_root? && position > 1
         siblings.
@@ -95,9 +93,9 @@ module TreeExt
           find(:last, :select => "id, ancestry, sequence_number", :order => "sequence_number")
       end
 
-      # see single methods
-      # using elsif because the options in case are always all executed,
-      # even if a prior condition is met
+      # See single methods.
+      # Using elsif because the options in case are always all executed,
+      # even if a prior condition is met.
       def structural_preceding_active
         preceding_of_a_root_in_first_position     ||
         preceding_of_a_root_in_non_first_position ||
