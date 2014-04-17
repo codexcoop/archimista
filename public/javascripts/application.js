@@ -85,6 +85,7 @@ $(document).ready(function() {
   $("#create_fond").click(function() {
     var name = $("#fond_name").val();
     var group_id = $("#fond_group_id").val();
+    var sequence_number = $("#fond_sequence_number").val();
     var validForm = true;
     validForm = validForm && validatesPresenceOf(name);
 
@@ -93,7 +94,7 @@ $(document).ready(function() {
         url: "/fonds/ajax_create",
         dataType: "json",
         type: "POST",
-        data: '{"fond": { "name": "' + name + '", "group_id": "'+ group_id +'", "sequence_number": "1"} }',
+        data: '{"fond": { "name": "' + name + '", "group_id": "' + group_id + '", "sequence_number": "' + sequence_number + '"} }',
         processData: true,
         contentType: "application/json",
         success: function(data, textStatus, jqXHR){

@@ -5,11 +5,11 @@
   </div>
   <div class="modal-body">
     <div id="fond_form_error"></div>
-
     <% form_tag({:controller => 'fonds', :action => 'ajax_create'}, {:method => :post, :id => "new-fond-form", :class => "skip-prompt"}) do %>
       <%= label_tag 'fond[name]', t('name') + required_marker + '<span class="inline-msg hide">obbligatorio</span>' %>
       <%= text_field_tag 'fond[name]', '', :autocomplete => "off", :style => "width: 98%" %>
       <%= hidden_field_tag 'fond[group_id]', current_user.group_id %>
+      <%= hidden_field_tag 'fond[sequence_number]', "1" %>
     <% end %>
   </div>
   <div class="modal-footer">
