@@ -66,7 +66,7 @@ module TreeExt
         self.class.
           find(:last,
             :select => "id, ancestry, sequence_number",
-            :conditions => "fond_id = #{fond_id} AND position < #{position}",
+            :conditions => "fond_id = #{fond_id} AND ancestry_depth = #{ancestry_depth} AND position < #{position}",
             :order => "position").
           subtree.
           find(:last,
