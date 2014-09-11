@@ -15,6 +15,10 @@ class ApplicationController < ActionController::Base
     %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
   end
 
+  def lower_sort_column
+    ["created_at", "updated_at"].any? { |c| sort_column.include?(c) } ? sort_column : "lower(#{sort_column})"
+  end
+
   def terms
     @terms = Term.for_select_options
   end

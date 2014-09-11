@@ -5,7 +5,8 @@ class GroupsController < ApplicationController
 
   def index
     @groups = Group.accessible_by(current_ability, :manage).
-                    all(:order => sort_column + ' ' + sort_direction)
+                    all(:order => lower_sort_column + ' ' + sort_direction)
+    @assets = DigitalObject.sum(:asset_file_size, :group => "group_id")
   end
 
   def show
