@@ -12,8 +12,10 @@
   <%= link_to t('new'), new_user_path, { :class => "btn btn-small new" } %>
 </div>
 <p>
-  <%= link_to_unless(params[:view].nil?, "Attivi <span class='muted'>(#{@active_users.length})</span>", users_path) %> |
-  <%= link_to_unless(params[:view] == "inactive" || @inactive_users.length == 0, "Non attivi <span class='muted'>(#{@inactive_users.length})</span>", users_path(:view => "inactive")) %>
+  <%= link_to_unless(params[:view].nil?, "Attivi", users_path) %>
+  <span class='muted'>(<%= @active_users.length %>)</span> |
+  <%= link_to_unless(params[:view] == "inactive" || @inactive_users.length == 0, "Non attivi", users_path(:view => "inactive")) %>
+  <span class='muted'>(<%= @inactive_users.length %>)</span>
 </p>
 
 <table class="table table-striped">
