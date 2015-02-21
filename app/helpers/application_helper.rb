@@ -178,22 +178,9 @@ module ApplicationHelper
   end
 
   # TextHelpers
-
-  def textilize(text, *options)
-    options ||= [:hard_breaks]
-
-    if text.blank?
-      ""
-    else
-      text = html_escape(text).gsub(/\[/, "&#91;").gsub(/\]/, "&#93;")
-      textilized = RedCloth.new(text, options)
-      textilized.to_html
-    end
-  end
-
   # Unescapes the entities for special characters that have been escaped by RedCloth.
   # For example: fond.description of "Archivio storico Arnoldo Mondadori Editore - AME"
-
+  # OPTIMIZE: dubbio che sia ancora utile. Verificare !
   def textilize_with_entities(text)
     textilize(text).gsub("&amp;#", "&#")
   end
