@@ -26,7 +26,7 @@
       <% @groups.each do |group| %>
       <tr>
         <td><%= link_to_unless(group.name == 'default', group.name, edit_group_path(group)) %></td>
-        <td class="center"><%= group.users.count %></td>
+        <td class="center"><%= group.users.select {|u| u.active == true }.size %> / <%= group.users.size %></td>
         <td class="center"><%= number_to_human_size(@assets[group.id]) || "&mdash;" %></td>
         <td><%= l group.created_at, :format => :long %></td>
         <td>
