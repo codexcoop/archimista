@@ -3,9 +3,15 @@ class CreatorsController < ApplicationController
   load_and_authorize_resource
 
   def index
+    terms
+    conditions = params[:view] ? "creator_type = '#{params[:view]}'" : ""
+
     @creators = Creator.list.search(params[:q]).accessible_by(current_ability, :read).paginate(:page => params[:page],
-      :order => sort_column + ' ' + sort_direction,
+      :conditions => conditions,
+      :order => lower_sort_column + ' ' + sort_direction,
       :include => :preferred_event)
+
+    @counts_by_type = Creator.accessible_by(current_ability, :read).count("id", :group => :creator_type)
   end
 
   def list

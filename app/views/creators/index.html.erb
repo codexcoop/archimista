@@ -20,13 +20,18 @@
     </div>
   </div>
 
+  <% if @counts_by_type.present? %>
+    <p><%= display_counts_by_type("creators", "creators.creator_type") %></p>
+  <% end %>
+
   <% if @creators.size > 0 %>
+
   <%= display_page_entries_info @creators %>
   <table class="table table-sortable">
     <thead>
       <tr>
-        <th><%= sortable("name", t('creator_name')) %></th>
-        <th><%= sortable("creator_type", t('creator_type')) %></th>
+        <th class="span7"><%= sortable("name", t('creator_name')) %></th>
+        <th><%= t('creator_type') %></th>
         <th><%= sortable("creators.updated_at", t('updated_at')) %></th>
         <th>&nbsp;</th>
         <th>&nbsp;</th>
@@ -36,9 +41,7 @@
     <% @creators.each do |creator| %>
       <tr class="<%= cycle("odd", "even") %>">
         <td>
-            <%= creator.residence + ", " if creator.residence.present? %>
-            <%= link_to creator.name, edit_creator_path(creator) %>
-            <%= creator.preferred_event.try(:full_display_date) %>
+          <%= link_to creator.name, edit_creator_path(creator) %><%= ", #{creator_qualifiers(creator)}" if creator_qualifiers(creator).present? %>
         </td>
         <td><%= show_value(creator.creator_type, "t") %></td>
         <td><%= l creator.updated_at, :format => :long %></td>

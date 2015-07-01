@@ -62,6 +62,19 @@ module ApplicationHelper
     link_to(name, "javascript:void(0)", :class => "add_child", :"data-association" => association)
   end
 
+  def display_counts_by_type(resource, vocabulary_name)
+    links = [ link_to_unless(params[:view].nil?, "Tutti", send("#{resource}_path")) ]
+    @terms.select {|l| l.vocabulary_name == vocabulary_name}.map {|a|
+      links << if @counts_by_type[a.term_value].nil?
+                "<span class='muted'>#{t(a.term_key)} (0)</span>"
+              else
+                link_to_unless(params[:view] == a.term_value, t(a.term_key), send("#{resource}_path", { :view => a.term_value })) +
+                " <span class='muted'>(#{(number_with_delimiter(@counts_by_type[a.term_value]) || "0")})</span>"
+              end
+    }
+    links.join(" | ")
+  end
+
   def link_to_digital_objects_by_count(digital_objects_count, name, object, html_options = {})
     target_link = if digital_objects_count > 0
       polymorphic_path([object, "digital_objects"])
@@ -88,7 +101,7 @@ module ApplicationHelper
     end
   end
 
-  # FormOptionsHelper
+  # Forms
   def terms_select(f, list_name, options={}, html_options={})
     attribute = list_name.split('.')[1]
     f.select(attribute, @terms.select {|l| l.vocabulary_name == "#{list_name}"}.map {|a| [ t(a.term_key), a.term_value ]}, options, html_options)
@@ -99,7 +112,6 @@ module ApplicationHelper
     f.select(attribute, @iccd_terms.select {|l| l.vocabulary_name == "#{list_name}" && l.term_scope == term_scope}.map {|a| [ a.term_key, a.term_value ]}, options, html_options)
   end
 
-  # Options for select heading_types
   def heading_types
     options_for_select(@terms.select {|l| l.vocabulary_name == "headings.heading_type"}.map {|a| [a.term_value, a.term_value]})
   end
@@ -108,19 +120,14 @@ module ApplicationHelper
     "&nbsp;*&nbsp;"
   end
 
-  # ShowHelpers
-
-  # BlankField
   def blank_field
     '<span class="blank">' + t('blank_field') + '</span>'
   end
 
-  # WarningField
   def warning_field
     '<span class="warning">' + t('warning_field') + '</span>'
   end
 
-  # Show actions
   def build_or_retrieve(collection, attributes = {})
     if collection.blank?
       collection.build(attributes = {})
@@ -129,7 +136,7 @@ module ApplicationHelper
     end
   end
 
-  # ShowValue
+  # Show actions
   def show_value(value, options={})
     if value.present?
       options == "t" ? t(value) : value
@@ -138,7 +145,6 @@ module ApplicationHelper
     end
   end
 
-  # ShowItem
   def show_item(item, options=['', ''], translate=nil)
     if item.present?
       string = translate.present? ? t(item) : item
@@ -148,33 +154,12 @@ module ApplicationHelper
     end
   end
 
-  # ShowEditor
   def show_editor(object)
     string = object.name
     string += " (#{object.qualifier})" unless object.qualifier.blank?
     string += ", #{object.editing_type}" unless object.editing_type.blank?
     string += ", #{l object.edited_at, :format => :long}" unless object.edited_at.blank?
     string
-  end
-
-  # NormalizeDateForEAD
-  def normalize_date_for_ead(event)
-    if event.equal_bounds?
-      "#{normalize_bound event.start_date_from, event.start_date_format}"
-    else
-      "#{normalize_bound event.start_date_from, event.start_date_format}/#{normalize_bound event.end_date_from, event.end_date_format}"
-    end
-  end
-
-  def normalize_bound(date, format)
-    case format
-    when 'Y'
-      date.year.to_s
-    when 'O'
-      String.new
-    else
-      date.to_s.underscore.camelize
-    end
   end
 
   # TextHelpers
@@ -199,6 +184,10 @@ module ApplicationHelper
         delete_if{|fragment| fragment.blank?}.
         join(", ")
     end
+  end
+
+  def creator_qualifiers(creator)
+    [creator.residence, creator.preferred_event.try(:full_display_date)].reject(&:blank?).join(", ")
   end
 
   def formatted_custodian_building(building)
