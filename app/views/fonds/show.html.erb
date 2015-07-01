@@ -171,8 +171,7 @@
         <% if @fond.creators.present? %>
           <ul>
             <% @fond.creators.each do |creator| %>
-              <li><%= link_to "#{creator.preferred_name.name}", creator_path(creator) %>
-                <%= creator.preferred_event.full_display_date if creator.preferred_event %>
+              <li><%= link_to "#{creator.preferred_name.name}", creator_path(creator) %><%= ", #{creator_qualifiers(creator)}" if creator_qualifiers(creator).present? %>
               </li>
             <% end %>
           </ul>
@@ -182,7 +181,7 @@
       </td>
     </tr>
     <tr>
-      <th><%= t('custodians') %></th>
+      <th><%= t('custodian') %></th>
       <td>
         <% if @fond.custodians.present? %>
           <ul>
