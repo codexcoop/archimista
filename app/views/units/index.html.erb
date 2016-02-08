@@ -104,6 +104,8 @@
             </div>
           <% end %>
           <div class="unit-actions">
+            <% dob_string = "Oggetti digitali (#{@digital_objects_counts[unit.id] || 0})" %>
+            <%= link_to dob_string, unit_digital_objects_path(unit.id) %> |
             <%= link_to t('show'), unit %> |
             <%= link_to t('destroy'), unit, :confirm => t('are_you_sure'), :method => :delete %> |
             <%= link_to "Modifica livello", "#", {:class => "move", :"data-id" => unit.id } %>

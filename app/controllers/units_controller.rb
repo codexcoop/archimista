@@ -210,6 +210,9 @@ class UnitsController < ApplicationController
         # :include => [:fond], # OPTIMIZE: esaminare attentamente. Forse migliora performance.
         :conditions => ["units.sequence_number IS NOT NULL AND (unit_events.preferred = ? OR unit_events.preferred IS NULL)", true],
         :order => sort_column + ' ' + sort_direction )
+
+        @digital_objects_counts = DigitalObject.count(:group => :attachable_id, :conditions => {:attachable_type => "Unit", :attachable_id => @units.map(&:id)})
+
     else
       redirect_to fonds_url
     end
