@@ -28,7 +28,9 @@
     <tbody>
     <% @custodians.each do |custodian| %>
       <tr class="<%= cycle("odd", "even") %>">
-        <td><%= link_to custodian.name, edit_custodian_path(custodian) %></td>
+        <td>
+          <%= link_to custodian.name, edit_custodian_path(custodian) %><%= ", #{custodian.custodian_headquarter.city}" if custodian.custodian_headquarter.present? %>
+        </td>
         <td><%= l custodian.updated_at, :format => :long %></td>
         <td><%= link_to t('show'), custodian %></td>
         <td><%= link_to t('destroy'), custodian, :confirm => t('are_you_sure'), :method => :delete %></td>

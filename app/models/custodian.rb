@@ -97,7 +97,7 @@ class Custodian < ActiveRecord::Base
   # Scopes
 
   named_scope :list, :select => "custodians.id, custodian_names.name, custodians.updated_at",
-    :joins => :preferred_name
+    :joins => :preferred_name, :include => :custodian_headquarter
 
   named_scope :export_list, :select => "custodians.id, custodian_names.name, custodians.updated_at, custodians.db_source, count(custodians.id) AS num",
     :joins => [:fonds, :preferred_name],
